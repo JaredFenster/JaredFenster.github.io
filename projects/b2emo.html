@@ -5,7 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>B2EMO</title>
 
-  <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="stylesheet" href="../css/styles.css"/>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/PrismJS/prism-themes@master/themes/prism-vsc-dark-plus.min.css">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
+
+
   <script defer src="../js/include.js"></script>
   <script defer src="../js/app.js"></script>
 </head>
@@ -101,9 +107,8 @@
       </ul>
     </div>
 
-    <div class="project-image">
-      <img src="../assets/B2EMO/CODE_SAMPLE.png" alt="Software system">
-    </div>
+      <pre class="line-numbers language-cpp" data-src="../assets/B2EMO/code.ino">
+    <code class="language-cpp"></code>
   </section>
 
   <!-- SECTION 5 -->
@@ -123,4 +128,17 @@
 </main>
 
 </body>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-clike.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-cpp.min.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/file-highlight/prism-file-highlight.min.js"></script>
+
+  <script>
+    window.addEventListener("load", () => Prism.highlightAll());
+  </script>
+
 </html>
