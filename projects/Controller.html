@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Controller</title>
+
+  <link rel="stylesheet" href="../css/styles.css"/>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/PrismJS/prism-themes@master/themes/prism-vsc-dark-plus.min.css">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
+
+
+  <script defer src="../js/include.js"></script>
+  <script defer src="../js/app.js"></script>
+</head>
+
+<body class="project-page">
+  <div data-include="../partials/nav.html"></div>
+
+  <main>
+
+  <!-- SECTION 1 -->
+  <section class="project-section">
+    <div class="project-image">
+      <img src="../assets/Controller/Controller.JPG" alt="Controller">
+    </div>
+
+    <div class="project-text">
+      <h2>Universal Robot Controller</h2>
+      <p>
+        A Wireless Controller for my Robots
+      </p>
+      <ul>
+        <li>Seamlessly connects to any Arduino with a nRF24L01</li>
+        <li>Sends all input data 20 times per second</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- SECTION 2 -->
+  <section class="project-section reverse">
+    <div class="project-text">
+      <h2>Mechanical & Hardware Design</h2>
+      <ul>
+        <li>The case is completely 3D printed</li>
+        <li>Includes 14 input options</li>
+        <li>Designed in Fusion 360</li>
+      </ul>
+    </div>
+
+   <div class="project-image">
+      <img src="../assets/Controller/CAD.png" alt="Mechanism">
+    </div>
+  </section>
+
+
+  <!-- SECTION 3 -->
+  <section class="project-section">
+    
+    <div class="project-image">
+      <img src="../assets/Controller/Electronics.JPEG" alt="Electronics">
+    </div>
+
+    <div class="project-text">
+      <h2>Electronics</h2>
+      <ul>
+        <li>All of the inputs are powered by the Arduino</li>
+        <li>The Arduino is powered by an external USB power bank on the bottom of the remote controller</li>
+      </ul>
+    </div>
+  </section>   
+  
+  
+  <!-- SECTION 4 -->
+  <section class="project-section reverse">
+    <div class="project-text">
+      <h2>Software</h2>
+      <ul>
+        <li>Written in C++</li>
+        <li>Uses nRF Libraries</li>
+        <li>Utilizes a Struct to send all inputs</li>
+      </ul>
+    </div>
+
+    <pre class="line-numbers language-cpp" data-src="../assets/Controller/code.ino">
+  <code class="language-cpp"></code>
+</pre>
+
+  </section>
+
+
+</main>
+
+</body>
+
+
+  <!-- Prism (put at END of body) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-clike.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-cpp.min.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/file-highlight/prism-file-highlight.min.js"></script>
+
+  <script>
+    // Make sure Prism runs after everything is on the page
+    window.addEventListener("load", () => Prism.highlightAll());
+  </script>
+
+</html>

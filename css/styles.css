@@ -1,0 +1,507 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap');
+
+:root {
+  --bg: #05060a;
+  --text: #e9f8ff;
+
+  --panel: rgba(0, 0, 0, 0.72);
+
+  /* nav control look */
+  --nav-bg: rgba(0, 0, 0, 0.45);
+  --nav-bg-hover: rgba(0, 0, 0, 0.60);
+  --nav-stroke: rgba(255, 255, 255, 0.22);
+  --nav-stroke-hover: rgba(255, 255, 255, 0.35);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  font-family: 'Space Grotesk', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: var(--text);
+}
+
+a {
+  color: #4da8ff; /* Lighter blue */
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* ===== NAV (NO BANNER) ===== */
+.topbar {
+  position: fixed;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+
+  padding: 12px 16px;
+
+  /* no banner behind buttons */
+  background: none;
+  backdrop-filter: none;
+  border-bottom: none;
+
+  /* allow scene clicks through empty topbar space */
+  pointer-events: none;
+}
+
+.topbar-spacer { height: 80px; }
+
+.nav-left, .nav-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  /* buttons stay clickable */
+  pointer-events: auto;
+}
+
+/* Clear clickable cursor */
+.nav-control,
+.dropdown-btn,
+.dropdown-item,
+.icon-link,
+.brand {
+  cursor: pointer;
+}
+
+/* Show pointer cursor when hovering the scene */
+.scene {
+  cursor: pointer;
+}
+
+
+
+/* Unified sizing + style for name / projects / about */
+.nav-control {
+  height: 56px;
+  padding: 0 18px;
+  border-radius: 16px;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  background: var(--nav-bg);
+  border: 1px solid var(--nav-stroke);
+
+  color: var(--text);
+  font-size: 1rem;
+  line-height: 1;
+  text-decoration: none;
+  cursor: pointer;
+  user-select: none;
+
+  box-shadow:
+    0 6px 18px rgba(0,0,0,0.45),
+    inset 0 1px 0 rgba(255,255,255,0.08);
+
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.nav-control:hover {
+  background: var(--nav-bg-hover);
+  border-color: var(--nav-stroke-hover);
+  transform: translateY(-1px);
+  box-shadow:
+    0 10px 26px rgba(0,0,0,0.55),
+    inset 0 1px 0 rgba(255,255,255,0.12);
+}
+
+.nav-control:focus-visible {
+  outline: 2px solid rgba(233, 248, 255, 0.7);
+  outline-offset: 2px;
+}
+
+.brand {
+  font-weight: 400;
+  letter-spacing: 0.3px;
+}
+
+/* Dropdown */
+.dropdown { position: relative; }
+
+.dropdown-btn {
+  /* button element: remove default styles that can affect sizing */
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+
+  min-width: 240px;
+  padding: 8px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: var(--panel);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.35);
+
+  opacity: 0;
+  transform: translateY(0);
+  pointer-events: none;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+/* hover opens menu */
+.dropdown:hover .dropdown-menu {
+  opacity: 1;
+  transform: translateY(8px);
+  pointer-events: auto;
+}
+
+/* Invisible hover bridge so the menu doesn't collapse when crossing the gap */
+.dropdown-menu::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -12px;
+  height: 12px;
+}
+
+.dropdown-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 10px;
+  border-radius: 12px;
+
+  cursor: pointer;
+  text-decoration: none;
+  color: var(--text);
+
+  border: 1px solid transparent;
+  transition: background 0.12s ease, border-color 0.12s ease;
+}
+
+.dropdown-item:hover {
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.12);
+}
+
+.dropdown-item .title { font-weight: 650; font-size: 0.95rem; }
+.dropdown-item .sub { opacity: 0.78; font-size: 0.82rem; }
+
+/* Icon buttons (same size as nav-control) */
+.icon-link {
+  width: 56px;
+  height: 56px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 14px;
+
+  background: var(--nav-bg);
+  border: 1px solid var(--nav-stroke);
+
+  box-shadow:
+    0 6px 18px rgba(0,0,0,0.45),
+    inset 0 1px 0 rgba(255,255,255,0.08);
+
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+
+  text-decoration: none;
+}
+
+.icon-link:hover {
+  background: var(--nav-bg-hover);
+  border-color: var(--nav-stroke-hover);
+  transform: translateY(-1px);
+  box-shadow:
+    0 10px 26px rgba(0,0,0,0.55),
+    inset 0 1px 0 rgba(255,255,255,0.12);
+}
+
+.icon-link:focus-visible {
+  outline: 2px solid rgba(233, 248, 255, 0.7);
+  outline-offset: 2px;
+}
+
+.icon-link svg { width: 24px; height: 24px; fill: var(--text); }
+
+/* ===== SCENE ===== */
+.scene {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.scene__layer {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  position: absolute;
+  inset: 0;
+}
+
+.scene__bg { z-index: 1; }
+
+.robot {
+  z-index: 2;
+  pointer-events: none; /* hit test manually in JS */
+  transition: transform 0.25s ease, filter 0.25s ease, opacity 0.25s ease;
+  filter: drop-shadow(0 0 0 rgba(0, 0, 0, 0));
+}
+
+.robot.robot--hover { filter: url(#white-outline); }
+.robot.robot--active { filter: url(#white-outline); }
+
+/* ===== SIMPLE CONTENT PAGES ===== */
+.page {
+  position: relative;
+  z-index: 2;
+  padding: 24px;
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+.card {
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(0,0,0,0.35);
+  border-radius: 16px;
+  padding: 18px;
+}
+
+/* Prism code blocks (let the Prism theme control colors/fonts) */
+pre[class*="language-"] {
+  max-height: 70vh;
+  overflow: auto;
+  padding: 16px;
+  border-radius: 8px;
+}
+
+/* Only style inline code that is NOT a Prism-highlighted block */
+code:not([class*="language-"]) {
+  color: inherit;
+  font-family: inherit;
+  background: rgba(255,255,255,0.06);
+  padding: 0.15em 0.35em;
+  border-radius: 6px;
+}
+
+
+
+
+/* ===== FULLSCREEN PROJECT SECTIONS ===== */
+
+.project-section {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  align-items: center;
+
+  gap: 80px;
+  padding: 0 8vw;
+}
+
+.project-section.reverse {
+  grid-template-columns: 1fr 1.2fr;
+}
+
+/* Big image container */
+.project-image {
+  width: 100%;
+  height: 70vh; /* BIG image */
+  border-radius: 24px;
+  overflow: hidden;
+
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(0,0,0,0.35);
+
+  box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+}
+
+.project-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Video embeds behave like images */
+.project-video {
+  position: relative;
+}
+
+.project-video video {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+
+
+
+/* Text block */
+.project-text {
+  max-width: 520px;
+}
+
+.project-text h2 {
+  font-size: clamp(2.2rem, 3vw, 3rem);
+  font-weight: 800;
+  margin-bottom: 20px;
+}
+
+.project-text p {
+  font-size: 1.5rem;
+  line-height: 1.7;
+  opacity: 0.92;
+  margin-bottom: 20px;
+}
+
+.project-text ul {
+  padding-left: 18px;
+  margin: 0;
+}
+
+.project-text li {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  opacity: 0.85;
+}
+
+/* Remove dividers – scrolling does the separation */
+.project-divider {
+  display: none;
+}
+
+/* ===== MOBILE ===== */
+@media (max-width: 900px) {
+  .project-section,
+  .project-section.reverse {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    padding: 80px 6vw;
+    min-height: auto;
+  }
+
+  .project-image {
+    height: 42vh;
+  }
+
+  .project-section.reverse .project-image {
+    order: -1;
+  }
+}
+
+
+/* ===== PROJECT PAGE BACKDROP (subtle, not distracting) ===== */
+body.project-page {
+  background:
+    radial-gradient(1200px 700px at 20% 10%, rgba(255,255,255,0.06), transparent 60%),
+    radial-gradient(900px 600px at 80% 30%, rgba(120,170,255,0.05), transparent 55%),
+    radial-gradient(900px 700px at 40% 90%, rgba(255,180,120,0.04), transparent 60%),
+    linear-gradient(180deg, #121a2c 0%, #09386e 55%, #000000 100%);
+}
+
+/* soft vignette to frame the content */
+body.project-page::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background: radial-gradient(circle at center, transparent 55%, rgba(0,0,0,0.45) 100%);
+}
+
+/* keep content above vignette */
+.page { position: relative; z-index: 1; }
+
+
+/* --- Prism font size override (must be last) --- */
+pre[class*="language-"] > code[class*="language-"] {
+  font-size: 1.0rem;
+  line-height: 1.55;
+}
+
+/* Keep Prism line numbers perfectly aligned with code line-height */
+pre.line-numbers {
+  line-height: 1.2;
+}
+
+pre.line-numbers > code {
+  line-height: 1.2;
+}
+
+/* THIS is the key: line-number rows need matching line-height */
+pre.line-numbers .line-numbers-rows > span {
+  line-height: 1.2;
+}
+
+/* ===== Prism line-numbers: force gutter to match code height ===== */
+pre.line-numbers {
+  position: relative;
+}
+
+/* Ensure the gutter spans the full height of the code block */
+pre.line-numbers .line-numbers-rows {
+  position: absolute;
+  top: 0px;      /* matches your pre padding-top (16px) */
+  bottom: 0px;   /* matches your pre padding-bottom (16px) */
+  left: 1;
+  height: auto !important;
+}
+
+/* Make each number take the same line-height as the code */
+pre.line-numbers .line-numbers-rows > span {
+  display: block;
+  line-height: 1.55 !important; /* must match your code line-height */
+}
+
+
+
+.scene__bg{
+  animation: roomLight 5s infinite;
+}
+
+@keyframes roomLight{
+  0%   { filter: brightness(1) contrast(1); }
+  12%  { filter: brightness(0.93) contrast(1.02); }
+  18%  { filter: brightness(1.05) contrast(1.03); }
+  55%  { filter: brightness(0.96) contrast(1.01); }
+  100% { filter: brightness(1) contrast(1); }
+}
+
+
+.vignette{
+  position:absolute; inset:0;
+  pointer-events:none;
+  z-index:3;
+  background: radial-gradient(circle at center, transparent 55%, rgba(0, 0, 0, 0.55) 100%);
+  animation: vignettePulse 8s ease-in-out infinite;
+}
+
+@keyframes vignettePulse{
+  0%,100% { opacity: 1; }
+  50%     { opacity: .5; }
+}
+

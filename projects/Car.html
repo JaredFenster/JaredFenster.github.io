@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>RC Car</title>
+
+  <link rel="stylesheet" href="../css/styles.css" />
+  <script defer src="../js/include.js"></script>
+  <script defer src="../js/app.js"></script>
+</head>
+<body class="project-page">
+  <div data-include="../partials/nav.html"></div>
+
+  <main>
+
+  <!-- SECTION 1 -->
+  <section class="project-section">
+    <div class="project-image project-video">
+      <video
+        autoplay
+        muted
+        loop
+        playsinline
+        preload="metadata"
+      >
+        <source src="../assets/Car/Demo.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+    </div>
+
+    <div class="project-text">
+      <h2>RC Car</h2>
+      <p>
+        Simple Remote Controlled Car
+      </p>
+      <ul>
+        <li>Wireless NRF24L01 Communication</li>
+        <li>Arduino GIGA R1</li>
+        <li>3D Printed</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- SECTION 2 -->
+  <section class="project-section reverse">
+    <div class="project-text">
+      <h2>Mechanical & Hardware Design</h2>
+      <ul>
+        <li>3D Printed</li>
+        <li>Designed in Fusion 360</li>
+        <li>4 Individual Motors</li>
+        <li>Linkage Steering</li>
+      </ul>
+    </div>
+
+   <div class="project-image">
+      <img src="../assets/Car/car.png" alt="Mechanism">
+    </div>
+  </section>
+
+
+  <!-- SECTION 3 -->
+  <section class="project-section">
+    
+    <div class="project-image">
+      <img src="../assets/Car/Electronics.JPG" alt="Electronics">
+    </div>
+
+    <div class="project-text">
+      <h2>Electronics</h2>
+      <ul>
+        <li>Controlled by an Arduino GIGA R1</li>
+        <li>Motors are driven by 2 L298N Motor Drivers</li>
+        <li>An NRF24L01 is placed at the back to communicate with the controller</li>
+        <li>A Servo controls the linkage steering</li>
+        <li>The whole car is powered by a 3s Lipo Battery</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- SECTION 3 -->
+  <section class="project-section">
+    
+    <div class="project-text">
+      <h2>Controller</h2>
+      <ul>
+        <li>The Controller is from a seperate project</li>
+        <li><a href="Controller.html">Click here to check it out</a></li>
+      </ul>
+    </div>
+
+    <div class="project-image">
+      <img src="../assets/Car/Controller.JPG" alt="Controller">
+    </div>
+  </section>
+
+</main>
+
+</body>
+</html>

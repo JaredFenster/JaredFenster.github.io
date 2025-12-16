@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Harmonic Drive Gearbox</title>
+
+  <link rel="stylesheet" href="../css/styles.css" />
+  <script defer src="../js/include.js"></script>
+  <script defer src="../js/app.js"></script>
+</head>
+<body class="project-page">
+  <div data-include="../partials/nav.html"></div>
+
+  <main>
+
+  <!-- SECTION 1 -->
+  <section class="project-section">
+    <div class="project-image project-video">
+      <video
+        autoplay
+        muted
+        loop
+        playsinline
+        preload="metadata"
+      >
+    <source src="../assets/Harmonic Drive/Demo.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+    </video>
+    </div>
+
+    <div class="project-text">
+      <h2>Harmonic Drive Gearbox</h2>
+      <p>
+        Incredibly Accurate and High Torque Robotic Gearbox
+      </p>
+      <ul>
+        <li>Harmonic Drive and Planetary Gearbox</li>
+        <li>Highly Compact</li>
+        <li>Dual On-Axis Encoders</li>
+        <li>16 Bit Magnetic Encoder</li>
+        <li>Accurate to 0.05 Degrees</li>
+        <li>Low Backlash & Backdriveable</li>
+        <li><a href="https://hackaday.io/project/196387-strain-wave-gear-robotic-arm" target="_blank" rel="noopener noreferrer">Highly Descriptive Project Documentation</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- SECTION 2 -->
+  <section class="project-section reverse">
+    <div class="project-text">
+      <h2>Mechanical & Hardware Design</h2>
+      <ul>
+        <li>The real genius is the use of the space inside the FlexSpline</li>
+        <li>A Planetary reducer was places in the center of the wave generator</li>
+        <li>Using the Ring Gear as the output and the Sun Gear as the input, we gain access to the space inside the FlexSpline</li>
+        <li>In this space an on-axis encoder is placed to measure the output's movement</li>
+        <li>With the addition of the encoder on the input motor, this gearbox is highly accurate and compact</li>
+
+      </ul>
+    </div>
+
+   <div class="project-image">
+      <img src="../assets/Harmonic Drive/Joint.png" alt="Interals Of Joint 3">
+    </div>
+  </section>
+
+
+  <!-- SECTION 3 -->
+  <section class="project-section">
+    
+    <div class="project-image">
+      <img src="../assets/Precision Arm/J3Internal.png" alt="Section-View">
+    </div>
+
+    <div class="project-text">
+      <h2>Materials</h2>
+      <ul>
+        <li>The Majority of the gearbox is 3D printed</li>
+        <li>The FlexSpline is 3D printed in Polycarbonate for the perfect mix of flexability and durability</li>
+        <li>The Circular Spline is 3D printed in Carbon Fiber Reinforced Polycarbonate for extra rigidity</li>
+        <li>An Aluminum machined ring surrounds the Circular Spline to prevent warping and tooth skipping under high loads</li>
+        <li>The remainder of the parts experience low forces and are 3D printed in PLA</li>
+        <li>The image on the left is a section-view of the smaller version of the Gearbox</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- SECTION 3 -->
+  <section class="project-section">
+    
+    <div class="project-text">
+      <h2>Torque</h2>
+      <ul>
+        <li>At its peak, the 3D printed gearbox achieved 50 Nm of Torque</li>
+        <li>The video on the right is a test with 40 Nm</li>
+        <li>The limitation to the torque is actually the FlexSpline teeth skipping, not the input motor</li>
+      </ul>
+    </div>
+
+    <div class="project-image project-video">
+      <iframe
+        width="100%"
+        height="100%"
+        src="https://www.youtube.com/embed/PXwk-bmG_9w"
+        title="YouTube video player"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen
+      ></iframe>
+    </div>
+  </section>
+
+  <!-- SECTION 5 -->
+  <section class="project-section">
+    <div class="project-image">
+      <img src="../assets/Harmonic Drive/Electronics.JPEG" alt="Final result">
+    </div>
+
+    <div class="project-text">
+      <h2>Electronics</h2>
+      <ul>
+        <li>The input motor is controlled by a Moteus R4</li>
+        <li>The output encoder is an AS5048B</li>
+        <li>The "B" variant is specifically used for its I2C communication as it can easily be connected directly to the Moteus R4 and included in the CAN-FD pipeline</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- SECTION 4 -->
+  <section class="project-section reverse">
+    <div class="project-text">
+      <h2>Applications</h2>
+      <ul>
+        <li>This gearboxes best application is in robot arms</li>
+        <li>Due to its High Torque and Precision, its perfect for the job</li>
+        <li><a href="Precision Arm.html">Check out the Precision Robot Arm I built with this exact Gearbox!</a></li>
+      </ul>
+    </div>
+    <div class="project-image">
+      <img src="../assets/Precision Arm/result.JPEG" alt="Application">
+    </div>
+  
+  </section>
+
+
+
+
+</main>
+
+</body>
+</html>

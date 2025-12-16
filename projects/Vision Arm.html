@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Vision Arm</title>
+
+  <link rel="stylesheet" href="../css/styles.css" />
+  <script defer src="../js/include.js"></script>
+  <script defer src="../js/app.js"></script>
+</head>
+<body class="project-page">
+  <div data-include="../partials/nav.html"></div>
+
+  <main>
+
+  <!-- SECTION 1 -->
+  <section class="project-section">
+    <div class="project-image project-video">
+      <video
+        autoplay
+        muted
+        loop
+        playsinline
+        preload="metadata"
+      >
+        <source src="../assets/Vision Arm/Homing.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+    </div>
+
+    <div class="project-text">
+      <h2>Vision Arm</h2>
+      <p>
+        Cycloidal Robotic Arm - Vision Capabilities
+      </p>
+      <ul>
+        <li>6 Degrees of Freedom</li>
+        <li>Open CV & AprilTags Detection</li>
+        <li>Unity Arm and Detection Visualizer</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- SECTION 2 -->
+  <section class="project-section reverse">
+    <div class="project-text">
+      <h2>Mechanical & Hardware Design</h2>
+      <ul>
+        <li>60 cm Reach, 2 Kg Payload</li>
+        <li>4 Cycloidal Drives - 2 Planetary Gearboxes</li>
+        <li>Completely 3D Printed</li>
+        <li>Driven by 6 Stepper Motors</li>
+        <li>Limit Switch Homing</li>
+        <li>Joints 5 & 6 are driven by 2 motors with a differential</li>
+        <li>Designed in Fusion 360</li>
+      </ul>
+    </div>
+
+   <div class="project-image">
+      <img src="../assets/Vision Arm/J1.png" alt="Electronics">
+    </div>
+  </section>
+
+
+  <!-- SECTION 3 -->
+  <section class="project-section">
+    
+    <div class="project-image">
+      <img src="../assets/Vision Arm/Cycloidal.jpg" alt="Electronics">
+    </div>
+
+    <div class="project-text">
+      <h2>Cycloidal Drives</h2>
+      <ul>
+        <li>The majority of the joints used Cycloidal Drives</li>
+        <li>Apart from the Bearing and Steel Rods, the gearboxes were entirely 3D printed</li>
+        <li>The Image to the left is all of the components of Joint 2</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- SECTION 3 -->
+  <section class="project-section">
+    
+    <div class="project-text">
+      <h2>Electronics & Control</h2>
+      <ul>
+        <li>4 Nema 17s and 2 Nema 23 Stepper Motors </li>
+        <li>Controlled by an Arduino Mega with 2 CNC Shields</li>
+        <li>Each Stepper Motor has a closed loop driver board with a Magnetic Encoder</li>
+        <li>The whole system runs on a 12V power supply</li>
+        <li>The camera plugs directly into an external computer</li>
+      </ul>
+    </div>
+
+    <div class="project-image">
+      <img src="../assets/Vision Arm/EndPic.jpg" alt="Electronics">
+    </div>
+  </section>
+
+  <!-- SECTION 5 -->
+  <section class="project-section">
+    <div class="project-image">
+      <img src="../assets/Vision Arm/Detection.png" alt="Final result">
+    </div>
+
+    <div class="project-text">
+      <h2>Vision Pipeline</h2>
+      <ol>
+        <li>The arm orients the camera over the workspace</li>
+        <li>A picture is taken and sent to an external computer's WSL</li>
+        <li>In the WSL the AprilTag and cubes are detected</li>
+        <li>The AprilTag's known dimensions are used to convert pixel distances to millimeters</li>
+        <li>Finally, the cube positions are sent back to Windows from the WSL for visualization</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- SECTION 4 -->
+  <section class="project-section reverse">
+    <div class="project-text">
+      <h2>Inverse Kinematics</h2>
+      <ul>
+        <li>Gradient Descent is the method I used as it was the easiest at the time</li>
+        <li>Joint angles are computed in Unity and sent to the Arduino</li>
+        <li>The arm moves in every direction until it is as close as it can get to the desired postion</li>
+      </ul>
+    </div>
+
+    <div class="project-image project-video">
+      <video
+        autoplay
+        muted
+        loop
+        playsinline
+        preload="metadata"
+      >
+        <source src="../assets/Vision Arm/inverse kin.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+    </div>
+  </section>
+
+  
+
+
+
+
+  <!-- SECTION 5 -->
+  <section class="project-section reverse">
+
+    <div class="project-image">
+      <img src="../assets/Vision Arm/Unity.png" alt="Final result">
+    </div>
+    
+    <div class="project-text">
+      <h2>Visualizer</h2>
+      <ul>
+        <li>This Visualizer is run in Unity</li>
+        <li>It takes the Positions of the Cubes, displays them, and allows the user to move the arm accordingly</li>
+        <li>When commanded, the program sends the Joint Angles to the Arduino to move the arm</li>
+      </ul>
+    </div>
+
+  </section>
+
+
+
+</main>
+
+</body>
+</html>

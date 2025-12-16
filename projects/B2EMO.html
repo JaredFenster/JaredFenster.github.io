@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>B2EMO</title>
+
+  <link rel="stylesheet" href="../css/styles.css" />
+  <script defer src="../js/include.js"></script>
+  <script defer src="../js/app.js"></script>
+</head>
+<body class="project-page">
+  <div data-include="../partials/nav.html"></div>
+
+  <main>
+
+  <!-- SECTION 1 -->
+  <section class="project-section">
+    <div class="project-image project-video">
+      <video
+        autoplay
+        muted
+        loop
+        playsinline
+        preload="metadata"
+      >
+    <source src="../assets/B2EMO/B2EMO_PORTFOLIO.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+</div>
+
+    <div class="project-text">
+      <h2>B2EMO</h2>
+      <p>
+        Full-scale, B2EMO replica from Star Wars.
+      </p>
+      <ul>
+        <li>Full Scale and Functionality</li>
+        <li>Omnidirectional Motion</li>
+        <li>Arduino based Control System</li>
+        <li><a href="https://www.youtube.com/watch?v=8wvXt8-5Ivs" target="_blank" rel="noopener noreferrer">Full Demo Video</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- SECTION 2 -->
+  <section class="project-section reverse">
+    <div class="project-text">
+      <h2>Mechanical & Hardware Design</h2>
+      <ul>
+        <li>The base of the robot is constructed with 2040 Aluminum Extrusion with Linear Rails to allow the wheels to seperate</li>
+        <li>The rest of the robot apart from the bearings and Steel Rods is completely 3D printed with PLA</li>
+        <li>Each Mecanum Wheel's height is manipulated using 150kg servos driving a herringbone rack and pinion</li>
+        <li>The main 2 stage lifting mechanism to reveal the rings is controlled by an internal mechanism consisting of linear bearings a 150kg servo for each stage</li>
+        <li>The rings each have an internal ring gear driven by seperate motors</li>
+        <li>The head is manimulated by a Stewart Platform with an additional motor for the spinning motion</li>
+      </ul>
+    </div>
+
+    <div class="project-image project-video">
+      <video
+        autoplay
+        muted
+        loop
+        playsinline
+        preload="metadata"
+      >
+    <source src="../assets/B2EMO/MECHANICAL_DISPLAY.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </section>
+
+  <!-- SECTION 3 -->
+  <section class="project-section">
+    
+    <div class="project-image">
+      <img src="../assets/B2EMO/Electronics.JPEG" alt="Electronics">
+    </div>
+
+    <div class="project-text">
+      <h2>Electronics & Control</h2>
+      <ul>
+        <li>The Arduino Mega has a custom pcb to neatly organize connections</li>
+        <li>The 6 heavy lifting servers are connected directly the the Arduino</li>
+        <li>The remaining servos are controlled by a Pololu Mini Maestro connected to the Arduino over UART</li>
+        <li>Each wheel motor uses a BTS7960, while the rings use one L298N motor controller</li>
+        <li>The system power is split among a 3s and 2s lipo battery with a few buck converters where needed</li>
+        <li>The Arduino is connected to the controller using a NRF24L01</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- SECTION 4 -->
+  <section class="project-section reverse">
+    <div class="project-text">
+      <h2>Software</h2>
+      <ul>
+        <li>Programmed in C++</li>
+        <li>Uses NRF communication pipeline to communicate with the controller</li>
+        <li>Motion filters were applied to almost all inputs for smooth motion</li>
+        <li><a href="Controller.html">Click here to see the controller for this project</a></li>
+      </ul>
+    </div>
+
+    <div class="project-image">
+      <img src="../assets/B2EMO/CODE_SAMPLE.png" alt="Software system">
+    </div>
+  </section>
+
+  <!-- SECTION 5 -->
+  <section class="project-section">
+    <div class="project-image">
+      <img src="../assets/B2EMO/FINAL_PIC.JPEG" alt="Final result">
+    </div>
+
+    <div class="project-text">
+      <h2>Final Result & Takeaways</h2>
+      <p>
+        This was my first major project! It took about a year to complete, with many major redesigns. It was completely designed in Fusion 360 and 3D printed on my BambuLab X1C. In the end I was fairly satisfied with how it turned out. If I were to come back to this project, I would do things very different, especially ditching the Arduino.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+</body>
+</html>

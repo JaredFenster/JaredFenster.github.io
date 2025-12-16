@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Robot Room</title>
+
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" />
+  <script defer src="js/include.js"></script>
+  <script defer src="js/app.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/file-highlight/prism-file-highlight.min.js"></script>
+</head>
+<body>
+  
+  <!-- Reusable Nav injected here -->
+  <div data-include="partials/nav.html"></div>
+
+  <!-- SVG filter for white outline (used by robots) -->
+  <svg width="0" height="0" aria-hidden="true">
+    <filter id="white-outline">
+      <feMorphology operator="dilate" radius="2" in="SourceAlpha" result="expanded" />
+      <feColorMatrix type="matrix"
+        values="1 0 0 0 1
+                0 1 0 0 1
+                0 0 1 0 1
+                0 0 0 1 0" result="white" />
+      <feMerge>
+        <feMergeNode in="white" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </svg>
+
+  <!-- Scene -->
+  <main class="scene" id="scene" aria-label="Interactive robot scene">
+
+    
+    <img src="assets/room.png" alt="Workshop Room" class="scene__layer scene__bg" />
+
+    <div class="vignette"></div>
+    
+    <img src="assets/B2EMO.png" alt="B2EMO" class="scene__layer robot" data-robot="B2EMO" />
+    <img src="assets/Controller.png" alt="Controller" class="scene__layer robot" data-robot="Controller" />
+    <img src="assets/Car.png" alt="RC Car" class="scene__layer robot" data-robot="Car" />
+    <img src="assets/Vision Arm.png" alt="Vision Arm" class="scene__layer robot" data-robot="Vision Arm" />
+    <img src="assets/Vertical Launcher.png" alt="Vertical Launcher" class="scene__layer robot" data-robot="Vertical Launcher" />
+    <img src="assets/Precision Arm.png" alt="Precision Arm" class="scene__layer robot" data-robot="Precision Arm" />
+    <img src="assets/Harmonic Drive.png" alt="Harmonic Drive" class="scene__layer robot" data-robot="Harmonic Drive" />
+    
+  </main>
+</body>
+</html>

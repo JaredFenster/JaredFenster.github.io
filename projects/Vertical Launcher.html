@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Vertical Launcher</title>
+
+  <link rel="stylesheet" href="../css/styles.css" />
+  <script defer src="../js/include.js"></script>
+  <script defer src="../js/app.js"></script>
+</head>
+<body class="project-page">
+  <div data-include="../partials/nav.html"></div>
+
+  <main>
+
+  <!-- SECTION 1 -->
+  <section class="project-section">
+    <div class="project-image project-video">
+      <video
+        autoplay
+        muted
+        loop
+        playsinline
+        preload="metadata"
+      >
+        <source src="../assets/Vertical Launcher/Demo.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+    </div>
+
+    <div class="project-text">
+      <h2>Vertical Ball Launcher</h2>
+      <p>
+        A Physics Project
+      </p>
+      <ul>
+        <li>Launches a ball perfectly vertical</li>
+        <li>The launch is triggered by a distance sensor</li>
+        <li>3D printed apart from the spring</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- SECTION 2 -->
+  <section class="project-section reverse">
+    <div class="project-text">
+      <h2>Mechanical & Hardware Design</h2>
+      <ul>
+        <li>The spring is held in compression by a servo motor</li>
+        <li>The servo motor moves out of the way, causing the spring to launch the ball</li>
+        <li>The base is pulled by a string at a constant speed in order for ball to land back in the funnel</li>
+      </ul>
+    </div>
+
+   <div class="project-image">
+      <img src="../assets/Vertical Launcher/Left.JPEG" alt="Mechanism">
+    </div>
+  </section>
+
+
+  <!-- SECTION 3 -->
+  <section class="project-section">
+    
+    <div class="project-image">
+      <img src="../assets/Vertical Launcher/Elec.JPEG" alt="Electronics">
+    </div>
+
+    <div class="project-text">
+      <h2>Electronics</h2>
+      <ul>
+        <li>Controlled by an Arduino UNO</li>
+        <li>A distance sensor triggers the servo to launch the ball</li>
+        <li>All electronics are powered by the Arduino, which is powered by the USB cord used to pull the mechanism</li>
+      </ul>
+    </div>
+  </section>    
+
+</main>
+
+</body>
+</html>
