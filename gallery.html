@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Gallery</title>
+
+  <link rel="stylesheet" href="css/styles.css" />
+  <script defer src="js/include.js"></script>
+
+  <style>
+    /* Page wrapper */
+    .gallery-page {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 120px 24px 80px;
+    }
+
+    .gallery-title {
+      font-size: clamp(2rem, 4vw, 3rem);
+      margin: 0 0 28px;
+    }
+
+    /* ===== Masonry via CSS columns ===== */
+    .masonry {
+      column-count: 4;
+      column-gap: 18px;
+    }
+    @media (max-width: 1200px) { .masonry { column-count: 3; } }
+    @media (max-width: 800px)  { .masonry { column-count: 2; } }
+    @media (max-width: 520px)  { .masonry { column-count: 1; } }
+
+    .masonry-item {
+      break-inside: avoid;
+      margin: 0 0 18px;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(0,0,0,0.35);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.45);
+      cursor: pointer;
+      transition: transform 0.5s ease, border-color 0.5s ease;
+    }
+
+
+    /* IMPORTANT: no cropping */
+    .masonry-item img {
+      width: 100%;
+      height: auto;        /* keep aspect ratio */
+      display: block;
+    }
+
+    /* ===== Fullscreen lightbox ===== */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: rgba(0,0,0,0.86);
+      backdrop-filter: blur(6px);
+      cursor: pointer;
+    }
+
+    .lightbox.is-open { display: flex; }
+
+    .lightbox img {
+      max-width: min(1400px, 96vw);
+      max-height: 92vh;
+      width: auto;
+      height: auto;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.14);
+      box-shadow: 0 30px 90px rgba(0,0,0,0.7);
+      cursor: pointer;
+    }
+
+    .lightbox-close {
+      position: fixed;
+      top: 18px;
+      right: 18px;
+      z-index: 10000;
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(0,0,0,0.35);
+      color: rgba(255,255,255,0.9);
+      font-size: 20px;
+      line-height: 1;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .lightbox.is-open + .lightbox-close {
+      display: inline-flex;
+    }
+
+    /* Add pointer cursor on hover */
+    .gallery-item {
+      position: relative;
+      overflow: hidden;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(0,0,0,0.35);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.45);
+      cursor: pointer; /* Ensure the gallery item itself has the pointer cursor */
+    }
+
+    .gallery-item img {
+      cursor: pointer; /* Reset cursor to default for images */
+    }
+  </style>
+</head>
+
+<body class="project-page">
+  <div data-include="partials/nav.html"></div>
+
+  <main class="gallery-page">
+    <h1 class="gallery-title">Photos from my projects over the years</h1>
+    <div class="masonry" id="gallery"></div>
+  </main>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox" aria-hidden="true">
+    <img id="lightboxImg" alt="" />
+  </div>
+  <div class="lightbox-close" id="lightboxClose" aria-label="Close">✕</div>
+
+  <script>
+    /**
+     * Static-site note:
+     * Browsers can’t “list a folder”, so keep this filename list.
+     * Folder: /assets/gallery/
+     */
+    const images = [
+      "71419296365__BFADA0B6-9317-4A31-95FD-DA5054866922.JPEG",
+      "car.png",
+      "Controller.JPG",
+      "Elec.JPEG",
+      "Electronics.JPEG",
+      "Electronics.JPG",
+      "FusionPic.png",
+      "IMG_0073.JPEG",
+      "IMG_0085.JPEG",
+      "IMG_0248.JPEG",
+      "IMG_0252.JPEG",
+      "IMG_0293.JPEG",
+      "IMG_0318.JPEG",
+      "IMG_0322.JPEG",
+      "IMG_0446.JPG",
+      "IMG_0470.JPEG",
+      "IMG_0505.JPEG",
+      "IMG_0511.JPEG",
+      "IMG_0586.JPEG",
+      "IMG_0636.JPEG",
+      "IMG_0652.JPEG",
+      "IMG_0675.JPEG",
+      "IMG_0709.JPEG",
+      "IMG_0767.JPEG",
+      "IMG_0771.JPEG",
+      "IMG_0778.JPEG",
+      "IMG_0779.JPEG",
+      "IMG_0782.JPEG",
+      "IMG_0785.JPEG",
+      "IMG_0794.JPEG",
+      "IMG_0810.JPEG",
+      "IMG_0811.JPEG",
+      "IMG_0812.JPEG",
+      "IMG_0815.JPEG",
+      "IMG_0816.JPEG",
+      "IMG_0827.JPEG",
+      "IMG_0885.JPEG",
+      "IMG_0892.JPEG",
+      "IMG_0900.JPEG",
+      "IMG_0951.JPEG",
+      "IMG_1007.JPEG",
+      "IMG_1023.JPEG",
+      "IMG_1028.JPEG",
+      "IMG_1029.JPEG",
+      "IMG_1037.JPEG",
+      "IMG_1042.JPEG",
+      "IMG_1073.JPEG",
+      "IMG_1111.JPEG",
+      "IMG_1330.JPG",
+      "IMG_1477.JPG",
+      "IMG_1493.JPG",
+      "IMG_1504.JPG",
+      "IMG_1549.JPG",
+      "IMG_1568.JPG",
+      "IMG_1590.JPG",
+      "IMG_1592.JPG",
+      "IMG_1595.JPG",
+      "IMG_1596.JPG",
+      "IMG_1598.JPG",
+      "IMG_1649.JPG",
+      "IMG_1654.JPG",
+      "IMG_1677.JPG",
+      "IMG_1695.JPEG",
+      "IMG_1702.JPG",
+      "IMG_1710.JPG",
+      "IMG_1725.JPG",
+      "IMG_1726.JPG",
+      "IMG_3655.JPEG",
+      "IMG_3671.JPEG",
+      "IMG_3939.JPEG",
+      "IMG_3955.JPEG",
+      "IMG_4048.JPEG",
+      "IMG_4076.JPEG",
+      "IMG_4077894D-B6CA-40E9-9F10-775A37B537B0.jpeg",
+      "IMG_4082.JPEG",
+      "IMG_4131.JPEG",
+      "J3Internal.png",
+      "Joint.png",
+      "result.JPEG",
+      "ROS.png",
+      "Vis.png"
+    ];
+
+    const gallery = document.getElementById("gallery");
+    const lightbox = document.getElementById("lightbox");
+    const lightboxImg = document.getElementById("lightboxImg");
+    const lightboxClose = document.getElementById("lightboxClose");
+
+    function openLightbox(src) {
+      lightboxImg.src = src;
+      lightbox.classList.add("is-open");
+      lightbox.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeLightbox() {
+      lightbox.classList.remove("is-open");
+      lightbox.setAttribute("aria-hidden", "true");
+      lightboxImg.src = "";
+      document.body.style.overflow = "";
+    }
+
+    images.forEach(file => {
+      const src = `assets/gallery/${file}`;
+
+      const item = document.createElement("div");
+      item.className = "masonry-item";
+
+      const img = document.createElement("img");
+      img.src = src;
+      img.loading = "lazy";
+      img.alt = "";
+
+      item.appendChild(img);
+      item.addEventListener("click", () => openLightbox(src));
+
+      gallery.appendChild(item);
+    });
+
+    // close actions
+    lightbox.addEventListener("click", closeLightbox);
+    lightboxClose.addEventListener("click", closeLightbox);
+
+    // prevent clicking the image itself from closing
+    lightboxImg.addEventListener("click", (e) => e.stopPropagation());
+
+    // ESC to close
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && lightbox.classList.contains("is-open")) closeLightbox();
+    });
+  </script>
+</body>
+</html>
