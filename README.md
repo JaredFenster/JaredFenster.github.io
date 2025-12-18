@@ -1,1 +1,1 @@
-This is my portfolio website. Almost entirely coded by ChatGPT :)
+This is my portfolio website. Almost entirely programmed by ChatGPT :)
