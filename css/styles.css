@@ -164,6 +164,8 @@ a:hover {
   top: 100%;
   left: 0;
 
+  margin-top: 10px;
+
   min-width: 240px;
   padding: 8px;
   border-radius: 14px;
