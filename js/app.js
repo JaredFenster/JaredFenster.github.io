@@ -196,7 +196,7 @@ function ensureMobileDrawerMarkup() {
   d.innerHTML = `
     <div class="drawer-title">Navigation</div>
     <a href="/">Home</a>
-    <a href="/about.html">About</a>
+    <a href="/#about" data-about-link>About</a>
     <a href="/gallery.html">Gallery</a>
     <div class="drawer-title">Projects</div>
     <a href="/projects/precision-arm.html">Precision Arm</a>
@@ -221,8 +221,90 @@ function ensureMobileDrawerMarkup() {
       </a>
     </div>`;
   document.body.appendChild(d);
-  
 }
+ // ===== ABOUT OVERLAY (toggle + deep-link from other pages) =====
+// ===== ABOUT OVERLAY (toggle + deep-link /#about) =====
+(function () {
+  function initAboutOverlay() {
+    const overlay = document.getElementById("aboutOverlay");
+    const sheet = overlay ? overlay.querySelector(".about-sheet") : null;
+
+    // Only exists on index.html
+    if (!overlay || !sheet) return;
+
+    // The nav gets injected, so this might be null on first pass
+    const aboutBtn = document.getElementById("aboutNavBtn");
+
+    function openAbout() {
+      overlay.classList.add("is-open");
+      overlay.setAttribute("aria-hidden", "false");
+    }
+
+    function closeAbout() {
+      overlay.classList.remove("is-open");
+      overlay.setAttribute("aria-hidden", "true");
+    }
+
+    function toggleAbout() {
+      const open = overlay.classList.contains("is-open");
+      if (open) {
+        closeAbout();
+        // remove hash (no jump)
+        if (location.hash === "#about") history.replaceState(null, "", location.pathname);
+      } else {
+        openAbout();
+        // add hash (so copy/paste works)
+        if (location.hash !== "#about") history.replaceState(null, "", location.pathname + "#about");
+      }
+    }
+
+    function syncFromHash() {
+      if (location.hash === "#about") openAbout();
+      else closeAbout();
+    }
+
+    // Click outside closes
+    overlay.addEventListener("click", (e) => {
+      if (e.target === overlay) {
+        closeAbout();
+        if (location.hash === "#about") history.replaceState(null, "", location.pathname);
+      }
+    });
+
+    // Stop clicks inside the sheet from closing
+    sheet.addEventListener("click", (e) => e.stopPropagation());
+
+    // ESC closes
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        closeAbout();
+        if (location.hash === "#about") history.replaceState(null, "", location.pathname);
+      }
+    });
+
+    // About button toggles (ONLY on index)
+    if (aboutBtn && !aboutBtn.__aboutBound) {
+      aboutBtn.__aboutBound = true;
+      aboutBtn.addEventListener("click", (e) => {
+        // prevent navigation on index
+        e.preventDefault();
+        toggleAbout();
+      });
+    }
+
+    // Open automatically if landing on /#about
+    syncFromHash();
+
+    // Back/forward + manual hash edits
+    window.addEventListener("hashchange", syncFromHash);
+  }
+
+  // Run once when DOM is ready
+  document.addEventListener("DOMContentLoaded", initAboutOverlay);
+
+  // Run again when nav is injected (important!)
+  window.addEventListener("nav:loaded", initAboutOverlay);
+})();
 
 
 

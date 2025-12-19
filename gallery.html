@@ -123,6 +123,17 @@
     .gallery-item img {
       cursor: pointer; /* Reset cursor to default for images */
     }
+
+    .gallery-page {
+      position: relative;
+      z-index: 2;
+    }
+    
+    .masonry,
+    .masonry-item {
+      position: relative;
+      z-index: 2;
+    }
   </style>
 </head>
 
@@ -250,7 +261,7 @@
     }
 
     images.forEach(file => {
-      const src = `assets/gallery/${file}`;
+      const src = `/assets/gallery/${file}`;
 
       const item = document.createElement("div");
       item.className = "masonry-item";
