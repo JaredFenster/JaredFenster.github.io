@@ -682,3 +682,19 @@ body.drawer-open .mobile-drawer {
     height: 48px;
   }
 }
+/* ===== MOBILE DRAWER SCROLL ===== */
+@media (max-width: 900px) {
+  .topbar {
+    top: 0;
+    left: 0;
+    transform: none;
+    width: 100vw;
+  }
+
+  .mobile-drawer {
+    max-height: 100dvh;          /* viewport-safe height */
+    overflow-y: auto;            /* THIS enables drawer scrolling */
+    overscroll-behavior: contain;
+    padding-bottom: 24px;        /* space at bottom so last item isn't clipped */
+  }
+}
