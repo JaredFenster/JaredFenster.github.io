@@ -161,6 +161,7 @@ window.initNav = function initNav() {
   const items = $all(".dropdown-item");
   if (items.length === 0) return;
 
+
   items.forEach((item) => {
     item.addEventListener("mouseenter", () => {
       const id = item.dataset.robot;
@@ -179,11 +180,115 @@ window.initNav = function initNav() {
   });
 };
 
+function ensureMobileDrawerMarkup() {
+  // backdrop
+  if (!document.querySelector(".drawer-backdrop")) {
+    const bd = document.createElement("div");
+    bd.className = "drawer-backdrop";
+    document.body.appendChild(bd);
+  }
+
+  
+  //Yes this is a terrible way to do this, No I do not care.
+  const d = document.createElement("aside");
+  d.className = "mobile-drawer";
+  d.setAttribute("aria-label", "Mobile menu");
+  d.innerHTML = `
+    <div class="drawer-title">Navigation</div>
+    <a href="/">Home</a>
+    <a href="/about.html">About</a>
+    <a href="/gallery.html">Gallery</a>
+    <div class="drawer-title">Projects</div>
+    <a href="/projects/precision-arm.html">Precision Arm</a>
+    <a href="/projects/b2emo.html">B2EMO</a>
+    <a href="/projects/harmonic-drive.html">Harmonic Drive</a>
+    <a href="/projects/vision-arm.html">Vision Arm</a>
+    <a href="/projects/omni.html">Omnidirectional Robot</a>
+    <a href="/projects/controller.html">Controller</a>
+    <a href="/projects/car.html">RC Car</a>
+    <a href="/projects/vertical-launcher.html">Vertical Launcher</a>
+    <div class="drawer-title">Social</div>
+    <div class="drawer-social">
+      <a class="icon-link" href="https://www.linkedin.com/in/jaredfenster" target="_blank" rel="noopener" aria-label="LinkedIn">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.95v5.66H9.32V9h3.41v1.56h.05c.48-.9 1.65-1.85 3.39-1.85 3.62 0 4.28 2.38 4.28 5.48v6.26zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.11 20.45H3.56V9h3.55v11.45z"/>
+        </svg>
+      </a>
+      <a class="icon-link" href="https://www.youtube.com/@jaredfenster" target="_blank" rel="noopener" aria-label="YouTube">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M21.6 7.2a3 3 0 0 0-2.1-2.1C17.7 4.6 12 4.6 12 4.6s-5.7 0-7.5.5A3 3 0 0 0 2.4 7.2 31.1 31.1 0 0 0 2 12s.1 3.2.4 4.8a3 3 0 0 0 2.1 2.1c1.8.5 7.5.5 7.5.5s5.7 0 7.5-.5a3 3 0 0 0 2.1-2.1c.3-1.6.4-4.8.4-4.8s0-3.2-.4-4.8zM10 15V9l6 3-6 3z"/>
+        </svg>
+      </a>
+    </div>`;
+  document.body.appendChild(d);
+  
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function initMobileDrawer() {
+  ensureMobileDrawerMarkup();
+
+  const menuBtn = document.querySelector(".nav-menu-btn");
+  const backdrop = document.querySelector(".drawer-backdrop");
+  const drawer = document.querySelector(".mobile-drawer");
+
+  if (!menuBtn || !backdrop || !drawer) return;
+
+  if (menuBtn.dataset.drawerInit === "1") return;
+  menuBtn.dataset.drawerInit = "1";
+
+  menuBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    document.body.classList.toggle("drawer-open");
+  });
+
+  backdrop.addEventListener("click", () => {
+    document.body.classList.remove("drawer-open");
+  });
+
+  drawer.addEventListener("click", (e) => {
+    if (e.target.closest("a")) document.body.classList.remove("drawer-open");
+  });
+}
+
+
+
+
+
+
 document.addEventListener("DOMContentLoaded", () => {
   safeInit();
+  initMobileDrawer();
   if (window.__NAV_READY__ && typeof window.initNav === "function") window.initNav();
 });
 
 window.addEventListener("nav:loaded", () => {
+  initMobileDrawer();
   if (typeof window.initNav === "function") window.initNav();
 });
+
+
+

@@ -1,77 +1,80 @@
 <header class="topbar">
-  <!-- CENTERED CONTROLS: Brand, Projects, About, Icons -->
   <div class="nav-right">
+
+    <!-- Always visible -->
     <a class="brand nav-control" href="/">Home</a>
-    <div class="dropdown" id="projectsDropdown">
-      <button class="dropdown-btn nav-control" type="button">
-        Projects ▾
-      </button>
 
-      <div class="dropdown-menu" role="menu" aria-label="Projects">
+    <!-- Mobile menu button (hidden on desktop) -->
+    <button
+      class="nav-control nav-menu-btn"
+      aria-label="Open menu"
+      aria-expanded="false"
+      type="button"
+    >
+      ☰
+    </button>
 
-        <a class="dropdown-item" href="/projects/precision-arm.html" data-robot="precision-arm" data-href="/projects/precision-arm.html">
-          <div class="title">Precision Robotic Arm</div>
-          <div class="sub">Personal Favourite</div>
-        </a>
-        
-        <a class="dropdown-item" href="/projects/b2emo.html" data-robot="b2emo" data-href="/projects/b2emo.html">
-          <div class="title">B2EMO</div>
-          <div class="sub">Star Wars Replica</div>
-        </a>
-        
-        <a class="dropdown-item" href="/projects/harmonic-drive.html" data-robot="harmonic-drive" data-href="/projects/harmonic-drive.html">
-          <div class="title">Harmonic Drive</div>
-          <div class="sub">High Torque Harmonic Drive</div>
-        </a>
+    <!-- Desktop-only content -->
+    <div class="nav-desktop">
+      <div class="dropdown" id="projectsDropdown">
+        <button class="dropdown-btn nav-control" type="button">
+          Projects ▾
+        </button>
 
-        <a class="dropdown-item" href="/projects/vision-arm.html" data-robot="vision-arm" data-href="/projects/vision-arm.html">
-          <div class="title">Vision Arm</div>
-          <div class="sub">Robot Arm with Camera</div>
-        </a>
-
-        <a class="dropdown-item" href="/projects/omni.html" data-robot="omni" data-href="/projects/omni.html">
-          <div class="title">Omnidirectional Robot</div>
-          <div class="sub">RC Mechanum Wheels</div>
-        </a>
-
-        <a class="dropdown-item" href="/projects/controller.html" data-robot="controller" data-href="/projects/controller.html">
-          <div class="title">Controller</div>
-          <div class="sub">Universal Robot Controller</div>
-        </a>
-
-        <a class="dropdown-item" href="/projects/car.html" data-robot="car" data-href="/projects/car.html">
-          <div class="title">RC Car</div>
-          <div class="sub">Simple RC Car</div>
-        </a>
-        
-        <a class="dropdown-item" href="/projects/vertical-launcher.html" data-robot="vertical-launcher" data-href="/projects/vertical-launcher.html">
-          <div class="title">Vertical Launcher</div>
-          <div class="sub">Physics Project</div>
-        </a>
-
-        
-
-        
+        <div class="dropdown-menu" role="menu" aria-label="Projects">
+          <a class="dropdown-item" href="/projects/precision-arm.html">
+            <div class="title">Precision Robotic Arm</div>
+            <div class="sub">Personal Favourite</div>
+          </a>
+          <a class="dropdown-item" href="/projects/b2emo.html">
+            <div class="title">B2EMO</div>
+            <div class="sub">Star Wars Replica</div>
+          </a>
+          <a class="dropdown-item" href="/projects/harmonic-drive.html">
+            <div class="title">Harmonic Drive</div>
+            <div class="sub">High Torque Harmonic Drive</div>
+          </a>
+          <a class="dropdown-item" href="/projects/vision-arm.html">
+            <div class="title">Vision Arm</div>
+            <div class="sub">Robot Arm with Camera</div>
+          </a>
+          <a class="dropdown-item" href="/projects/omni.html">
+            <div class="title">Omnidirectional Robot</div>
+            <div class="sub">RC Mechanum Wheels</div>
+          </a>
+          <a class="dropdown-item" href="/projects/controller.html">
+            <div class="title">Controller</div>
+            <div class="sub">Universal Robot Controller</div>
+          </a>
+          <a class="dropdown-item" href="/projects/car.html">
+            <div class="title">RC Car</div>
+            <div class="sub">Simple RC Car</div>
+          </a>
+          <a class="dropdown-item" href="/projects/vertical-launcher.html">
+            <div class="title">Vertical Launcher</div>
+            <div class="sub">Physics Project</div>
+          </a>
+        </div>
       </div>
-    </div>
 
-    <a class="nav-control" href="/about.html">About</a>
-    <a class="nav-control" href="/gallery.html">Gallery</a>
+      <a class="nav-control" href="/about.html">About</a>
+      <a class="nav-control" href="/gallery.html">Gallery</a>
 
-    <!-- Social icons -->
-    <a class="icon-link" href="https://www.linkedin.com/in/jaredfenster" target="_blank" rel="noopener" aria-label="LinkedIn">
-      <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.95v5.66H9.32V9h3.41v1.56h.05c.48-.9 1.65-1.85 3.39-1.85 3.62 0 4.28 2.38 4.28 5.48v6.26zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.11 20.45H3.56V9h3.55v11.45z"/>
-      </svg>
-    </a>
+      <!-- Desktop icons -->
+      <a class="icon-link" href="https://www.linkedin.com/in/jaredfenster" target="_blank" rel="noopener" aria-label="LinkedIn">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.95v5.66H9.32V9h3.41v1.56h.05c.48-.9 1.65-1.85 3.39-1.85 3.62 0 4.28 2.38 4.28 5.48v6.26zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.11 20.45H3.56V9h3.55v11.45z"/>
+        </svg>
+      </a>
 
-    <a class="icon-link" href="https://www.youtube.com/@jaredfenster" target="_blank" rel="noopener" aria-label="YouTube">
-      <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M21.6 7.2a3 3 0 0 0-2.1-2.1C17.7 4.6 12 4.6 12 4.6s-5.7 0-7.5.5A3 3 0 0 0 2.4 7.2 31.1 31.1 0 0 0 2 12s.1 3.2.4 4.8a3 3 0 0 0 2.1 2.1c1.8.5 7.5.5 7.5.5s5.7 0 7.5-.5a3 3 0 0 0 2.1-2.1c.3-1.6.4-4.8.4-4.8s0-3.2-.4-4.8zM10 15V9l6 3-6 3z"/>
-      </svg>
-    </a>
+      <a class="icon-link" href="https://www.youtube.com/@jaredfenster" target="_blank" rel="noopener" aria-label="YouTube">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M21.6 7.2a3 3 0 0 0-2.1-2.1C17.7 4.6 12 4.6 12 4.6s-5.7 0-7.5.5A3 3 0 0 0 2.4 7.2 31.1 31.1 0 0 0 2 12s.1 3.2.4 4.8a3 3 0 0 0 2.1 2.1c1.8.5 7.5.5 7.5.5s5.7 0 7.5-.5a3 3 0 0 0 2.1-2.1c.3-1.6.4-4.8.4-4.8s0-3.2-.4-4.8zM10 15V9l6 3-6 3z"/>
+        </svg>
+      </a>
     </div>
   </div>
 </header>
 
-<div class="topbar-spacer"></div>
+
+
