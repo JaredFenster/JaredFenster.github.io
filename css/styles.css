@@ -713,6 +713,7 @@ body.drawer-open .mobile-drawer {
   z-index: 50;
   background: rgba(5, 8, 14, 0.45);
   backdrop-filter: blur(6px);
+  overflow-y: auto;
 
   opacity: 0;
   pointer-events: none;
