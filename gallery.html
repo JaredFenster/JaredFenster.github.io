@@ -10,14 +10,8 @@
   <script defer src="js/app.js"></script>
 
   <style>
+    html, body { background: var(--bg); }
 
-    html, body {
-        background: var(--bg);
-    }
-
-    /* Page wrapper */
-
-    
     .gallery-page {
       max-width: 1600px;
       margin: 0 auto;
@@ -29,43 +23,57 @@
       margin: 0 0 28px;
     }
 
-    /* ===== Masonry via CSS columns ===== */
-    .masonry {
-      column-count: 4;
-      column-gap: 18px;
-    }
-    @media (max-width: 1200px) { .masonry { column-count: 3; } }
-    @media (max-width: 800px)  { .masonry { column-count: 2; } }
-    @media (max-width: 520px)  { .masonry { column-count: 1; } }
+    /* ===== Justified rows (4–5 per row) ===== */
+    :root{
+      --gap: 18px;
+      --card-radius: 16px;
 
-    .masonry-item {
-      break-inside: avoid;
-      margin: 0 0 18px;
-      border-radius: 16px;
+      /* 👇 KEY TUNING VALUE */
+      --row-h: 620px; /* desktop: ~4–5 per row */
+    }
+
+    @media (max-width: 1200px) { :root{ --row-h: 280px; } }
+    @media (max-width: 800px)  { :root{ --row-h: 240px; } }
+    @media (max-width: 520px)  { :root{ --row-h: 200px; } }
+
+    .justified {
+      display: flex;
+      flex-direction: column;
+      gap: var(--gap);
+    }
+
+    .justified-row {
+      display: flex;
+      gap: var(--gap);
+      width: 100%;
+      align-items: stretch;
+    }
+
+    .justified-item {
+      border-radius: var(--card-radius);
       overflow: hidden;
       border: 1px solid rgba(255,255,255,0.12);
       background: rgba(0,0,0,0.35);
       box-shadow: 0 18px 40px rgba(0,0,0,0.45);
       cursor: pointer;
-      transition: transform 0.5s ease, border-color 0.5s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+
+      contain: content;
+      content-visibility: auto;
+      contain-intrinsic-size: 360px 260px;
     }
 
-
-    /* IMPORTANT: no cropping - center and constrain inside reserved box */
-    .masonry-item img {
-      max-width: 100%;
-      max-height: 100%;
-      width: auto;
-      height: auto;
+    .justified-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
       display: block;
       opacity: 0;
-      transition: opacity 0.45s ease-in-out;
+      transition: opacity 0.35s ease-in-out;
     }
 
-    /* ===== Fullscreen lightbox ===== */
+    .justified-item img.loaded { opacity: 1; }
+
+    /* ===== Lightbox ===== */
     .lightbox {
       position: fixed;
       inset: 0;
@@ -78,18 +86,14 @@
       backdrop-filter: blur(6px);
       cursor: pointer;
     }
-
     .lightbox.is-open { display: flex; }
 
     .lightbox img {
       max-width: min(1400px, 96vw);
       max-height: 92vh;
-      width: auto;
-      height: auto;
       border-radius: 18px;
       border: 1px solid rgba(255,255,255,0.14);
       box-shadow: 0 30px 90px rgba(0,0,0,0.7);
-      cursor: pointer;
     }
 
     .lightbox-close {
@@ -102,117 +106,33 @@
       border-radius: 14px;
       border: 1px solid rgba(255,255,255,0.18);
       background: rgba(0,0,0,0.35);
-      color: rgba(255,255,255,0.9);
+      color: #fff;
       font-size: 20px;
-      line-height: 1;
       display: none;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      user-select: none;
     }
 
-    .lightbox.is-open + .lightbox-close {
-      display: inline-flex;
-    }
-
-    /* Add pointer cursor on hover */
-    .gallery-item {
-      position: relative;
-      overflow: hidden;
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,0.12);
-      background: rgba(0,0,0,0.35);
-      box-shadow: 0 20px 40px rgba(0,0,0,0.45);
-      cursor: pointer; /* Ensure the gallery item itself has the pointer cursor */
-    }
-
-    .gallery-item img {
-      cursor: pointer; /* Reset cursor to default for images */
-    }
-
-    .gallery-page {
-      position: relative;
-      z-index: 2;
-    }
-    
-    .masonry,
-    .masonry-item {
-      position: relative;
-      z-index: 2;
-    }
-
-    /* Preloader styles */
-    #preloader {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: #000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 9999;
-    }
-
-    .spinner {
-      width: 50px;
-      height: 50px;
-      border: 5px solid rgba(255, 255, 255, 0.3);
-      border-top: 5px solid #fff;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-      0% {
-        transform: rotate(0deg);
-      }
-      100% {
-        transform: rotate(360deg);
-      }
-    }
-
-    /* Fade-in effect for images */
-    .masonry-item img {
-      opacity: 0;
-      transition: opacity 0.5s ease-in-out;
-    }
-
-    .masonry-item img.loaded {
-      opacity: 1;
-    }
+    .lightbox.is-open + .lightbox-close { display: inline-flex; }
   </style>
 </head>
 
 <body class="project-page">
   <div data-include="partials/nav.html"></div>
 
-  <!-- Preloader -->
-  <div id="preloader">
-    <div class="spinner"></div>
-  </div>
-
   <main class="gallery-page">
     <h1 class="gallery-title">Photos from my projects over the years</h1>
-    <div class="masonry" id="gallery"></div>
+    <div class="justified" id="gallery"></div>
   </main>
 
-  <!-- Lightbox -->
-  <div class="lightbox" id="lightbox" aria-hidden="true">
-    <img id="lightboxImg" alt="" />
+  <div class="lightbox" id="lightbox">
+    <img id="lightboxImg" />
   </div>
-  <div class="lightbox-close" id="lightboxClose" aria-label="Close">✕</div>
+  <div class="lightbox-close" id="lightboxClose">✕</div>
 
   <script>
-    /**
-     * Static-site note:
-     * Browsers can’t “list a folder”, so keep this filename list.
-     * Folder: /assets/gallery/
-     */
-    const images = [
-      "71419296365__BFADA0B6-9317-4A31-95FD-DA5054866922.JPEG",
+    const images = ["71419296365__BFADA0B6-9317-4A31-95FD-DA5054866922.JPEG",
       "car.png",
       "Controller.JPG",
       "Elec.JPEG",
@@ -285,15 +205,13 @@
       "IMG_3955.JPEG",
       "IMG_4048.JPEG",
       "IMG_4076.JPEG",
-      "IMG_4077894D-B6CA-40E9-9F10-775A37B537B0.jpeg",
       "IMG_4082.JPEG",
       "IMG_4131.JPEG",
       "J3Internal.png",
       "Joint.png",
       "result.JPEG",
       "ROS.png",
-      "Vis.png"
-    ];
+      "Vis.png"];
 
     const gallery = document.getElementById("gallery");
     const lightbox = document.getElementById("lightbox");
@@ -303,119 +221,85 @@
     function openLightbox(src) {
       lightboxImg.src = src;
       lightbox.classList.add("is-open");
-      lightbox.setAttribute("aria-hidden", "false");
       document.body.style.overflow = "hidden";
     }
-
     function closeLightbox() {
       lightbox.classList.remove("is-open");
-      lightbox.setAttribute("aria-hidden", "true");
       lightboxImg.src = "";
       document.body.style.overflow = "";
     }
 
-    // Ensure gallery images load correctly (use relative paths)
-    // Reserve each item's height based on image aspect ratio before inserting the visible <img>
-    function getColumnCount() {
-      const w = window.innerWidth;
-      if (w <= 520) return 1;
-      if (w <= 800) return 2;
-      if (w <= 1200) return 3;
-      return 4;
+    function cssPx(name, fallback) {
+      const v = parseFloat(getComputedStyle(document.documentElement).getPropertyValue(name));
+      return Number.isFinite(v) ? v : fallback;
     }
 
-    function computeColumnWidth() {
-      const count = getColumnCount();
-      const gap = 18; // matches CSS column-gap
-      const galleryWidth = Math.max(0, gallery.clientWidth);
-      return (galleryWidth - (count - 1) * gap) / count;
-    }
+    const GAP = () => cssPx("--gap", 18);
+    const ROW_H = () => cssPx("--row-h", 320);
 
-    images.forEach(file => {
-      const src = `assets/gallery/${file}`; // relative path
+    let buffer = [];
+    let active = 0;
+    let next = 0;
+    const MAX = 6;
 
-      const item = document.createElement('div');
-      item.className = 'masonry-item';
-      // give a small default min-height to avoid collapsing while metadata loads
-      item.style.minHeight = '120px';
+    function tryBuild() {
+      const width = gallery.clientWidth;
+      while (buffer.length) {
+        let sum = 0, count = 0;
+        for (let i = 0; i < buffer.length; i++) {
+          sum += buffer[i].aspect;
+          count++;
+          const needed = sum * ROW_H() + GAP() * (count - 1);
+          if (needed >= width) {
+            const h = (width - GAP() * (count - 1)) / sum;
+            const row = document.createElement("div");
+            row.className = "justified-row";
 
-      // append early so order is preserved top-to-bottom
-      gallery.appendChild(item);
+            buffer.splice(0, count).forEach(it => {
+              const w = it.aspect * h;
+              const card = document.createElement("div");
+              card.className = "justified-item";
+              card.style.width = w + "px";
+              card.style.height = h + "px";
 
-      // preload image metadata to get natural size without inserting the image yet
-      const probe = new Image();
-      probe.src = src;
-      probe.decoding = 'async';
+              const img = document.createElement("img");
+              img.src = it.src;
+              img.onload = () => img.classList.add("loaded");
 
-      probe.addEventListener('load', () => {
-        const colW = computeColumnWidth();
-        // if natural sizes unavailable, fall back to square
-        const iw = probe.naturalWidth || 1;
-        const ih = probe.naturalHeight || iw;
-        const height = Math.round((ih / iw) * colW);
-        item.style.height = height + 'px';
+              card.onclick = () => openLightbox(it.src);
+              card.appendChild(img);
+              row.appendChild(card);
+            });
 
-        // now create the visible img and insert it
-        const img = document.createElement('img');
-        img.src = src;
-        img.loading = 'lazy';
-        img.alt = file;
-
-        img.addEventListener('load', () => {
-          img.style.opacity = '1';
-        });
-
-        img.addEventListener('error', () => {
-          img.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==';
-          img.alt = 'Image failed to load';
-          img.style.opacity = '1';
-        });
-
-        item.appendChild(img);
-        item.addEventListener('click', () => openLightbox(src));
-      });
-
-      // If probe errors (e.g., unsupported), still append a placeholder image element
-      probe.addEventListener('error', () => {
-        // keep minHeight and show failed placeholder
-        const img = document.createElement('img');
-        img.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==';
-        img.alt = 'Image failed to load';
-        img.style.opacity = '1';
-        item.appendChild(img);
-        item.addEventListener('click', () => openLightbox(src));
-      });
-    });
-
-    // close actions
-    lightbox.addEventListener("click", closeLightbox);
-    lightboxClose.addEventListener("click", closeLightbox);
-
-    // prevent clicking the image itself from closing
-    lightboxImg.addEventListener("click", (e) => e.stopPropagation());
-
-    // ESC to close
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && lightbox.classList.contains("is-open")) closeLightbox();
-    });
-
-    // Preloader removal
-    window.addEventListener("load", () => {
-      const preloader = document.getElementById("preloader");
-      if (preloader) {
-        preloader.style.opacity = "0";
-        preloader.style.transition = "opacity 0.5s ease";
-        setTimeout(() => preloader.remove(), 500);
+            gallery.appendChild(row);
+            break;
+          }
+          if (i === buffer.length - 1) return;
+        }
       }
+    }
 
-      // Add 'loaded' class to images after they load
-      const images = document.querySelectorAll(".masonry-item img");
-      images.forEach(img => {
-        img.addEventListener("load", () => {
-          img.classList.add("loaded");
-        });
-      });
-    });
+    function pump() {
+      while (active < MAX && next < images.length) {
+        const src = `assets/gallery/${images[next++]}`;
+        active++;
+        const im = new Image();
+        im.onload = () => {
+          buffer.push({ src, aspect: im.naturalWidth / im.naturalHeight });
+          active--;
+          tryBuild();
+          pump();
+        };
+        im.onerror = () => { active--; pump(); };
+        im.src = src;
+      }
+    }
+
+    pump();
+
+    lightbox.onclick = closeLightbox;
+    lightboxClose.onclick = closeLightbox;
+    lightboxImg.onclick = e => e.stopPropagation();
   </script>
 </body>
 </html>
