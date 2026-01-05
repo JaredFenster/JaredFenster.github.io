@@ -48,14 +48,21 @@
       box-shadow: 0 18px 40px rgba(0,0,0,0.45);
       cursor: pointer;
       transition: transform 0.5s ease, border-color 0.5s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
 
-    /* IMPORTANT: no cropping */
+    /* IMPORTANT: no cropping - center and constrain inside reserved box */
     .masonry-item img {
-      width: 100%;
-      height: auto;        /* keep aspect ratio */
+      max-width: 100%;
+      max-height: 100%;
+      width: auto;
+      height: auto;
       display: block;
+      opacity: 0;
+      transition: opacity 0.45s ease-in-out;
     }
 
     /* ===== Fullscreen lightbox ===== */
@@ -134,11 +141,58 @@
       position: relative;
       z-index: 2;
     }
+
+    /* Preloader styles */
+    #preloader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 5px solid rgba(255, 255, 255, 0.3);
+      border-top: 5px solid #fff;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* Fade-in effect for images */
+    .masonry-item img {
+      opacity: 0;
+      transition: opacity 0.5s ease-in-out;
+    }
+
+    .masonry-item img.loaded {
+      opacity: 1;
+    }
   </style>
 </head>
 
 <body class="project-page">
   <div data-include="partials/nav.html"></div>
+
+  <!-- Preloader -->
+  <div id="preloader">
+    <div class="spinner"></div>
+  </div>
 
   <main class="gallery-page">
     <h1 class="gallery-title">Photos from my projects over the years</h1>
@@ -260,21 +314,77 @@
       document.body.style.overflow = "";
     }
 
+    // Ensure gallery images load correctly (use relative paths)
+    // Reserve each item's height based on image aspect ratio before inserting the visible <img>
+    function getColumnCount() {
+      const w = window.innerWidth;
+      if (w <= 520) return 1;
+      if (w <= 800) return 2;
+      if (w <= 1200) return 3;
+      return 4;
+    }
+
+    function computeColumnWidth() {
+      const count = getColumnCount();
+      const gap = 18; // matches CSS column-gap
+      const galleryWidth = Math.max(0, gallery.clientWidth);
+      return (galleryWidth - (count - 1) * gap) / count;
+    }
+
     images.forEach(file => {
-      const src = `/assets/gallery/${file}`;
+      const src = `assets/gallery/${file}`; // relative path
 
-      const item = document.createElement("div");
-      item.className = "masonry-item";
+      const item = document.createElement('div');
+      item.className = 'masonry-item';
+      // give a small default min-height to avoid collapsing while metadata loads
+      item.style.minHeight = '120px';
 
-      const img = document.createElement("img");
-      img.src = src;
-      img.loading = "lazy";
-      img.alt = "";
-
-      item.appendChild(img);
-      item.addEventListener("click", () => openLightbox(src));
-
+      // append early so order is preserved top-to-bottom
       gallery.appendChild(item);
+
+      // preload image metadata to get natural size without inserting the image yet
+      const probe = new Image();
+      probe.src = src;
+      probe.decoding = 'async';
+
+      probe.addEventListener('load', () => {
+        const colW = computeColumnWidth();
+        // if natural sizes unavailable, fall back to square
+        const iw = probe.naturalWidth || 1;
+        const ih = probe.naturalHeight || iw;
+        const height = Math.round((ih / iw) * colW);
+        item.style.height = height + 'px';
+
+        // now create the visible img and insert it
+        const img = document.createElement('img');
+        img.src = src;
+        img.loading = 'lazy';
+        img.alt = file;
+
+        img.addEventListener('load', () => {
+          img.style.opacity = '1';
+        });
+
+        img.addEventListener('error', () => {
+          img.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==';
+          img.alt = 'Image failed to load';
+          img.style.opacity = '1';
+        });
+
+        item.appendChild(img);
+        item.addEventListener('click', () => openLightbox(src));
+      });
+
+      // If probe errors (e.g., unsupported), still append a placeholder image element
+      probe.addEventListener('error', () => {
+        // keep minHeight and show failed placeholder
+        const img = document.createElement('img');
+        img.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==';
+        img.alt = 'Image failed to load';
+        img.style.opacity = '1';
+        item.appendChild(img);
+        item.addEventListener('click', () => openLightbox(src));
+      });
     });
 
     // close actions
@@ -287,6 +397,24 @@
     // ESC to close
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape" && lightbox.classList.contains("is-open")) closeLightbox();
+    });
+
+    // Preloader removal
+    window.addEventListener("load", () => {
+      const preloader = document.getElementById("preloader");
+      if (preloader) {
+        preloader.style.opacity = "0";
+        preloader.style.transition = "opacity 0.5s ease";
+        setTimeout(() => preloader.remove(), 500);
+      }
+
+      // Add 'loaded' class to images after they load
+      const images = document.querySelectorAll(".masonry-item img");
+      images.forEach(img => {
+        img.addEventListener("load", () => {
+          img.classList.add("loaded");
+        });
+      });
     });
   </script>
 </body>
