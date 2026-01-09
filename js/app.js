@@ -99,6 +99,10 @@ function safeInit() {
 
   // Load buffers
   robots.forEach((imgEl) => {
+    // Prevent default browser image dragging which creates a tiny drag ghost
+    imgEl.draggable = false;
+    imgEl.addEventListener('dragstart', (ev) => ev.preventDefault());
+
     if (imgEl.complete && imgEl.naturalWidth > 0) buildPixelBuffer(imgEl);
     else imgEl.addEventListener("load", () => buildPixelBuffer(imgEl));
   });
@@ -124,6 +128,11 @@ function safeInit() {
     }
 
     setHoverRobot(hoveredEl);
+    // Cursor state: mid when hovering a clickable robot, open otherwise
+    if (window.__setCursor) {
+      if (hoveredEl) window.__setCursor('cursor-mid');
+      else window.__setCursor('cursor-open');
+    }
   });
 
   scene.addEventListener("mouseleave", () => {
@@ -131,12 +140,16 @@ function safeInit() {
     hoveredEl = null;
     offFrames = 0;
     clearHoverAll();
+    if (window.__setCursor) window.__setCursor('cursor-open');
   });
 
   // Click a robot => go straight to its page
   scene.addEventListener("click", (e) => {
     const hitEl = topmostRobotHit(e.clientX, e.clientY);
     if (!hitEl) return;
+
+    // show closed cursor briefly on click
+    if (window.__setCursor) window.__setCursor('cursor-closed');
 
     const id = hitEl.dataset.robot;
     window.location.href = `projects/${id}.html`;
@@ -146,14 +159,23 @@ function safeInit() {
   window.__ROBOT_SCENE__ = {
     forceHoverRobot(idOrNull) {
       forcedHoverEl = idOrNull ? robots.find(r => r.dataset.robot === String(idOrNull)) : null;
-      if (forcedHoverEl) setHoverRobot(forcedHoverEl);
-      else clearHoverAll();
+      if (forcedHoverEl) {
+        setHoverRobot(forcedHoverEl);
+        if (window.__setCursor) window.__setCursor('cursor-mid');
+      } else {
+        clearHoverAll();
+        if (window.__setCursor) window.__setCursor('cursor-open');
+      }
     },
     clearForcedHover() {
       forcedHoverEl = null;
       clearHoverAll();
+      if (window.__setCursor) window.__setCursor('cursor-open');
     }
   };
+
+  // Allow external code to query if there is a hover present
+  window.__ROBOT_SCENE__.hasHover = () => Boolean(forcedHoverEl || hoveredEl);
 }
 
 // ===== NAV WIRING =====
@@ -360,6 +382,56 @@ function initMobileDrawer() {
 
 
 
+
+// Global cursor manager: idle/open/mid/closed
+(function () {
+  const CUR_OPEN = 'cursor-open';
+  const CUR_MID = 'cursor-mid';
+  const CUR_CLOSED = 'cursor-closed';
+  let idleTimer = null;
+  const IDLE_MS = 2000;
+
+  function setCursor(name) {
+    document.body.classList.remove(CUR_OPEN, CUR_MID, CUR_CLOSED);
+    if (name) document.body.classList.add(name);
+  }
+
+  // expose to scene code
+  window.__setCursor = setCursor;
+
+  document.addEventListener('mousemove', (e) => {
+    // don't override closed state while mouse is down
+    if (document.body.classList.contains(CUR_CLOSED)) return;
+
+    // If the robot scene reports a hover, keep the mid cursor and
+    // avoid resetting it to open (so robot hover isn't immediately
+    // overridden by the global mousemove listener).
+    if (window.__ROBOT_SCENE__ && typeof window.__ROBOT_SCENE__.hasHover === 'function' && window.__ROBOT_SCENE__.hasHover()) {
+      clearTimeout(idleTimer);
+      return;
+    }
+
+    setCursor(CUR_OPEN);
+    clearTimeout(idleTimer);
+    idleTimer = setTimeout(() => {
+      // idle: revert to default cursor by removing custom classes
+      document.body.classList.remove(CUR_OPEN, CUR_MID);
+    }, IDLE_MS);
+  });
+
+  document.addEventListener('mousedown', () => {
+    setCursor(CUR_CLOSED);
+  });
+
+  document.addEventListener('mouseup', () => {
+    // restore based on current scene hover
+    if (window.__ROBOT_SCENE__ && typeof window.__ROBOT_SCENE__.hasHover === 'function' && window.__ROBOT_SCENE__.hasHover()) {
+      setCursor(CUR_MID);
+    } else {
+      setCursor(CUR_OPEN);
+    }
+  });
+})();
 
 document.addEventListener("DOMContentLoaded", () => {
   safeInit();

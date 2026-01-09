@@ -398,6 +398,72 @@ code:not([class*="language-"]) {
   margin-bottom: 20px;
 }
 
+/* ===== Custom cursor states =====
+   Place three images in `assets/Cursor/` named:
+     - open.png   (default / moving)
+     - mid.png    (hovering over clickable robot)
+     - closed.png (mouse down / clicked)
+   These are applied to the `body` via classes toggled from JS.
+*/
+
+:root {
+  /* Cursor image sources (keep path relative to this CSS file) */
+  --cursor-open-src: url("../assets/Cursor/open.png");
+  --cursor-mid-src: url("../assets/Cursor/mid.png");
+  --cursor-closed-src: url("../assets/Cursor/closed.png");
+
+  /* Hotspot offsets (pixels from top-left). Tweak these to move the active
+     point of the cursor without editing the PNG. Increase X to move hotspot
+     right, increase Y to move it down. */
+  --cursor-open-x: 16;
+  --cursor-open-y: 20;
+  --cursor-mid-x: 16;
+  --cursor-mid-y: 20;
+  --cursor-closed-x: 16;
+  --cursor-closed-y: 20;
+
+  /* Composite cursor values (uses the above variables) */
+  --cursor-open: var(--cursor-open-src) var(--cursor-open-x) var(--cursor-open-y), auto;
+  --cursor-mid: var(--cursor-mid-src) var(--cursor-mid-x) var(--cursor-mid-y), pointer;
+  --cursor-closed: var(--cursor-closed-src) var(--cursor-closed-x) var(--cursor-closed-y), pointer;
+}
+
+/* Apply cursor state to body and all descendant elements so the element
+  under the pointer inherits the intended cursor. */
+/* Force custom cursors to apply to the scene and all elements (use !important
+  to override other cursor declarations that might appear elsewhere). */
+body.cursor-open,
+body.cursor-open *,
+.scene,
+.scene * { cursor: var(--cursor-open) !important; }
+
+body.cursor-mid,
+body.cursor-mid *,
+.scene,
+.scene * { cursor: var(--cursor-mid) !important; }
+
+body.cursor-closed,
+body.cursor-closed *,
+.scene,
+.scene * { cursor: var(--cursor-closed) !important; }
+
+/* Ensure nav and other explicit pointer cursors respect the global state */
+body.cursor-mid .nav-control,
+body.cursor-mid .icon-link,
+body.cursor-mid .dropdown-btn,
+body.cursor-mid .dropdown-item { cursor: var(--cursor-mid); }
+
+body.cursor-open .nav-control,
+body.cursor-open .icon-link,
+body.cursor-open .dropdown-btn,
+body.cursor-open .dropdown-item { cursor: var(--cursor-open); }
+
+body.cursor-closed .nav-control,
+body.cursor-closed .icon-link,
+body.cursor-closed .dropdown-btn,
+body.cursor-closed .dropdown-item { cursor: var(--cursor-closed); }
+
+
 .project-text ul {
   padding-left: 18px;
   margin: 0;
@@ -505,9 +571,9 @@ pre.line-numbers .line-numbers-rows > span {
 
 @keyframes roomLight{
   5%   { filter: brightness(1) contrast(1); }
-  12%  { filter: brightness(0.95) contrast(1.02); }
+  12%  { filter: brightness(0.85) contrast(1.02); }
   18%  { filter: brightness(0.98) contrast(1.00); }
-  55%  { filter: brightness(0.96) contrast(1.01); }
+  55%  { filter: brightness(0.90) contrast(1.01); }
   100% { filter: brightness(1) contrast(1); }
 }
 
