@@ -115,6 +115,10 @@ function safeInit() {
   scene.addEventListener("mousemove", (e) => {
     if (forcedHoverEl) return;
 
+    // If the user is holding the mouse (closed cursor), don't let hover
+    // logic override the closed state.
+    if (document.body.classList && document.body.classList.contains && document.body.classList.contains('cursor-closed')) return;
+
     const hitEl = topmostRobotHit(e.clientX, e.clientY);
 
     if (hitEl) {
@@ -140,7 +144,7 @@ function safeInit() {
     hoveredEl = null;
     offFrames = 0;
     clearHoverAll();
-    if (window.__setCursor) window.__setCursor('cursor-open');
+    if (window.__setCursor && !(document.body.classList && document.body.classList.contains && document.body.classList.contains('cursor-closed'))) window.__setCursor('cursor-open');
   });
 
   // Click a robot => go straight to its page
@@ -161,16 +165,16 @@ function safeInit() {
       forcedHoverEl = idOrNull ? robots.find(r => r.dataset.robot === String(idOrNull)) : null;
       if (forcedHoverEl) {
         setHoverRobot(forcedHoverEl);
-        if (window.__setCursor) window.__setCursor('cursor-mid');
+        if (window.__setCursor && !(document.body.classList && document.body.classList.contains && document.body.classList.contains('cursor-closed'))) window.__setCursor('cursor-mid');
       } else {
         clearHoverAll();
-        if (window.__setCursor) window.__setCursor('cursor-open');
+        if (window.__setCursor && !(document.body.classList && document.body.classList.contains && document.body.classList.contains('cursor-closed'))) window.__setCursor('cursor-open');
       }
     },
     clearForcedHover() {
       forcedHoverEl = null;
       clearHoverAll();
-      if (window.__setCursor) window.__setCursor('cursor-open');
+      if (window.__setCursor && !(document.body.classList && document.body.classList.contains && document.body.classList.contains('cursor-closed'))) window.__setCursor('cursor-open');
     }
   };
 
