@@ -297,82 +297,105 @@ function initMobileDrawer() {
   });
 }
 
-// ===== GLOBAL CURSOR MANAGER (FIXED + NAV MID) =====
+// ===== GLOBAL CURSOR MANAGER (ROBUST: NO "STUCK CLOSED") =====
 (function () {
   const CUR_OPEN = 'cursor-open';
   const CUR_MID = 'cursor-mid';
   const CUR_CLOSED = 'cursor-closed';
 
-  let isMouseDown = false;
+  let isDown = false;
+  let activePointerId = null;
 
   function setCursor(name) {
     document.body.classList.remove(CUR_OPEN, CUR_MID, CUR_CLOSED);
     if (name) document.body.classList.add(name);
   }
-
   window.__setCursor = setCursor;
 
-  // Anything that should show MID on hover (top nav, links, buttons, etc.)
-  const MID_HOVER_SELECTOR = ".nav-control, .icon-link, .dropdown-btn, .dropdown-item, a, button";
+  const MID_HOVER_SELECTOR =
+    ".nav-control, .icon-link, .dropdown-btn, .dropdown-item, a, button";
 
   function isMidHoverTarget(el) {
     return !!el && !!el.closest(MID_HOVER_SELECTOR);
   }
 
-  document.addEventListener('mousemove', (e) => {
-    if (isMouseDown) return;
+  function robotHoverActive() {
+    return !!(window.__ROBOT_SCENE__ &&
+              typeof window.__ROBOT_SCENE__.hasHover === 'function' &&
+              window.__ROBOT_SCENE__.hasHover());
+  }
 
-    // If robot hover is active -> MID
-    if (window.__ROBOT_SCENE__ &&
-        typeof window.__ROBOT_SCENE__.hasHover === 'function' &&
-        window.__ROBOT_SCENE__.hasHover()) {
+  function refreshFromHover(clientX, clientY) {
+    if (isDown) return; // don't override closed while down
+
+    if (robotHoverActive()) {
       setCursor(CUR_MID);
       return;
     }
 
-    // If hovering nav / link / button -> MID
-    if (isMidHoverTarget(e.target)) {
-      setCursor(CUR_MID);
-      return;
+    // use elementFromPoint when we have coords; fallback to activeElement otherwise
+    let el = null;
+    if (typeof clientX === "number" && typeof clientY === "number") {
+      el = document.elementFromPoint(clientX, clientY);
+    } else {
+      el = document.activeElement;
     }
 
-    setCursor(CUR_OPEN);
-  }, { passive: true });
-
-  document.addEventListener('mousedown', () => {
-    isMouseDown = true;
-    setCursor(CUR_CLOSED);
-  });
-
-  document.addEventListener('mouseup', (e) => {
-    isMouseDown = false;
-
-    // mouseup position might be over nav target
-    const el = document.elementFromPoint(e.clientX, e.clientY);
-
-    if (window.__ROBOT_SCENE__ &&
-        typeof window.__ROBOT_SCENE__.hasHover === 'function' &&
-        window.__ROBOT_SCENE__.hasHover()) {
-      setCursor(CUR_MID);
-      return;
-    }
-
-    if (isMidHoverTarget(el)) {
-      setCursor(CUR_MID);
-      return;
-    }
-
-    setCursor(CUR_OPEN);
-  });
-
-  window.addEventListener('blur', () => {
-    isMouseDown = false;
-    setCursor(CUR_OPEN);
-  });
+    if (isMidHoverTarget(el)) setCursor(CUR_MID);
+    else setCursor(CUR_OPEN);
+  }
 
   // Start in a known state
   setCursor(CUR_OPEN);
+
+  // Pointer move: set open/mid
+  window.addEventListener("pointermove", (e) => {
+    refreshFromHover(e.clientX, e.clientY);
+  }, { passive: true });
+
+  // Pointer down: closed + capture pointer so we still get the up/cancel
+  window.addEventListener("pointerdown", (e) => {
+    // only track primary button/touch
+    if (e.button !== undefined && e.button !== 0) return;
+
+    isDown = true;
+    activePointerId = e.pointerId;
+
+    // capture ensures we receive pointerup even if you drag off elements
+    try { e.target.setPointerCapture?.(e.pointerId); } catch {}
+
+    setCursor(CUR_CLOSED);
+  });
+
+  function releasePointer(e) {
+    if (activePointerId !== null && e && e.pointerId !== undefined && e.pointerId !== activePointerId) {
+      return; // ignore other pointers
+    }
+    isDown = false;
+    activePointerId = null;
+
+    // decide final state based on where we released
+    if (e) refreshFromHover(e.clientX, e.clientY);
+    else setCursor(CUR_OPEN);
+  }
+
+  // Pointer up / cancel: always release
+  window.addEventListener("pointerup", releasePointer);
+  window.addEventListener("pointercancel", releasePointer);
+
+  // If the pointer leaves the window or tab loses focus, force reset
+  window.addEventListener("blur", () => releasePointer(null));
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) releasePointer(null);
+  });
+
+  // Some browsers fire mouseleave on window when exiting viewport
+  window.addEventListener("mouseleave", () => {
+    // if you were holding down and left the window, don't get stuck
+    if (isDown) releasePointer(null);
+  });
 })();
+
 
 document.addEventListener("DOMContentLoaded", () => {
   safeInit();

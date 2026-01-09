@@ -866,3 +866,8 @@ body.drawer-open .mobile-drawer {
   transform: translateY(-1px);
   background: rgba(255,255,255,0.14);
 }
+/* Prevent native link/image drag cursors in the top nav */
+.topbar, .topbar * {
+  -webkit-user-drag: none;
+  user-select: none; /* optional: stops text selection while dragging */
+}
