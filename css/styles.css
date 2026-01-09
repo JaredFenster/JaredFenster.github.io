@@ -434,18 +434,19 @@ code:not([class*="language-"]) {
   to override other cursor declarations that might appear elsewhere). */
 body.cursor-open,
 body.cursor-open *,
-.scene,
-.scene * { cursor: var(--cursor-open) !important; }
+body.cursor-open .scene,
+body.cursor-open .scene * { cursor: var(--cursor-open) !important; }
 
 body.cursor-mid,
 body.cursor-mid *,
-.scene,
-.scene * { cursor: var(--cursor-mid) !important; }
+body.cursor-mid .scene,
+body.cursor-mid .scene * { cursor: var(--cursor-mid) !important; }
 
 body.cursor-closed,
 body.cursor-closed *,
-.scene,
-.scene * { cursor: var(--cursor-closed) !important; }
+body.cursor-closed .scene,
+body.cursor-closed .scene * { cursor: var(--cursor-closed) !important; }
+
 
 /* Ensure nav and other explicit pointer cursors respect the global state */
 body.cursor-mid .nav-control,

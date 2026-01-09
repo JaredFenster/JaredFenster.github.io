@@ -9,14 +9,11 @@ function $all(sel, root = document) { return Array.from(root.querySelectorAll(se
 
 function safeInit() {
   const scene = $("#scene");
-  
   const robots = $all(".robot");
 
-  // Not on the scene page? No scene logic.
   if (!scene || robots.length === 0) return;
 
-  // Per-robot pixel buffers
-  const state = new Map(); // imgEl -> { canvas, imgData }
+  const state = new Map();
 
   function buildPixelBuffer(imgEl) {
     const canvas = document.createElement("canvas");
@@ -34,19 +31,17 @@ function safeInit() {
     });
   }
 
-  // object-fit: cover mapping (centered)
   function screenToImageCoverCoords(imgEl, clientX, clientY) {
     const rect = imgEl.getBoundingClientRect();
     const iw = imgEl.naturalWidth;
     const ih = imgEl.naturalHeight;
 
-    const scale = Math.max(rect.width / iw, rect.height / ih); // cover
+    const scale = Math.max(rect.width / iw, rect.height / ih);
     const drawnW = iw * scale;
     const drawnH = ih * scale;
 
-    // object-position: center
     const offsetX = rect.left + (rect.width - drawnW) / 2;
-    const offsetY = rect.top  + (rect.height - drawnH) / 2;
+    const offsetY = rect.top + (rect.height - drawnH) / 2;
 
     return {
       x: (clientX - offsetX) / scale,
@@ -93,31 +88,24 @@ function safeInit() {
 
   function setHoverRobot(elOrNull) {
     clearHoverAll();
-    if (!elOrNull) return;
-    elOrNull.classList.add("robot--hover");
+    if (elOrNull) elOrNull.classList.add("robot--hover");
   }
 
-  // Load buffers
   robots.forEach((imgEl) => {
-    // Prevent default browser image dragging which creates a tiny drag ghost
     imgEl.draggable = false;
-    imgEl.addEventListener('dragstart', (ev) => ev.preventDefault());
+    imgEl.addEventListener('dragstart', e => e.preventDefault());
 
     if (imgEl.complete && imgEl.naturalWidth > 0) buildPixelBuffer(imgEl);
     else imgEl.addEventListener("load", () => buildPixelBuffer(imgEl));
   });
 
-  // Hover/click state
   let hoveredEl = null;
   let offFrames = 0;
-  let forcedHoverEl = null; // set by nav dropdown hover
+  let forcedHoverEl = null;
 
   scene.addEventListener("mousemove", (e) => {
     if (forcedHoverEl) return;
-
-    // If the user is holding the mouse (closed cursor), don't let hover
-    // logic override the closed state.
-    if (document.body.classList && document.body.classList.contains && document.body.classList.contains('cursor-closed')) return;
+    if (document.body.classList.contains('cursor-closed')) return;
 
     const hitEl = topmostRobotHit(e.clientX, e.clientY);
 
@@ -132,7 +120,7 @@ function safeInit() {
     }
 
     setHoverRobot(hoveredEl);
-    // Cursor state: mid when hovering a clickable robot, open otherwise
+
     if (window.__setCursor) {
       if (hoveredEl) window.__setCursor('cursor-mid');
       else window.__setCursor('cursor-open');
@@ -144,64 +132,95 @@ function safeInit() {
     hoveredEl = null;
     offFrames = 0;
     clearHoverAll();
-    if (window.__setCursor && !(document.body.classList && document.body.classList.contains && document.body.classList.contains('cursor-closed'))) window.__setCursor('cursor-open');
+    if (window.__setCursor && !document.body.classList.contains('cursor-closed')) {
+      window.__setCursor('cursor-open');
+    }
   });
 
-  // Click a robot => go straight to its page
   scene.addEventListener("click", (e) => {
     const hitEl = topmostRobotHit(e.clientX, e.clientY);
     if (!hitEl) return;
 
-    // show closed cursor briefly on click
     if (window.__setCursor) window.__setCursor('cursor-closed');
 
     const id = hitEl.dataset.robot;
     window.location.href = `projects/${id}.html`;
   });
 
-  // Expose hooks so nav hover can control highlight
   window.__ROBOT_SCENE__ = {
     forceHoverRobot(idOrNull) {
       forcedHoverEl = idOrNull ? robots.find(r => r.dataset.robot === String(idOrNull)) : null;
       if (forcedHoverEl) {
         setHoverRobot(forcedHoverEl);
-        if (window.__setCursor && !(document.body.classList && document.body.classList.contains && document.body.classList.contains('cursor-closed'))) window.__setCursor('cursor-mid');
+        if (window.__setCursor && !document.body.classList.contains('cursor-closed')) {
+          window.__setCursor('cursor-mid');
+        }
       } else {
         clearHoverAll();
-        if (window.__setCursor && !(document.body.classList && document.body.classList.contains && document.body.classList.contains('cursor-closed'))) window.__setCursor('cursor-open');
+        if (window.__setCursor && !document.body.classList.contains('cursor-closed')) {
+          window.__setCursor('cursor-open');
+        }
       }
     },
     clearForcedHover() {
       forcedHoverEl = null;
       clearHoverAll();
-      if (window.__setCursor && !(document.body.classList && document.body.classList.contains && document.body.classList.contains('cursor-closed'))) window.__setCursor('cursor-open');
+      if (window.__setCursor && !document.body.classList.contains('cursor-closed')) {
+        window.__setCursor('cursor-open');
+      }
+    },
+    hasHover() {
+      return Boolean(forcedHoverEl || hoveredEl);
     }
   };
-
-  // Allow external code to query if there is a hover present
-  window.__ROBOT_SCENE__.hasHover = () => Boolean(forcedHoverEl || hoveredEl);
 }
 
 // ===== NAV WIRING =====
 window.initNav = function initNav() {
+  // dropdown items (projects list)
   const items = $all(".dropdown-item");
-  if (items.length === 0) return;
-
 
   items.forEach((item) => {
     item.addEventListener("mouseenter", () => {
       const id = item.dataset.robot;
-      if (window.__ROBOT_SCENE__) window.__ROBOT_SCENE__.forceHoverRobot(id);
+      if (window.__ROBOT_SCENE__) {
+        window.__ROBOT_SCENE__.forceHoverRobot(id);
+      }
+      if (window.__setCursor && !document.body.classList.contains('cursor-closed')) {
+        window.__setCursor('cursor-mid');
+      }
     });
 
     item.addEventListener("mouseleave", () => {
-      if (window.__ROBOT_SCENE__) window.__ROBOT_SCENE__.clearForcedHover();
+      if (window.__ROBOT_SCENE__) {
+        window.__ROBOT_SCENE__.clearForcedHover();
+      }
+      if (window.__setCursor && !document.body.classList.contains('cursor-closed')) {
+        window.__setCursor('cursor-open');
+      }
     });
 
     item.addEventListener("click", (e) => {
       const href = item.dataset.href || item.getAttribute("href");
       if (href && href !== "#") window.location.href = href;
       e.preventDefault();
+    });
+  });
+
+  // TOP NAV hover (Name/About buttons, icons, dropdown button itself)
+  const navHoverTargets = $all(".nav-control, .icon-link, .dropdown-btn");
+  navHoverTargets.forEach((el) => {
+    el.addEventListener("mouseenter", () => {
+      if (window.__setCursor && !document.body.classList.contains('cursor-closed')) {
+        window.__setCursor('cursor-mid');
+      }
+    });
+    el.addEventListener("mouseleave", () => {
+      if (window.__setCursor && !document.body.classList.contains('cursor-closed')) {
+        // If robot hover is active, keep MID, else OPEN
+        if (window.__ROBOT_SCENE__ && window.__ROBOT_SCENE__.hasHover()) window.__setCursor('cursor-mid');
+        else window.__setCursor('cursor-open');
+      }
     });
   });
 };
@@ -214,7 +233,9 @@ function ensureMobileDrawerMarkup() {
     document.body.appendChild(bd);
   }
 
-  
+  // don't duplicate the drawer if it already exists
+  if (document.querySelector(".mobile-drawer")) return;
+
   //Yes this is a terrible way to do this, No I do not care.
   const d = document.createElement("aside");
   d.className = "mobile-drawer";
@@ -248,112 +269,6 @@ function ensureMobileDrawerMarkup() {
     </div>`;
   document.body.appendChild(d);
 }
- // ===== ABOUT OVERLAY (toggle + deep-link from other pages) =====
-// ===== ABOUT OVERLAY (toggle + deep-link /#about) =====
-(function () {
-  function initAboutOverlay() {
-    const overlay = document.getElementById("aboutOverlay");
-    const sheet = overlay ? overlay.querySelector(".about-sheet") : null;
-
-    // Only exists on index.html
-    if (!overlay || !sheet) return;
-
-    // The nav gets injected, so this might be null on first pass
-    const aboutBtn = document.getElementById("aboutNavBtn");
-
-    function openAbout() {
-      overlay.classList.add("is-open");
-      overlay.setAttribute("aria-hidden", "false");
-    }
-
-    function closeAbout() {
-      overlay.classList.remove("is-open");
-      overlay.setAttribute("aria-hidden", "true");
-    }
-
-    function toggleAbout() {
-      const open = overlay.classList.contains("is-open");
-      if (open) {
-        closeAbout();
-        // remove hash (no jump)
-        if (location.hash === "#about") history.replaceState(null, "", location.pathname);
-      } else {
-        openAbout();
-        // add hash (so copy/paste works)
-        if (location.hash !== "#about") history.replaceState(null, "", location.pathname + "#about");
-      }
-    }
-
-    function syncFromHash() {
-      if (location.hash === "#about") openAbout();
-      else closeAbout();
-    }
-
-    // Click outside closes
-    overlay.addEventListener("click", (e) => {
-      if (e.target === overlay) {
-        closeAbout();
-        if (location.hash === "#about") history.replaceState(null, "", location.pathname);
-      }
-    });
-
-    // Stop clicks inside the sheet from closing
-    sheet.addEventListener("click", (e) => e.stopPropagation());
-
-    // ESC closes
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") {
-        closeAbout();
-        if (location.hash === "#about") history.replaceState(null, "", location.pathname);
-      }
-    });
-
-    // About button toggles (ONLY on index)
-    if (aboutBtn && !aboutBtn.__aboutBound) {
-      aboutBtn.__aboutBound = true;
-      aboutBtn.addEventListener("click", (e) => {
-        // prevent navigation on index
-        e.preventDefault();
-        toggleAbout();
-      });
-    }
-
-    // Open automatically if landing on /#about
-    syncFromHash();
-
-    // Back/forward + manual hash edits
-    window.addEventListener("hashchange", syncFromHash);
-  }
-
-  // Run once when DOM is ready
-  document.addEventListener("DOMContentLoaded", initAboutOverlay);
-
-  // Run again when nav is injected (important!)
-  window.addEventListener("nav:loaded", initAboutOverlay);
-})();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 function initMobileDrawer() {
@@ -382,59 +297,81 @@ function initMobileDrawer() {
   });
 }
 
-
-
-
-
-
-// Global cursor manager: idle/open/mid/closed
+// ===== GLOBAL CURSOR MANAGER (FIXED + NAV MID) =====
 (function () {
   const CUR_OPEN = 'cursor-open';
   const CUR_MID = 'cursor-mid';
   const CUR_CLOSED = 'cursor-closed';
-  let idleTimer = null;
-  const IDLE_MS = 2000;
+
+  let isMouseDown = false;
 
   function setCursor(name) {
     document.body.classList.remove(CUR_OPEN, CUR_MID, CUR_CLOSED);
     if (name) document.body.classList.add(name);
   }
 
-  // expose to scene code
   window.__setCursor = setCursor;
 
-  document.addEventListener('mousemove', (e) => {
-    // don't override closed state while mouse is down
-    if (document.body.classList.contains(CUR_CLOSED)) return;
+  // Anything that should show MID on hover (top nav, links, buttons, etc.)
+  const MID_HOVER_SELECTOR = ".nav-control, .icon-link, .dropdown-btn, .dropdown-item, a, button";
 
-    // If the robot scene reports a hover, keep the mid cursor and
-    // avoid resetting it to open (so robot hover isn't immediately
-    // overridden by the global mousemove listener).
-    if (window.__ROBOT_SCENE__ && typeof window.__ROBOT_SCENE__.hasHover === 'function' && window.__ROBOT_SCENE__.hasHover()) {
-      clearTimeout(idleTimer);
+  function isMidHoverTarget(el) {
+    return !!el && !!el.closest(MID_HOVER_SELECTOR);
+  }
+
+  document.addEventListener('mousemove', (e) => {
+    if (isMouseDown) return;
+
+    // If robot hover is active -> MID
+    if (window.__ROBOT_SCENE__ &&
+        typeof window.__ROBOT_SCENE__.hasHover === 'function' &&
+        window.__ROBOT_SCENE__.hasHover()) {
+      setCursor(CUR_MID);
+      return;
+    }
+
+    // If hovering nav / link / button -> MID
+    if (isMidHoverTarget(e.target)) {
+      setCursor(CUR_MID);
       return;
     }
 
     setCursor(CUR_OPEN);
-    clearTimeout(idleTimer);
-    idleTimer = setTimeout(() => {
-      // idle: revert to default cursor by removing custom classes
-      document.body.classList.remove(CUR_OPEN, CUR_MID);
-    }, IDLE_MS);
-  });
+  }, { passive: true });
 
   document.addEventListener('mousedown', () => {
+    isMouseDown = true;
     setCursor(CUR_CLOSED);
   });
 
-  document.addEventListener('mouseup', () => {
-    // restore based on current scene hover
-    if (window.__ROBOT_SCENE__ && typeof window.__ROBOT_SCENE__.hasHover === 'function' && window.__ROBOT_SCENE__.hasHover()) {
+  document.addEventListener('mouseup', (e) => {
+    isMouseDown = false;
+
+    // mouseup position might be over nav target
+    const el = document.elementFromPoint(e.clientX, e.clientY);
+
+    if (window.__ROBOT_SCENE__ &&
+        typeof window.__ROBOT_SCENE__.hasHover === 'function' &&
+        window.__ROBOT_SCENE__.hasHover()) {
       setCursor(CUR_MID);
-    } else {
-      setCursor(CUR_OPEN);
+      return;
     }
+
+    if (isMidHoverTarget(el)) {
+      setCursor(CUR_MID);
+      return;
+    }
+
+    setCursor(CUR_OPEN);
   });
+
+  window.addEventListener('blur', () => {
+    isMouseDown = false;
+    setCursor(CUR_OPEN);
+  });
+
+  // Start in a known state
+  setCursor(CUR_OPEN);
 })();
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -447,6 +384,3 @@ window.addEventListener("nav:loaded", () => {
   initMobileDrawer();
   if (typeof window.initNav === "function") window.initNav();
 });
-
-
-
