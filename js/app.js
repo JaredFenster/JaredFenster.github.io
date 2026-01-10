@@ -395,6 +395,80 @@ function initMobileDrawer() {
     if (isDown) releasePointer(null);
   });
 })();
+// ===== ABOUT OVERLAY (robust: works with injected nav) =====
+(function () {
+  function initAboutOverlay() {
+    const overlay = document.getElementById("aboutOverlay");
+    const sheet = overlay ? overlay.querySelector(".about-sheet") : null;
+
+    // Only exists on index.html
+    if (!overlay || !sheet) return;
+
+    function openAbout() {
+      overlay.classList.add("is-open");
+      overlay.setAttribute("aria-hidden", "false");
+    }
+
+    function closeAbout() {
+      overlay.classList.remove("is-open");
+      overlay.setAttribute("aria-hidden", "true");
+    }
+
+    function toggleAbout() {
+      const open = overlay.classList.contains("is-open");
+      if (open) {
+        closeAbout();
+        if (location.hash === "#about") history.replaceState(null, "", location.pathname);
+      } else {
+        openAbout();
+        if (location.hash !== "#about") history.replaceState(null, "", location.pathname + "#about");
+      }
+    }
+
+    function syncFromHash() {
+      if (location.hash === "#about") openAbout();
+      else closeAbout();
+    }
+
+    // Click outside closes
+    overlay.addEventListener("click", (e) => {
+      if (e.target === overlay) {
+        closeAbout();
+        if (location.hash === "#about") history.replaceState(null, "", location.pathname);
+      }
+    });
+
+    // Stop clicks inside the sheet from closing
+    sheet.addEventListener("click", (e) => e.stopPropagation());
+
+    // ESC closes
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        closeAbout();
+        if (location.hash === "#about") history.replaceState(null, "", location.pathname);
+      }
+    });
+
+    // IMPORTANT: nav is injected, so use event delegation
+    document.addEventListener("click", (e) => {
+      const btn =
+        e.target.closest("#aboutNavBtn") ||
+        e.target.closest("[data-about-link]") ||
+        e.target.closest('a[href$="#about"], a[href*="/#about"]');
+
+      if (!btn) return;
+
+      e.preventDefault();
+      toggleAbout();
+    });
+
+    syncFromHash();
+    window.addEventListener("hashchange", syncFromHash);
+  }
+
+  document.addEventListener("DOMContentLoaded", initAboutOverlay);
+  window.addEventListener("nav:loaded", initAboutOverlay);
+})();
 
 
 document.addEventListener("DOMContentLoaded", () => {
