@@ -482,12 +482,167 @@ function initMobileDrawer() {
 
 
 document.addEventListener("DOMContentLoaded", () => {
-  safeInit();
-  initMobileDrawer();
-  if (window.__NAV_READY__ && typeof window.initNav === "function") window.initNav();
+  const loader = document.getElementById("loader");
+  if (!loader) return;
+
+  const nav = performance.getEntriesByType("navigation")[0];
+  const navType = nav ? nav.type : "navigate"; // "navigate" | "reload" | "back_forward"
+
+  const alreadyShown = sessionStorage.getItem("bootShown") === "1";
+  const isBackForward = navType === "back_forward";
+
+  // If coming from back button OR already saw it this session → skip
+  if (isBackForward || alreadyShown) {
+    loader.remove();
+    document.body.classList.remove("lights-off", "lights-dim", "lights-on");
+    document.body.classList.add("ambient-light");
+    return;
+  }
+
+  // mark as shown for this tab/session
+  sessionStorage.setItem("bootShown", "1");
+
+  const cmdWin = loader.querySelector(".cmd");
+  const bodyEl = document.getElementById("terminalBody");
+  const typedEl = document.getElementById("typedNow");
+
+  // ===== TIMING (tweak these) =====
+  const POP_IN_DELAY = 500;      // blank screen time before cmd appears
+  const AFTER_DONE_DELAY = 450;  // pause after "DONE" before fade
+  const FADE_MS = 550;           // must match CSS transition on #loader
+
+  // typing feel
+  const CHAR_MS = 100;            // 28–40 = readable
+  const CHAR_JITTER = 16;
+  const PAUSE_AFTER_CMD = 180;
+  const PAUSE_BETWEEN_LINES = 500;
+  const WAIT_AFTER_WINDOW = 500;
+  const TERMINAL_REMOVE_DELAY = 500; // after DONE, remove terminal
+  const DIM_REVEAL_MS = 1400;        // 1000–2000 (1–2 sec)
+
+
+  const PROMPT = `C:\\ROBOT_ROOM>`;
+
+  const cmd = "room initialize";
+  const out = [
+    "Boot sequence: ROBOT_ROOM",
+    "Allocating scene graph ............. OK",
+    "Loading room texture ............... OK",
+    "Loading robot layers ............... OK",
+    "Building hover hitmaps ............. OK",
+    "Warming shaders .................... OK",
+    "Syncing input pipeline ............. OK",
+    "DONE."
+  ];
+
+  function addLine(text = "") {
+    if (!bodyEl) return;
+    const div = document.createElement("div");
+    div.className = "cmd-line";
+    div.textContent = text;
+    bodyEl.appendChild(div);
+    while (bodyEl.children.length > 12) bodyEl.removeChild(bodyEl.firstChild);
+  }
+
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+  async function typeIntoPrompt(text) {
+    if (!typedEl) return;
+    typedEl.textContent = "";
+    for (let i = 0; i < text.length; i++) {
+      typedEl.textContent += text[i];
+      await sleep(CHAR_MS + Math.floor(Math.random() * CHAR_JITTER));
+    }
+  }
+
+  async function run() {
+  // START: lights fully off
+  document.body.classList.add("lights-off");
+  document.body.classList.remove("lights-dim", "lights-on", "ambient-light");
+
+  // 1) blank screen beat
+  await sleep(POP_IN_DELAY);
+
+  // Move from OFF → DIM (still dark, but readable shapes)
+  document.body.classList.remove("lights-off");
+  document.body.classList.add("lights-dim");
+
+  // 2) pop window in
+  if (cmdWin) cmdWin.classList.remove("cmd--hidden");
+  await sleep(WAIT_AFTER_WINDOW);
+
+  // 3) type command
+  await typeIntoPrompt(cmd);
+  await sleep(40);
+  addLine(`${PROMPT}${cmd}`);
+  if (typedEl) typedEl.textContent = "";
+  await sleep(PAUSE_AFTER_CMD);
+
+  // 4) output lines
+  for (const line of out) {
+    addLine(line);
+    await sleep(PAUSE_BETWEEN_LINES);
+  }
+
+  // After printing all output lines:
+await sleep(AFTER_DONE_DELAY);
+
+// 1) Wait 500ms then remove ONLY the terminal window
+await sleep(TERMINAL_REMOVE_DELAY);
+if (cmdWin) cmdWin.remove();
+
+// 2) Reveal the room faintly for 1–2 seconds
+document.body.classList.remove("lights-off");
+document.body.classList.add("lights-dim");
+loader.classList.add("see-through");
+
+await sleep(DIM_REVEAL_MS);
+
+// 3) Flicker lights ON
+document.body.classList.remove("lights-dim");
+document.body.classList.add("lights-on");
+loader.classList.remove("see-through");
+
+// Optional: start ambient loop after flicker finishes
+setTimeout(() => {
+  document.body.classList.add("ambient-light");
+}, 1300);
+
+// 4) Fade out loader overlay
+loader.classList.add("hidden");
+setTimeout(() => loader.remove(), FADE_MS + 50);
+
+}
+
+
+  run();
+
+  // failsafe: never stuck (in case something errors)
+  setTimeout(() => {
+    if (!loader.classList.contains("hidden")) {
+      loader.classList.add("hidden");
+      setTimeout(() => loader.remove(), FADE_MS + 50);
+    }
+  }, 15000);
 });
+
+
 
 window.addEventListener("nav:loaded", () => {
   initMobileDrawer();
   if (typeof window.initNav === "function") window.initNav();
 });
+
+
+// ===== BOOTSTRAP =====
+function bootInteractive() {
+  // robots hover/click
+  safeInit();
+
+  // nav interactions (if nav is already present)
+  initMobileDrawer();
+  if (typeof window.initNav === "function") window.initNav();
+}
+
+document.addEventListener("DOMContentLoaded", bootInteractive);
+window.addEventListener("nav:loaded", bootInteractive);

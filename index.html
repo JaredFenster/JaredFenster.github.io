@@ -22,8 +22,38 @@
   <script defer src="js/app.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/file-highlight/prism-file-highlight.min.js"></script>
+
+  <link rel="preload" as="image" href="assets/room.png">
+  <link rel="preload" as="image" href="assets/B2EMO.png">
+  <link rel="preload" as="image" href="assets/Controller.png">
+  <link rel="preload" as="image" href="assets/Car.png">
+  <link rel="preload" as="image" href="assets/Vision Arm.png">
+  <link rel="preload" as="image" href="assets/Vertical Launcher.png">
+  <link rel="preload" as="image" href="assets/Precision Arm.png">
+
 </head>
 <body>
+
+<div id="loader" aria-hidden="false">
+  <div class="cmd cmd--hidden">
+    <div class="cmd-titlebar">
+      <div class="cmd-title">Command Prompt</div>
+      <div class="cmd-controls">
+        <span class="cmd-btn">—</span><span class="cmd-btn">□</span><span class="cmd-btn cmd-close">×</span>
+      </div>
+    </div>
+
+    <div class="cmd-body" id="terminalBody"></div>
+
+    <div class="cmd-input">
+      <span class="cmd-path">C:\ROBOT_ROOM&gt;</span>
+      <span class="typed" id="typedNow"></span><span class="caret"></span>
+    </div>
+  </div>
+</div>
+
+
+
   
   <!-- Reusable Nav injected here -->
   <div data-include="partials/nav.html"></div>
@@ -46,10 +76,10 @@
 
   <!-- Scene -->
   <main class="scene" id="scene" aria-label="Interactive robot scene">
-
+  
     
-    <img src="assets/tree-back.png" alt="Workshop Room" class="scene__layer scene__bg" />
-    <img src="assets/tree.png" alt="Workshop Room" class="scene__layer scene__bg tree-layer" />
+    <img src="assets/tree-back.png" alt="Workshop Room" class="scene__layer scene__bg window-light" />
+    <img src="assets/tree.png" alt="Workshop Room" class="scene__layer scene__bg tree-layer window-light" />
     <img src="assets/room.png" alt="Workshop Room" class="scene__layer scene__bg" />
 
     <div class="vignette"></div>
