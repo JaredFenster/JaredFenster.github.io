@@ -516,7 +516,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const CHAR_JITTER = 16;
   const PAUSE_AFTER_CMD = 180;
   const PAUSE_BETWEEN_LINES = 500;
-  const WAIT_AFTER_WINDOW = 500;
+  const WAIT_AFTER_WINDOW = 2000;
   const TERMINAL_REMOVE_DELAY = 500; // after DONE, remove terminal
   const DIM_REVEAL_MS = 1400;        // 1000–2000 (1–2 sec)
 
