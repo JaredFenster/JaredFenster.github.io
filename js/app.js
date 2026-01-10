@@ -451,16 +451,26 @@ function initMobileDrawer() {
 
     // IMPORTANT: nav is injected, so use event delegation
     document.addEventListener("click", (e) => {
-      const btn =
-        e.target.closest("#aboutNavBtn") ||
-        e.target.closest("[data-about-link]") ||
-        e.target.closest('a[href$="#about"], a[href*="/#about"]');
+  const btn =
+    e.target.closest("#aboutNavBtn") ||
+    e.target.closest("[data-about-link]") ||
+    e.target.closest('a[href$="#about"], a[href*="/#about"]');
 
-      if (!btn) return;
+  if (!btn) return;
 
-      e.preventDefault();
-      toggleAbout();
-    });
+  // only intercept if overlay exists on THIS page (index.html)
+  const overlay = document.getElementById("aboutOverlay");
+  const sheet = overlay ? overlay.querySelector(".about-sheet") : null;
+  if (!overlay || !sheet) return; // <-- IMPORTANT: allow normal navigation on other pages
+
+  e.preventDefault();
+
+  // ✅ OPEN (don't toggle) and update hash like a real link
+  overlay.classList.add("is-open");
+  overlay.setAttribute("aria-hidden", "false");
+  if (location.hash !== "#about") location.hash = "#about";
+});
+
 
     syncFromHash();
     window.addEventListener("hashchange", syncFromHash);
