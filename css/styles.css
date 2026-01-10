@@ -647,8 +647,8 @@ body.ambient-light .scene__bg{
   height: 100%;
   object-fit: cover;     
   transform-origin: 70% 40%;
-  animation: treeSway 6.5s ease-in-out infinite;
-  will-change: transform;
+  animation: treeSway 6.5s ease-in-out infinite !important;
+  will-change: transform; 
 }
 
 @keyframes treeSway{
@@ -660,6 +660,14 @@ body.ambient-light .scene__bg{
 /* accessibility */
 @media (prefers-reduced-motion: reduce){
   .tree-layer{ animation: none; }
+}
+
+/* Dev override: force tree sway even when OS/browser prefers reduced motion.
+   Use by adding the class `force-motion` to the body (e.g. in the console:
+   `document.body.classList.add('force-motion')`). Remove the class to restore
+   respecting user preference. This is intended for local testing only. */
+body.force-motion .tree-layer {
+  animation: treeSway 6.5s ease-in-out infinite !important;
 }
 
 /* ===== Mobile nav ===== */

@@ -535,25 +535,42 @@ document.addEventListener("DOMContentLoaded", () => {
     "DONE."
   ];
 
-  function addLine(text = "") {
-    if (!bodyEl) return;
-    const div = document.createElement("div");
-    div.className = "cmd-line";
-    div.textContent = text;
+ const liveLine = document.getElementById("liveLine");
+
+function addLine(text = "") {
+  if (!bodyEl) return;
+
+  const div = document.createElement("div");
+  div.className = "cmd-line";
+  div.textContent = text;
+
+  // Insert ABOVE the live line so the live prompt stays at the bottom
+  if (liveLine && liveLine.parentNode) {
+    liveLine.parentNode.insertBefore(div, liveLine);
+  } else {
     bodyEl.appendChild(div);
-    while (bodyEl.children.length > 12) bodyEl.removeChild(bodyEl.firstChild);
   }
+
+  // Trim ONLY printed lines inside #terminalBody (live line is not in there)
+  while (bodyEl.children.length > 12) {
+    bodyEl.removeChild(bodyEl.firstChild);
+  }
+}
+
 
   const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
-  async function typeIntoPrompt(text) {
-    if (!typedEl) return;
-    typedEl.textContent = "";
-    for (let i = 0; i < text.length; i++) {
-      typedEl.textContent += text[i];
-      await sleep(CHAR_MS + Math.floor(Math.random() * CHAR_JITTER));
-    }
+async function typeIntoPrompt(text) {
+  if (!typedEl) return;
+
+  typedEl.textContent = "";
+
+  for (let i = 0; i < text.length; i++) {
+    typedEl.textContent += text[i];
+    await sleep(CHAR_MS + Math.floor(Math.random() * CHAR_JITTER));
   }
+}
+
 
   async function run() {
   // START: lights fully off
@@ -574,8 +591,6 @@ document.addEventListener("DOMContentLoaded", () => {
   // 3) type command
   await typeIntoPrompt(cmd);
   await sleep(40);
-  addLine(`${PROMPT}${cmd}`);
-  if (typedEl) typedEl.textContent = "";
   await sleep(PAUSE_AFTER_CMD);
 
   // 4) output lines
