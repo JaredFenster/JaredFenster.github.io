@@ -573,12 +573,12 @@ code:not([class*="language-"]) {
   /* Hotspot offsets (pixels from top-left). Tweak these to move the active
      point of the cursor without editing the PNG. Increase X to move hotspot
      right, increase Y to move it down. */
-  --cursor-open-x: 8;
-  --cursor-open-y: 10;
-  --cursor-mid-x: 8;
-  --cursor-mid-y: 10;
-  --cursor-closed-x: 8;
-  --cursor-closed-y: 10;
+  --cursor-open-x: 16;
+  --cursor-open-y: 16;
+  --cursor-mid-x: 16;
+  --cursor-mid-y: 16;
+  --cursor-closed-x: 16;
+  --cursor-closed-y: 16;
 
   /* Composite cursor values (uses the above variables) */
   --cursor-open: var(--cursor-open-src) var(--cursor-open-x) var(--cursor-open-y), auto;
