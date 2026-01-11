@@ -854,15 +854,22 @@ body.force-motion .tree-layer {
 
 /* ===== Mobile nav ===== */
 
-@media (max-width: 700px) {
+@media (max-width: 900px) {
   .topbar { pointer-events: auto;}
 }
 
 .nav-menu-btn {
   display: none;
   font-size: 1.4rem;
-  width: 48px;
+  /* match standard nav-control sizing so the hamburger sits inside the same box */
+  width: 80px;
+  height: 56px;
+  padding: 0;
+  align-items: center;
   justify-content: center;
+  border-radius: 14px;
+  box-sizing: border-box;
+  overflow: visible;
 }
 
 .drawer-backdrop,
@@ -870,13 +877,16 @@ body.force-motion .tree-layer {
   display: none;
 }
 
-@media (max-width: 700px) {
-  .nav-desktop {
-    display: none;
+@media (max-width: 900px) {
+  /* Ensure desktop nav is fully hidden on small screens */
+  .nav-desktop,
+  .nav-right > .nav-desktop {
+    display: none !important;
   }
 
+  /* Force hamburger visible */
   .nav-menu-btn {
-    display: inline-flex;
+    display: inline-flex !important;
   }
 
   .drawer-backdrop {
