@@ -187,15 +187,54 @@ a:hover {
   transition: opacity 0.15s ease, transform 0.15s ease;
 }
 
-/* hover opens menu */
-.dropdown:hover .dropdown-menu {
-  opacity: 1;
+/* ================================
+   TERMINAL DROPDOWN (Projects menu)
+   ================================ */
 
-  pointer-events: auto;
+/* Container stays the same */
+.dropdown{
+  position: relative;
+  display: inline-flex;
+  flex: 0 0 auto;
+  width: max-content;
 }
 
-/* Invisible hover bridge so the menu doesn't collapse when crossing the gap */
-.dropdown-menu::before {
+/* Terminal panel */
+.dropdown-menu{
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 10px;
+
+  min-width: 260px;
+  padding: 8px;
+  border-radius: 8px;
+
+  background: #000; /* true terminal */
+  border: 1px solid rgba(0,255,64,0.45);
+  box-shadow:
+    0 0 0 1px rgba(0,255,64,0.10),
+    0 18px 50px rgba(0,0,0,0.72);
+
+  opacity: 0;
+  pointer-events: none;
+
+  transform: translateY(-6px) scale(0.98);
+  transform-origin: top left;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+
+  backdrop-filter: none; /* kill glass blur */
+}
+
+/* Hover opens menu */
+.dropdown:hover .dropdown-menu{
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0) scale(1);
+}
+
+/* Invisible hover bridge so it doesn't collapse */
+.dropdown-menu::before{
   content: "";
   position: absolute;
   left: 0;
@@ -204,28 +243,87 @@ a:hover {
   height: 12px;
 }
 
-.dropdown-item {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  padding: 10px 10px;
-  border-radius: 12px;
-  
-  cursor: pointer;
+/* Subtle scanline overlay (like your loader) */
+.dropdown-menu::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.02), transparent 12%);
+  opacity: 0.22;
+  border-radius: 8px;
+}
+
+/* Optional prompt line at top of menu.
+   If you don't add the HTML element, this is ignored. */
+.dropdown-prompt{
+  font-family: Consolas, "Lucida Console", "Courier New", monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.15em;
+  color: rgba(0,255,64,0.65);
+  padding: 6px 10px 6px;
+  border-bottom: 1px dashed rgba(0,255,64,0.22);
+  margin-bottom: 6px;
+}
+
+/* Make items look like commands */
+.dropdown-item{
+  display: block;
+  font-family: Consolas, "Lucida Console", "Courier New", monospace;
+  font-size: 0.92rem;
+  line-height: 1.35;
+
+  padding: 8px 10px 8px 26px;
+  border-radius: 6px;
+
+  color: rgba(235,240,245,0.92);
   text-decoration: none;
-  color: var(--text);
 
   border: 1px solid transparent;
+  position: relative;
+
   transition: background 0.12s ease, border-color 0.12s ease;
 }
 
-.dropdown-item:hover {
-  background: rgba(255,255,255,0.08);
-  border-color: rgba(255,255,255,0.12);
+/* Command prompt marker */
+.dropdown-item::before{
+  content: ">";
+  position: absolute;
+  left: 10px;
+  top: 8px;
+  color: rgba(0,255,64,0.65);
 }
 
-.dropdown-item .title { font-weight: 650; font-size: 0.95rem; }
-.dropdown-item .sub { opacity: 0.78; font-size: 0.82rem; }
+/* Hover = armed row */
+.dropdown-item:hover{
+  background: rgba(0,255,64,0.06);
+  border-color: rgba(0,255,64,0.18);
+  text-decoration: none; /* override your global a:hover underline */
+}
+
+/* Add a blinking caret on hover */
+.dropdown-item:hover::after{
+  content: " █";
+  color: rgba(0,255,64,0.9);
+  animation: dropdownCaretBlink 0.9s steps(1) infinite;
+}
+
+@keyframes dropdownCaretBlink{
+  50%{ opacity: 0; }
+}
+
+/* If your dropdown items contain .title/.sub, keep them terminal-ish */
+.dropdown-item .title{
+  font-weight: 650;
+  font-size: 0.92rem;
+  color: rgba(235,240,245,0.92);
+}
+
+.dropdown-item .sub{
+  font-size: 0.78rem;
+  color: rgba(180,190,200,0.55);
+  margin-top: 2px;
+}
 
 /* Icon buttons (same size as nav-control) */
 .icon-link {
@@ -1320,4 +1418,266 @@ body.drawer-open .mobile-drawer {
 .project-text li.is-visible{
   opacity: 1;
   transform: translateY(0);
+}
+
+
+/* =========================
+   TERMINAL NAV THEME OVERRIDE
+   Paste near the end of styles.css
+   ========================= */
+
+/* tighten the whole nav vibe */
+.topbar{
+  top: 14px;
+  z-index: 1500;
+}
+
+/* Shared terminal button look */
+.nav-control,
+.dropdown-btn,
+.icon-link{
+  background: #000 !important;
+  border: 1px solid rgba(0,255,64,0.45) !important;
+  border-radius: 10px !important;
+
+  box-shadow:
+    0 0 0 1px rgba(0,255,64,0.10),
+    0 14px 40px rgba(0,0,0,0.65) !important;
+
+  font-family: Consolas, "Lucida Console", "Courier New", monospace !important;
+  color: rgba(235,240,245,0.92) !important;
+
+  letter-spacing: 0.2px;
+  position: relative;
+}
+
+/* remove the “glassy” hover behavior */
+.nav-control:hover,
+.dropdown-btn:hover,
+.icon-link:hover{
+  transform: none !important;
+  background: rgba(0,255,64,0.06) !important;
+  border-color: rgba(0,255,64,0.65) !important;
+  box-shadow:
+    0 0 0 1px rgba(0,255,64,0.18),
+    0 18px 55px rgba(0,0,0,0.75) !important;
+}
+
+/* make focus look terminal instead of default white outline */
+.nav-control:focus-visible,
+.dropdown-btn:focus-visible,
+.icon-link:focus-visible{
+  outline: 2px solid rgba(0,255,64,0.55) !important;
+  outline-offset: 3px;
+}
+
+/* Brand looks like a command */
+.brand{
+  font-weight: 700 !important;
+  letter-spacing: 0.6px !important;
+}
+
+/* Add prompt marker to all nav buttons except icon-only buttons */
+.nav-control::before,
+.dropdown-btn::before{
+  content: ">";
+  color: rgba(0,255,64,0.75);
+  margin-right: 10px;
+}
+
+/* Keep icon buttons clean (no ">") */
+.icon-link::before{ content: none !important; }
+
+/* Icons match terminal green (if your SVG uses fill) */
+.icon-link svg{
+  fill: rgba(0,255,64,0.85) !important;
+}
+
+/* Subtle scanline overlay on buttons (same vibe as cmd window) */
+.nav-control::after,
+.dropdown-btn::after,
+.icon-link::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  border-radius: inherit;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.03), transparent 12%);
+  opacity: 0.22;
+}
+
+/* Optional: hover caret blink at the end of the text */
+.nav-control:hover span::after,
+.dropdown-btn:hover span::after{
+  content: " █";
+  color: rgba(0,255,64,0.9);
+  animation: navCaretBlink 0.9s steps(1) infinite;
+}
+
+/* If your nav buttons do NOT wrap text in a span, this makes it still work */
+.nav-control:hover::marker{ content: ""; }
+
+@keyframes navCaretBlink{
+  50%{ opacity: 0; }
+}
+
+/* Dropdown menu should sit above terminal buttons cleanly */
+.dropdown-menu{
+  z-index: 2005;
+}
+
+/* Make the dropdown button text consistent */
+.dropdown-btn{
+  padding-left: 22px; /* room for ">" marker */
+}
+
+/* Keep sizing consistent with your old nav */
+.nav-control{
+  height: 56px;
+  padding: 0 22px;
+}
+
+.icon-link{
+  width: 56px;
+  height: 56px;
+  border-radius: 10px !important;
+}
+
+/* Remove global link underline hover inside nav */
+.topbar a:hover{
+  text-decoration: none !important;
+}
+/* =========================
+   TERMINAL ABOUT OVERLAY THEME
+   Paste after your existing About overlay styles
+   ========================= */
+
+.about-overlay{
+  background: rgba(0,0,0,0.72) !important;
+  backdrop-filter: blur(3px) !important;
+}
+
+/* Make the sheet look like your CMD window */
+.about-sheet{
+  background: #000 !important;
+  border: 1px solid rgba(0,255,64,0.45) !important;
+  border-radius: 10px !important;
+
+  box-shadow:
+    0 0 0 1px rgba(0,255,64,0.10),
+    0 40px 120px rgba(0,0,0,0.80) !important;
+
+  font-family: Consolas, "Lucida Console", "Courier New", monospace !important;
+  color: rgba(235,240,245,0.92) !important;
+
+  position: relative;
+  overflow: hidden;
+}
+
+/* Scanline/CRT-ish overlay like the cmd panels */
+.about-sheet::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.03), transparent 14%);
+  opacity: 0.25;
+}
+
+/* Add a subtle prompt label */
+.about-sheet::before{
+  content: "C:\\ABOUT>";
+  position: absolute;
+  top: 12px;
+  left: 14px;
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  color: rgba(0,255,64,0.70);
+  opacity: 0.95;
+  pointer-events: none;
+}
+
+/* Push content down so the prompt label doesn't overlap */
+.about-sheet{
+  padding-top: 44px !important;
+}
+
+/* Terminal heading */
+.about-sheet h1{
+  margin: 0 0 10px !important;
+  font-family: Consolas, "Lucida Console", "Courier New", monospace !important;
+  font-weight: 700 !important;
+  color: rgba(0,255,64,0.95) !important;
+  letter-spacing: 0.4px;
+  position: relative;
+  padding-left: 1.6em;
+}
+
+/* // prefix on heading */
+.about-sheet h1::before{
+  content: "//";
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: rgba(0,255,64,0.75);
+}
+
+/* Body text like terminal output */
+.about-sub{
+  color: rgba(235,240,245,0.90) !important;
+  opacity: 1 !important;
+  line-height: 1.75 !important;
+  max-width: 78ch;
+}
+
+/* Tags become terminal chips */
+.about-meta span{
+  border: 1px solid rgba(0,255,64,0.35) !important;
+  background: rgba(0,255,64,0.06) !important;
+  color: rgba(0,255,64,0.85) !important;
+  border-radius: 999px !important;
+  font-family: Consolas, "Lucida Console", "Courier New", monospace !important;
+  font-size: 0.9rem !important;
+}
+
+/* Actions become terminal buttons */
+.about-actions a{
+  border: 1px solid rgba(0,255,64,0.45) !important;
+  background: rgba(0,0,0,0.9) !important;
+  color: rgba(235,240,245,0.92) !important;
+  border-radius: 10px !important;
+
+  font-family: Consolas, "Lucida Console", "Courier New", monospace !important;
+  text-decoration: none !important;
+
+  box-shadow: 0 0 0 1px rgba(0,255,64,0.10);
+  position: relative;
+  padding-left: 18px !important;
+}
+
+/* Add prompt marker */
+.about-actions a::before{
+  content: ">";
+  position: absolute;
+  left: 10px;
+  color: rgba(0,255,64,0.75);
+}
+
+/* Hover = green glow */
+.about-actions a:hover{
+  transform: none !important;
+  background: rgba(0,255,64,0.08) !important;
+  border-color: rgba(0,255,64,0.70) !important;
+  box-shadow:
+    0 0 0 1px rgba(0,255,64,0.20),
+    0 18px 55px rgba(0,0,0,0.75) !important;
+}
+
+/* Optional: links in about body match terminal green */
+.about-sheet a{
+  color: rgba(0,255,64,0.92) !important;
+  border-bottom: 1px dotted rgba(0,255,64,0.35);
+}
+.about-sheet a:hover{
+  border-bottom-style: solid;
 }
