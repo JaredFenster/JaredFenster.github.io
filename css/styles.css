@@ -13,12 +13,19 @@
   --nav-stroke-hover: rgba(255, 255, 255, 0.35);
 }
 
+:root{
+  --term-green: #00ff40;
+  --term-green-dim: rgba(0, 255, 60, 0.75);
+  --term-muted: rgba(180,190,200,0.55);
+}
+
+
 * { box-sizing: border-box; }
 
 body {
   margin: 0;
   background: var(--bg);
-  font-family: 'Space Grotesk', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: Consolas, "Lucida Console", "Courier New", monospace;
   color: var(--text);
 }
 
@@ -432,11 +439,115 @@ code:not([class*="language-"]) {
   max-width: 520px;
 }
 
-.project-text h2 {
-  font-size: clamp(2.2rem, 3vw, 3rem);
-  font-weight: 800;
-  margin-bottom: 20px;
+/* ===== Terminal-style section headings ===== */
+.project-text h2{
+  font-family: Consolas, "Lucida Console", "Courier New", monospace;
+  font-size: 2rem;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  color: var(--term-green);
+
+  position: relative;
+  padding-left: 1.8em;
 }
+
+/* // prefix */
+.project-text h2::before{
+  content: "//";
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: var(--term-green-dim);
+}
+
+.project-text ul{
+  list-style: none;
+  padding-left: 0;
+}
+
+.project-text li{
+  position: relative;
+  padding-left: 1.2em;
+}
+
+.project-text li::before{
+  content: ">";
+  position: absolute;
+  left: 0;
+  color: var(--term-green-dim);
+}
+
+.project-text a{
+  color: var(--term-green);
+  text-decoration: none;
+  border-bottom: 1px dotted rgba(124,255,155,0.4);
+}
+
+.project-text a:hover{
+  border-bottom-style: solid;
+}
+
+.project-section::before{
+  content: "C:\\ROBOT_ROOM>";
+  position: absolute;
+  top: 24px;
+  left: 8vw;
+
+  font-family: Consolas, monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  color: rgba(0, 255, 60, 0.615);
+  pointer-events: none;
+}
+
+
+.project-text li.ok::before   { content: "[OK]";   color: rgba(124,255,155,0.95); }
+.project-text li.warn::before { content: "[WARN]"; color: rgba(255,210,120,0.95); }
+.project-text li.err::before  { content: "[ERR]";  color: rgba(255,120,120,0.95); }
+
+/* ===== Terminal typing headings (armed but inactive) ===== */
+.project-text h2{
+  font-family: Consolas, "Lucida Console", "Courier New", monospace;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  color: var(--term-green);
+
+  position: relative;
+  padding-left: 1.8em;
+
+  overflow: hidden;
+  white-space: nowrap;
+  max-width: 0;
+}
+
+/* // prefix */
+.project-text h2::before{
+  content: "//";
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: var(--term-green-dim);
+}
+
+/* When activated */
+.project-text h2.is-typing{
+  animation: typeIn 0.9s steps(26, end) forwards;
+}
+
+@keyframes typeIn{
+  to { max-width: 40ch; }
+}
+
+/* Mobile: disable typing (feels cramped) */
+@media (max-width: 900px){
+  .project-text h2{
+    max-width: none;
+    white-space: normal;
+    animation: none !important;
+  }
+}
+
+
 
 .project-text p {
   font-size: 1.5rem;
@@ -551,11 +662,17 @@ body.cursor-closed .dropdown-item { cursor: var(--cursor-closed); }
 /* ===== PROJECT PAGE BACKDROP (subtle, not distracting) ===== */
 body.project-page {
   background:
-    radial-gradient(1200px 700px at 20% 10%, rgba(255,255,255,0.06), transparent 60%),
-    radial-gradient(900px 600px at 80% 30%, rgba(120,170,255,0.05), transparent 55%),
-    radial-gradient(900px 700px at 40% 90%, rgba(255,180,120,0.04), transparent 60%),
-    linear-gradient(180deg, #121a2c 0%, #09386e 55%, #000000 100%);
+    repeating-linear-gradient(
+      to bottom,
+      rgba(255,255,255,0.015),
+      rgba(255,255,255,0.015) 1px,
+      transparent 1px,
+      transparent 3px
+    ),
+    linear-gradient(180deg, #06070a 0%, #020304 100%);
 }
+
+
 
 /* soft vignette to frame the content */
 body.project-page::before {
@@ -577,39 +694,6 @@ pre[class*="language-"] > code[class*="language-"] {
   line-height: 1.55;
 }
 
-/* Keep Prism line numbers perfectly aligned with code line-height */
-pre.line-numbers {
-  line-height: 1.2;
-}
-
-pre.line-numbers > code {
-  line-height: 1.2;
-}
-
-/* THIS is the key: line-number rows need matching line-height */
-pre.line-numbers .line-numbers-rows > span {
-  line-height: 1.2;
-}
-
-/* ===== Prism line-numbers: force gutter to match code height ===== */
-pre.line-numbers {
-  position: relative;
-}
-
-/* Ensure the gutter spans the full height of the code block */
-pre.line-numbers .line-numbers-rows {
-  position: absolute;
-  top: 0px;      /* matches your pre padding-top (16px) */
-  bottom: 0px;   /* matches your pre padding-bottom (16px) */
-  left: 1;
-  height: auto !important;
-}
-
-/* Make each number take the same line-height as the code */
-pre.line-numbers .line-numbers-rows > span {
-  display: block;
-  line-height: 1.55 !important; /* must match your code line-height */
-}
 
 
 
@@ -1045,3 +1129,195 @@ body.drawer-open .mobile-drawer {
   transition: opacity 0.28s ease, transform 0.28s ease;
 }
 
+/* ===== Embedded CMD code panel (same style as loader) ===== */
+.cmd.cmd--embed{
+  width: 100%;
+  max-width: none;
+  position: relative; /* so .cmd::after overlay positions correctly */
+}
+
+/* Put Copy button inside the input row without breaking alignment */
+.cmd-copy{
+  margin-left: auto;
+  height: 28px;
+  padding: 0 10px;
+  border-radius: 6px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.14);
+  color: rgba(255,255,255,0.88);
+  font-family: inherit;
+  cursor: pointer;
+}
+.cmd-copy:hover{ background: rgba(255,255,255,0.10); }
+
+/* Static command text (no typing animation, just styled) */
+.typed--static{ opacity: 0.95; }
+
+/* Code body: allow scrolling for long code */
+.cmd-body--code{
+  max-height: 70vh;      /* match your project-image tall card vibe */
+  overflow: auto;        /* scroll code */
+  padding: 0;            /* pre will own padding */
+}
+
+/* Make Prism sit nicely inside the CMD body */
+.cmd-body--code pre{
+  margin: 0;
+  padding: 12px 14px 14px;
+  max-height: none;      /* override any global pre max-height */
+  overflow: visible;     /* let container scroll instead */
+  background: transparent; /* keep true CMD black */
+}
+
+/* Line numbers spacing: Prism plugin expects extra left padding */
+.cmd-body--code pre.line-numbers{
+  padding-left: 3.2em;
+}
+
+/* Optional: slightly dim Prism tokens so it feels like CMD, not "VS Code theme" */
+.cmd-body--code code[class*="language-"],
+.cmd-body--code pre[class*="language-"]{
+  color: rgba(255,255,255,0.92);
+  text-shadow: none;
+}
+
+
+/* Embedded CMD code panel: scroll inside body (like real CMD) */
+.cmd-body--code{
+  max-height: 70vh;
+  overflow: auto;
+  padding: 0;
+}
+
+/* The code block itself: no Prism rounding/padding weirdness */
+.cmd-body--code .cmd-pre{
+  margin: 0;
+  padding: 12px 14px 14px;
+  background: transparent;
+  border-radius: 0;
+  max-height: none;
+  overflow: visible; /* container scrolls */
+}
+
+/* Prism defaults sometimes add backgrounds; force transparent */
+.cmd-body--code pre[class*="language-"],
+.cmd-body--code code[class*="language-"]{
+  background: transparent !important;
+  text-shadow: none;
+}
+
+/* Slightly smaller + denser like Windows CMD */
+.cmd-body--code code[class*="language-"]{
+  font-size: 0.98rem;
+  line-height: 1.45;
+}
+
+
+/* ===== Terminal code colors (only inside CMD embed) ===== */
+.cmd-body--code pre,
+.cmd-body--code code{
+  background: transparent !important;
+  text-shadow: none !important;
+  font-family: Consolas, "Lucida Console", "Courier New", monospace !important;
+  font-size: 0.98rem;
+  line-height: 1.45;
+  color: rgba(235, 240, 245, 0.92);
+}
+
+/* Make Prism stop painting its own backgrounds */
+.cmd-body--code pre[class*="language-"]{
+  background: transparent !important;
+}
+
+/* Selection looks terminal-y */
+.cmd-body--code pre ::selection,
+.cmd-body--code code ::selection{
+  background: rgba(255,255,255,0.16);
+}
+
+/* Subtle token palette (NOT vsc dark plus) */
+.cmd-body--code .token.comment,
+.cmd-body--code .token.prolog,
+.cmd-body--code .token.doctype,
+.cmd-body--code .token.cdata{
+  color: rgba(170, 185, 200, 0.55);
+  font-style: italic;
+}
+
+.cmd-body--code .token.punctuation{
+  color: rgba(235, 240, 245, 0.70);
+}
+
+.cmd-body--code .token.keyword{
+  color: rgba(120, 190, 255, 0.95); /* soft terminal-blue */
+}
+
+.cmd-body--code .token.function{
+  color: rgba(255, 210, 120, 0.95); /* amber */
+}
+
+.cmd-body--code .token.string,
+.cmd-body--code .token.char,
+.cmd-body--code .token.attr-value{
+  color: rgba(150, 230, 170, 0.95); /* terminal green */
+}
+
+.cmd-body--code .token.number{
+  color: rgba(255, 170, 200, 0.92); /* soft pink */
+}
+
+.cmd-body--code .token.boolean,
+.cmd-body--code .token.constant{
+  color: rgba(255, 170, 200, 0.92);
+}
+
+.cmd-body--code .token.operator{
+  color: rgba(235, 240, 245, 0.72);
+}
+
+.cmd-body--code .token.class-name,
+.cmd-body--code .token.builtin{
+  color: rgba(180, 200, 255, 0.90);
+}
+
+.cmd-body--code .token.decorator,
+.cmd-body--code .token.annotation{
+  color: rgba(200, 170, 255, 0.90);
+}
+
+
+/* Allow section to break the normal 2-column constraint */
+.project-section--wide {
+  grid-template-columns: 1fr 1fr;
+}
+
+/* Make the terminal span BOTH columns */
+.cmd--wide {
+  grid-column: 1 / -1;
+  height: 80vh; /* taller = more immersive */
+}
+
+/* Let the code breathe vertically */
+.cmd--wide .cmd-body--code {
+  max-height: calc(80vh - 90px); /* title + prompt accounted for */
+}
+
+
+/* ===== Terminal bullet reveal (armed state) ===== */
+.project-text ul{
+  opacity: 1;
+}
+
+.project-text li{
+  opacity: 0;
+  transform: translateY(4px);
+  transition:
+    opacity 0.35s ease,
+    transform 0.35s ease;
+}
+
+/* When revealed */
+.project-text li.is-visible{
+  opacity: 1;
+  transform: translateY(0);
+}

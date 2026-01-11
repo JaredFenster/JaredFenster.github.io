@@ -4,24 +4,18 @@
   <meta charset="UTF-8" />
 
   <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-XHHEVSN1WV"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-XHHEVSN1WV');
-</script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XHHEVSN1WV"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XHHEVSN1WV');
+  </script>
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>B2EMO</title>
 
   <link rel="stylesheet" href="../css/styles.css"/>
-
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/PrismJS/prism-themes@master/themes/prism-vsc-dark-plus.min.css">
-
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
-
 
   <script defer src="../js/include.js"></script>
   <script defer src="../js/app.js"></script>
@@ -34,23 +28,15 @@
   <!-- SECTION 1 -->
   <section class="project-section">
     <div class="project-image project-video">
-      <video
-        autoplay
-        muted
-        loop
-        playsinline
-        preload="metadata"
-      >
-    <source src="../assets/B2EMO/B2EMO_PORTFOLIO.mp4" type="video/mp4">
-    Your browser does not support the video tag.
-  </video>
-</div>
+      <video autoplay muted loop playsinline preload="metadata">
+        <source src="../assets/B2EMO/B2EMO_PORTFOLIO.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+    </div>
 
     <div class="project-text">
       <h2>B2EMO</h2>
-      <p>
-        Full-scale, B2EMO replica from Star Wars.
-      </p>
+      <p>Full-scale, B2EMO replica from Star Wars.</p>
       <ul>
         <li>Full Scale and Functionality</li>
         <li>Omnidirectional Motion</li>
@@ -63,7 +49,7 @@
   <!-- SECTION 2 -->
   <section class="project-section reverse">
     <div class="project-text">
-      <h2>Mechanical & Hardware Design</h2>
+      <h2>Mechanical Design</h2>
       <ul>
         <li>The base of the robot is constructed with 2040 Aluminum Extrusion with Linear Rails to allow the wheels to seperate</li>
         <li>The rest of the robot apart from the bearings and Steel Rods is completely 3D printed with PLA</li>
@@ -75,20 +61,15 @@
     </div>
 
     <div class="project-image project-video">
-      <video
-        autoplay
-        muted
-        loop
-        playsinline
-        preload="metadata"
-      >
-    <source src="../assets/B2EMO/MECHANICAL_DISPLAY.mp4" type="video/mp4">
-    Your browser does not support the video tag.
+      <video autoplay muted loop playsinline preload="metadata">
+        <source src="../assets/B2EMO/MECHANICAL_DISPLAY.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+    </div>
   </section>
 
   <!-- SECTION 3 -->
   <section class="project-section">
-    
     <div class="project-image">
       <img src="../assets/B2EMO/Electronics.JPEG" alt="Electronics">
     </div>
@@ -111,15 +92,34 @@
     <div class="project-text">
       <h2>Software</h2>
       <ul>
-        <li>Programmed in C++</li>
+        <li>Programmed in Python</li>
         <li>Uses NRF communication pipeline to communicate with the controller</li>
         <li>Motion filters were applied to almost all inputs for smooth motion</li>
         <li><a href="controller.html">Click here to see the controller for this project</a></li>
       </ul>
     </div>
 
-      <pre class="line-numbers language-cpp" data-src="../assets/B2EMO/code.ino">
-    <code class="language-cpp"></code>
+    <!-- Terminal-styled code block (Python, NOT wide) -->
+    <div class="cmd cmd--embed">
+      <div class="cmd-titlebar">
+        <div class="cmd-title">Command Prompt</div>
+        <div class="cmd-controls">
+          <span class="cmd-btn">—</span><span class="cmd-btn">□</span><span class="cmd-btn cmd-close">×</span>
+        </div>
+      </div>
+
+      <div class="cmd-input">
+        <span class="cmd-path">C:\B2EMO&gt;</span>
+        <span class="typed typed--static">B2EMO_Control.py</span>
+        <span class="caret"></span>
+      </div>
+
+      <div class="cmd-body cmd-body--code">
+        <pre class="cmd-pre" data-src="../assets/B2EMO/code.py">
+          <code class="language-python"></code>
+        </pre>
+      </div>
+    </div>
   </section>
 
   <!-- SECTION 5 -->
@@ -140,16 +140,16 @@
 
 </body>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-clike.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-cpp.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/file-highlight/prism-file-highlight.min.js"></script>
+<!-- Python only -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
 
-  <script>
-    window.addEventListener("load", () => Prism.highlightAll());
-  </script>
+<!-- loads code from data-src -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/file-highlight/prism-file-highlight.min.js"></script>
+
+<script>
+  window.addEventListener("load", () => Prism.highlightAll());
+</script>
 
 </html>

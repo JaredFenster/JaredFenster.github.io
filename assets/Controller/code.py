@@ -1,23 +1,19 @@
-#include <SPI.h>
-#include <nRF24L01.h>
-#include <RF24.h>
 
-int
-  rx = A0,
-  ry = A2,
-  lx = A3,
-  ly = A4,
-  rt = A6,
-  lt = A7,
-  p1 = A9,
-  p2 = A10,
-  p3 = A11,
-  br = A12,
-  bl = A13,
-  bx = A6,
-  rs = A1,
-  ls = A5,
-  by = A8;
+ int rx = A0,
+     ry = A2,
+     lx = A3,
+     ly = A4,
+     rt = A6,
+     lt = A7,
+     p1 = A9,
+     p2 = A10,
+     p3 = A11,
+     br = A12,
+     bl = A13,
+     bx = A6,
+     rs = A1,
+     ls = A5,
+     by = A8;
 
 RF24 radio(9, 8);
 const byte address[6] = "00001";

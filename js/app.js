@@ -661,3 +661,51 @@ function bootInteractive() {
 
 document.addEventListener("DOMContentLoaded", bootInteractive);
 window.addEventListener("nav:loaded", bootInteractive);
+
+
+// Terminal-style typing + cascading bullets (on scroll)
+document.addEventListener("DOMContentLoaded", () => {
+  const sections = document.querySelectorAll(".project-section");
+
+  if (!("IntersectionObserver" in window)) return;
+
+  const observer = new IntersectionObserver(
+    (entries, obs) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+
+        const section = entry.target;
+        const heading = section.querySelector(".project-text h2");
+        const bullets = section.querySelectorAll(".project-text li");
+
+        if (!heading) {
+          obs.unobserve(section);
+          return;
+        }
+
+        // 1) Start heading typing
+        heading.classList.add("is-typing");
+
+        // 2) After typing finishes, reveal bullets one-by-one
+        const TYPE_DURATION = 900; // must match CSS typing animation
+        const BULLET_DELAY = 140;  // ms between bullets
+
+        setTimeout(() => {
+          bullets.forEach((li, i) => {
+            setTimeout(() => {
+              li.classList.add("is-visible");
+            }, i * BULLET_DELAY);
+          });
+        }, TYPE_DURATION + 120); // slight pause after heading
+
+        obs.unobserve(section); // 🔑 run once
+      });
+    },
+    {
+      threshold: 0.55,
+      rootMargin: "0px 0px -10% 0px"
+    }
+  );
+
+  sections.forEach(section => observer.observe(section));
+});
