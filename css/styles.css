@@ -14,8 +14,14 @@
 }
 
 :root{
-  --term-green: #00ff40;
-  --term-green-dim: rgba(0, 255, 60, 0.75);
+  /* terminal / accent colors — changed to grey to desaturate nav theme */
+  --term-green: #8b8f94; /* primary accent (now grey) */
+  --term-green-dim: rgba(139,143,148,0.65); /* dimmer accent */
+  --term-green-muted: rgba(139,143,148,0.22);
+  --term-green-outline: rgba(139,143,148,0.10);
+  --term-green-soft: rgba(139,143,148,0.06);
+  --term-green-hover-border: rgba(139,143,148,0.18);
+  --term-green-caret: rgba(139,143,148,0.90);
   --term-muted: rgba(180,190,200,0.55);
 }
 
@@ -211,9 +217,9 @@ a:hover {
   border-radius: 8px;
 
   background: #000; /* true terminal */
-  border: 1px solid rgba(0,255,64,0.45);
+  border: 1px solid var(--term-green-dim);
   box-shadow:
-    0 0 0 1px rgba(0,255,64,0.10),
+    0 0 0 1px var(--term-green-outline),
     0 18px 50px rgba(0,0,0,0.72);
 
   opacity: 0;
@@ -260,9 +266,9 @@ a:hover {
   font-family: Consolas, "Lucida Console", "Courier New", monospace;
   font-size: 0.72rem;
   letter-spacing: 0.15em;
-  color: rgba(0,255,64,0.65);
+  color: var(--term-green-dim);
   padding: 6px 10px 6px;
-  border-bottom: 1px dashed rgba(0,255,64,0.22);
+  border-bottom: 1px dashed var(--term-green-muted);
   margin-bottom: 6px;
 }
 
@@ -291,20 +297,20 @@ a:hover {
   position: absolute;
   left: 10px;
   top: 8px;
-  color: rgba(0,255,64,0.65);
+  color: var(--term-green-dim);
 }
 
 /* Hover = armed row */
 .dropdown-item:hover{
-  background: rgba(0,255,64,0.06);
-  border-color: rgba(0,255,64,0.18);
+  background: var(--term-green-soft);
+  border-color: var(--term-green-hover-border);
   text-decoration: none; /* override your global a:hover underline */
 }
 
 /* Add a blinking caret on hover */
 .dropdown-item:hover::after{
   content: " █";
-  color: rgba(0,255,64,0.9);
+  color: var(--term-green-caret);
   animation: dropdownCaretBlink 0.9s steps(1) infinite;
 }
 
@@ -594,7 +600,7 @@ code:not([class*="language-"]) {
   font-family: Consolas, monospace;
   font-size: 0.75rem;
   letter-spacing: 0.15em;
-  color: rgba(0, 255, 60, 0.615);
+  color: var(--term-green-dim);
   pointer-events: none;
 }
 
@@ -663,25 +669,13 @@ code:not([class*="language-"]) {
 */
 
 :root {
-  /* Cursor image sources (keep path relative to this CSS file) */
-  --cursor-open-src: url("../assets/Cursor/open.png");
-  --cursor-mid-src: url("../assets/Cursor/mid.png");
-  --cursor-closed-src: url("../assets/Cursor/closed.png");
-
-  /* Hotspot offsets (pixels from top-left). Tweak these to move the active
-     point of the cursor without editing the PNG. Increase X to move hotspot
-     right, increase Y to move it down. */
-  --cursor-open-x: 16;
-  --cursor-open-y: 16;
-  --cursor-mid-x: 16;
-  --cursor-mid-y: 16;
-  --cursor-closed-x: 16;
-  --cursor-closed-y: 16;
-
-  /* Composite cursor values (uses the above variables) */
-  --cursor-open: var(--cursor-open-src) var(--cursor-open-x) var(--cursor-open-y), auto;
-  --cursor-mid: var(--cursor-mid-src) var(--cursor-mid-x) var(--cursor-mid-y), pointer;
-  --cursor-closed: var(--cursor-closed-src) var(--cursor-closed-x) var(--cursor-closed-y), pointer;
+  /* Cursor behavior: revert to default cursors (no image assets).
+     JS may still toggle `body.cursor-open|mid|closed` classes; these
+     now map to standard cursor keywords so clicking rules are preserved. */
+  --cursor-open: auto;
+  --cursor-mid: pointer;
+  /* when mouse is pressed but not over something clickable, show default cursor */
+  --cursor-closed: auto;
 }
 
 /* Apply cursor state to body and all descendant elements so the element
@@ -719,6 +713,14 @@ body.cursor-closed .nav-control,
 body.cursor-closed .icon-link,
 body.cursor-closed .dropdown-btn,
 body.cursor-closed .dropdown-item { cursor: var(--cursor-closed); }
+
+/* Ensure interactive nav elements still show pointer when clicking.
+  This overrides the general `body.cursor-closed *` rule above. */
+body.cursor-closed .nav-control,
+body.cursor-closed .icon-link,
+body.cursor-closed .dropdown-btn,
+body.cursor-closed .dropdown-item,
+body.cursor-closed .brand { cursor: pointer !important; }
 
 
 .project-text ul {
@@ -1447,11 +1449,11 @@ body.drawer-open .mobile-drawer {
 .dropdown-btn,
 .icon-link{
   background: #000 !important;
-  border: 1px solid rgba(0,255,64,0.45) !important;
+  border: 1px solid var(--term-green-dim) !important;
   border-radius: 10px !important;
 
   box-shadow:
-    0 0 0 1px rgba(0,255,64,0.10),
+    0 0 0 1px var(--term-green-outline),
     0 14px 40px rgba(0,0,0,0.65) !important;
 
   font-family: Consolas, "Lucida Console", "Courier New", monospace !important;
@@ -1466,10 +1468,10 @@ body.drawer-open .mobile-drawer {
 .dropdown-btn:hover,
 .icon-link:hover{
   transform: none !important;
-  background: rgba(0,255,64,0.06) !important;
-  border-color: rgba(0,255,64,0.65) !important;
+  background: var(--term-green-soft) !important;
+  border-color: var(--term-green-dim) !important;
   box-shadow:
-    0 0 0 1px rgba(0,255,64,0.18),
+    0 0 0 1px var(--term-green-hover-border),
     0 18px 55px rgba(0,0,0,0.75) !important;
 }
 
@@ -1477,7 +1479,7 @@ body.drawer-open .mobile-drawer {
 .nav-control:focus-visible,
 .dropdown-btn:focus-visible,
 .icon-link:focus-visible{
-  outline: 2px solid rgba(0,255,64,0.55) !important;
+  outline: 2px solid var(--term-green-dim) !important;
   outline-offset: 3px;
 }
 
@@ -1491,7 +1493,7 @@ body.drawer-open .mobile-drawer {
 .nav-control::before,
 .dropdown-btn::before{
   content: ">";
-  color: rgba(0,255,64,0.75);
+  color: var(--term-green-dim);
   margin-right: 10px;
 }
 
@@ -1500,7 +1502,7 @@ body.drawer-open .mobile-drawer {
 
 /* Icons match terminal green (if your SVG uses fill) */
 .icon-link svg{
-  fill: rgba(0,255,64,0.85) !important;
+  fill: var(--term-green) !important;
 }
 
 /* Subtle scanline overlay on buttons (same vibe as cmd window) */
@@ -1520,7 +1522,7 @@ body.drawer-open .mobile-drawer {
 .nav-control:hover span::after,
 .dropdown-btn:hover span::after{
   content: " █";
-  color: rgba(0,255,64,0.9);
+  color: var(--term-green-caret);
   animation: navCaretBlink 0.9s steps(1) infinite;
 }
 
@@ -1570,11 +1572,11 @@ body.drawer-open .mobile-drawer {
 /* Make the sheet look like your CMD window */
 .about-sheet{
   background: #000 !important;
-  border: 1px solid rgba(0,255,64,0.45) !important;
+  border: 1px solid var(--term-green-dim) !important;
   border-radius: 10px !important;
 
   box-shadow:
-    0 0 0 1px rgba(0,255,64,0.10),
+    0 0 0 1px var(--term-green-outline),
     0 40px 120px rgba(0,0,0,0.80) !important;
 
   font-family: Consolas, "Lucida Console", "Courier New", monospace !important;
@@ -1602,7 +1604,7 @@ body.drawer-open .mobile-drawer {
   left: 14px;
   font-size: 0.75rem;
   letter-spacing: 0.14em;
-  color: rgba(0,255,64,0.70);
+  color: var(--term-green-dim);
   opacity: 0.95;
   pointer-events: none;
 }
@@ -1617,7 +1619,7 @@ body.drawer-open .mobile-drawer {
   margin: 0 0 10px !important;
   font-family: Consolas, "Lucida Console", "Courier New", monospace !important;
   font-weight: 700 !important;
-  color: rgba(0,255,64,0.95) !important;
+  color: var(--term-green) !important;
   letter-spacing: 0.4px;
   position: relative;
   padding-left: 1.6em;
@@ -1629,7 +1631,7 @@ body.drawer-open .mobile-drawer {
   position: absolute;
   left: 0;
   top: 0;
-  color: rgba(0,255,64,0.75);
+  color: var(--term-green-dim);
 }
 
 /* Body text like terminal output */
@@ -1642,9 +1644,9 @@ body.drawer-open .mobile-drawer {
 
 /* Tags become terminal chips */
 .about-meta span{
-  border: 1px solid rgba(0,255,64,0.35) !important;
-  background: rgba(0,255,64,0.06) !important;
-  color: rgba(0,255,64,0.85) !important;
+  border: 1px solid var(--term-green-muted) !important;
+  background: var(--term-green-soft) !important;
+  color: var(--term-green) !important;
   border-radius: 999px !important;
   font-family: Consolas, "Lucida Console", "Courier New", monospace !important;
   font-size: 0.9rem !important;
@@ -1660,7 +1662,7 @@ body.drawer-open .mobile-drawer {
   font-family: Consolas, "Lucida Console", "Courier New", monospace !important;
   text-decoration: none !important;
 
-  box-shadow: 0 0 0 1px rgba(0,255,64,0.10);
+  box-shadow: 0 0 0 1px var(--term-green-outline);
   position: relative;
   padding-left: 18px !important;
 }
@@ -1670,23 +1672,23 @@ body.drawer-open .mobile-drawer {
   content: ">";
   position: absolute;
   left: 10px;
-  color: rgba(0,255,64,0.75);
+  color: var(--term-green-dim);
 }
 
 /* Hover = green glow */
 .about-actions a:hover{
   transform: none !important;
-  background: rgba(0,255,64,0.08) !important;
-  border-color: rgba(0,255,64,0.70) !important;
+  background: rgba(139,143,148,0.08) !important;
+  border-color: var(--term-green-dim) !important;
   box-shadow:
-    0 0 0 1px rgba(0,255,64,0.20),
+    0 0 0 1px rgba(139,143,148,0.20),
     0 18px 55px rgba(0,0,0,0.75) !important;
 }
 
 /* Optional: links in about body match terminal green */
 .about-sheet a{
-  color: rgba(0,255,64,0.92) !important;
-  border-bottom: 1px dotted rgba(0,255,64,0.35);
+  color: var(--term-green) !important;
+  border-bottom: 1px dotted var(--term-green-muted);
 }
 .about-sheet a:hover{
   border-bottom-style: solid;
