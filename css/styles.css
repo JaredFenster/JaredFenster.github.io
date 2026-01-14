@@ -307,10 +307,22 @@ a:hover {
   text-decoration: none; /* override your global a:hover underline */
 }
 
-/* Add a blinking caret on hover */
-.dropdown-item:hover::after{
-  content: " █";
+/* Add a blinking caret on hover — positioned at the right of the item */
+.dropdown-item::after{
+  content: "";
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
   color: var(--term-green-caret);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 120ms linear, transform 120ms linear;
+}
+
+.dropdown-item:hover::after{
+  content: "█";
+  opacity: 1;
   animation: dropdownCaretBlink 0.9s steps(1) infinite;
 }
 
@@ -1463,16 +1475,16 @@ body.drawer-open .mobile-drawer {
   position: relative;
 }
 
-/* remove the “glassy” hover behavior */
+/* Stronger, opaque hover for nav buttons (clear/soft hover replaced) */
 .nav-control:hover,
 .dropdown-btn:hover,
 .icon-link:hover{
-  transform: none !important;
-  background: var(--term-green-soft) !important;
-  border-color: var(--term-green-dim) !important;
-  box-shadow:
-    0 0 0 1px var(--term-green-hover-border),
-    0 18px 55px rgba(0,0,0,0.75) !important;
+  transform: translateY(-3px);
+  background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+  background-color: var(--nav-bg-hover);
+  border-color: var(--nav-stroke-hover);
+  color: var(--text);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.55), 0 2px 8px rgba(77,168,255,0.06);
 }
 
 /* make focus look terminal instead of default white outline */
