@@ -1512,9 +1512,10 @@ body.drawer-open .mobile-drawer {
 /* Keep icon buttons clean (no ">") */
 .icon-link::before{ content: none !important; }
 
-/* Icons match terminal green (if your SVG uses fill) */
+/* Icons match nav text color (inherit from .icon-link) */
 .icon-link svg{
-  fill: var(--term-green) !important;
+  fill: currentColor !important;
+  stroke: currentColor !important;
 }
 
 /* Subtle scanline overlay on buttons (same vibe as cmd window) */

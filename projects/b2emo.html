@@ -115,8 +115,8 @@
       </div>
 
       <div class="cmd-body cmd-body--code">
-        <pre class="cmd-pre" data-src="../assets/B2EMO/code.py">
-          <code class="language-python"></code>
+        <pre class="cmd-pre language-arduino language-cpp" data-src="../assets/B2EMO/code.ino">
+          <code class="language-arduino language-cpp"></code>
         </pre>
       </div>
     </div>
@@ -140,16 +140,36 @@
 
 </body>
 
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
 
-<!-- Python only -->
+<!-- Arduino/C++ support -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-clike.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-cpp.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-arduino.min.js"></script>
+
+<!-- Python (keep) -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
 
 <!-- loads code from data-src -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/file-highlight/prism-file-highlight.min.js"></script>
 
 <script>
-  window.addEventListener("load", () => Prism.highlightAll());
+  window.addEventListener("load", () => {
+    // Fallback aliases so .ino works even if Arduino is missing
+    if (Prism && Prism.languages) {
+      if (!Prism.languages.arduino && Prism.languages.cpp) {
+        Prism.languages.arduino = Prism.languages.cpp;
+      }
+      if (!Prism.languages.ino && Prism.languages.arduino) {
+        Prism.languages.ino = Prism.languages.arduino;
+      }
+    }
+    if (Prism?.plugins?.fileHighlight?.highlight) {
+      Prism.plugins.fileHighlight.highlight();
+    }
+    Prism.highlightAll();
+  });
 </script>
 
 </html>
