@@ -1828,3 +1828,16 @@ body.drawer-open .mobile-drawer {
   -webkit-backdrop-filter: none !important;
   backdrop-filter: none !important;
 }
+/* make sure nothing reintroduces strokes on icons */
+.icon-link svg, .icon-link svg *{
+  stroke: none !important;
+}
+/* Fix: last icon clipped by the nav pill edge */
+.nav-right{
+  padding-right: 22px !important; /* was ~14px; gives breathing room */
+}
+
+/* Optional: extra safety only for the last icon */
+.nav-desktop > a.icon-link:last-child{
+  margin-right: 6px !important;
+}
