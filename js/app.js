@@ -240,7 +240,6 @@ window.initNav = function initNav() {
     dropdownPortal.setAttribute("aria-label", "Projects");
 
     dropdownPortal.innerHTML = `
-      <div class="projects-hover-bridge" aria-hidden="true"></div>
       <div class="projects-dropdown-menu" role="menu" aria-label="Projects">
         <div class="dropdown-prompt">C:\\PROJECTS&gt;</div>
 
@@ -290,13 +289,12 @@ window.initNav = function initNav() {
   const menu = dropdownPortal.querySelector(".projects-dropdown-menu");
   if (!menu) return;
 
-  // Ensure bridge exists even if markup came from HTML
+  // Bridge will be created only when the dropdown is opened.
+  // If markup included a bridge, remove it so it only exists while open.
   let bridge = dropdownPortal.querySelector(".projects-hover-bridge");
-  if (!bridge) {
-    bridge = document.createElement("div");
-    bridge.className = "projects-hover-bridge";
-    bridge.setAttribute("aria-hidden", "true");
-    dropdownPortal.insertBefore(bridge, menu);
+  if (bridge) {
+    bridge.remove();
+    bridge = null;
   }
 
   // Init once
@@ -320,6 +318,7 @@ window.initNav = function initNav() {
   const GAP_PX = 22; // your current gap
 
   const syncBridgeSize = () => {
+    if (!bridge) return;
     const w = menu.getBoundingClientRect().width || 280;
     bridge.style.position = "absolute";
     bridge.style.left = "0px";
@@ -348,6 +347,13 @@ window.initNav = function initNav() {
   const open = () => {
     clearTimeout(closeT);
     position();
+    // Create the invisible bridge only when opening
+    if (!bridge) {
+      bridge = document.createElement("div");
+      bridge.className = "projects-hover-bridge";
+      bridge.setAttribute("aria-hidden", "true");
+      dropdownPortal.insertBefore(bridge, menu);
+    }
     dropdownPortal.classList.add("is-open");
     dropdownPortal.style.pointerEvents = "auto";
     dropdownButton.setAttribute("aria-expanded", "true");
@@ -364,6 +370,11 @@ window.initNav = function initNav() {
       dropdownPortal.classList.remove("is-open");
       dropdownPortal.style.pointerEvents = "none";
       dropdownButton.setAttribute("aria-expanded", "false");
+      // remove the bridge so it isn't present while closed
+      if (bridge && bridge.parentElement) {
+        bridge.parentElement.removeChild(bridge);
+      }
+      bridge = null;
     }, 140);
   };
 
