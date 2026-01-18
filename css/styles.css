@@ -11,6 +11,12 @@
   --nav-bg-hover: rgba(0, 0, 0, 0.60);
   --nav-stroke: rgba(255, 255, 255, 0.22);
   --nav-stroke-hover: rgba(255, 255, 255, 0.35);
+
+  /* full-width glass bar behind nav controls */
+  /* a bit clearer / more see-through */
+  --topbar-glass: rgba(6, 8, 14, 0.26);
+  --topbar-glass-hi: rgba(255, 255, 255, 0.12);
+  --topbar-glass-border: rgba(255, 255, 255, 0.16);
 }
 
 :root{
@@ -24,7 +30,6 @@
   --term-green-caret: rgba(139,143,148,0.90);
   --term-muted: rgba(180,190,200,0.55);
 }
-
 
 * { box-sizing: border-box; }
 
@@ -48,10 +53,13 @@ a:hover {
 .topbar{
   position: fixed;
   top: 12px;
-  left: 0;
-  right: 0;
-  transform: none;
+  left: 50%;
+  right: auto;
+  transform: translateX(-50%);
   z-index: 20;
+
+  width: fit-content;
+  max-width: calc(100vw - 24px);
 
   display: flex;
   justify-content: center;
@@ -69,8 +77,27 @@ a:hover {
   pointer-events: auto;
 }
 
+/* Slot-style glass wrapper around the nav controls */
+.nav-right{
+  position: relative;
+  padding: 12px 14px;
+  border-radius: 22px;
+  width: 100%;
 
+  background:
+    linear-gradient(180deg, var(--topbar-glass-hi), rgba(255,255,255,0.02)),
+    var(--topbar-glass);
 
+  border: 1px solid var(--topbar-glass-border);
+  box-shadow:
+    0 18px 40px rgba(0,0,0,0.35),
+    inset 0 1px 0 rgba(255,255,255,0.10);
+
+  -webkit-backdrop-filter: blur(24px) saturate(170%) !important;
+  backdrop-filter: blur(24px) saturate(170%) !important;
+
+  isolation: auto !important;
+}
 
 /* Fix: keep the desktop nav items in one horizontal row */
 .nav-desktop{
@@ -80,7 +107,6 @@ a:hover {
   flex: 0 0 auto;
 }
 
-
 /* Fix: don’t let the topbar wrap into multiple lines */
 .nav-right{
   display: flex;
@@ -89,7 +115,6 @@ a:hover {
   pointer-events: auto;
   flex-wrap: nowrap;
 }
-
 
 /* Clear clickable cursor */
 .nav-control,
@@ -105,8 +130,6 @@ a:hover {
   cursor: pointer;
 }
 
-
-
 /* Unified sizing + style for name / projects / about */
 .nav-control {
   height: 56px;
@@ -119,6 +142,9 @@ a:hover {
 
   background: var(--nav-bg);
   border: 1px solid var(--nav-stroke);
+
+  -webkit-backdrop-filter: blur(32px) saturate(160%);
+  backdrop-filter: blur(10px) saturate(160%);
 
   color: var(--text);
   font-size: 1rem;
@@ -155,16 +181,26 @@ a:hover {
 .brand {
   font-weight: 600;
   letter-spacing: 0.6px;
+  white-space: nowrap;
 }
 
+@media (max-width: 420px) {
+  /* ultra-small devices: keep one line without breaking layout */
+  .brand {
+    max-width: 46vw;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+/* Floating Projects dropdown container (outside nav-right) */
 .dropdown{
-  position: relative;
-  display: inline-flex;
-  flex: 0 0 auto;      /* <-- KEY: cannot grow */
-  width: max-content;  /* <-- KEY: shrink-wrap to button */
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 2005;
+  pointer-events: none; /* enabled when open */
 }
-
-
 
 .dropdown-btn {
   /* button element: remove default styles that can affect sizing */
@@ -172,81 +208,51 @@ a:hover {
   -webkit-appearance: none;
 }
 
-.dropdown-menu {
-  position: absolute;
-  top: 100%;
-  left: 0;
-
-  margin-top: 10px;
-
-  min-width: 240px;
-  padding: 8px;
-  border-radius: 14px;
-  border: 1px solid rgba(255,255,255,0.12);
-  background: var(--panel);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 12px 40px rgba(0,0,0,0.35);
-
-  opacity: 0;
-
-  pointer-events: none;
-  transition: opacity 0.15s ease, transform 0.15s ease;
-}
-
 /* ================================
    TERMINAL DROPDOWN (Projects menu)
    ================================ */
 
-/* Container stays the same */
-.dropdown{
-  position: relative;
-  display: inline-flex;
-  flex: 0 0 auto;
-  width: max-content;
-}
-
 /* Terminal panel */
-.dropdown-menu{
+.dropdown-menu {
   position: absolute;
   top: 100%;
   left: 0;
-  margin-top: 10px;
+  margin-top: 12px; /* small gap below nav glass */
+  min-width: 280px;
+  padding: 12px;
+  border-radius: 16px;
 
-  min-width: 260px;
-  padding: 8px;
-  border-radius: 8px;
+  /* 1. MATCH NAV BAR DYNAMIC GRADIENT */
+  background: 
+    linear-gradient(180deg, var(--topbar-glass-hi), rgba(255,255,255,0.02)),
+    var(--topbar-glass) !important;
 
-  background: #000; /* true terminal */
-  border: 1px solid var(--term-green-dim);
+  /* 2. MATCH NAV BAR STROKE & SHADOW */
+  border: 1px solid var(--topbar-glass-border) !important;
   box-shadow:
-    0 0 0 1px var(--term-green-outline),
-    0 18px 50px rgba(0,0,0,0.72);
+    0 18px 44px rgba(0,0,0,0.40),
+    inset 0 1px 0 rgba(255,255,255,0.10) !important;
 
+  /* 3. MATCH NAV BAR BLUR & SATURATION */
+  -webkit-backdrop-filter: blur(24px) saturate(170%) !important;
+  backdrop-filter: blur(24px) saturate(170%) !important;
+
+  /* Animation & Interaction logic */
   opacity: 0;
   pointer-events: none;
-
   transform: translateY(-6px) scale(0.98);
   transform-origin: top left;
   transition: opacity 0.15s ease, transform 0.15s ease;
-
-  backdrop-filter: none; /* kill glass blur */
 }
 
-/* Hover opens menu */
-.dropdown:hover .dropdown-menu{
+/* ✅ JS-driven open state (no :has dependency) */
+#projectsDropdown { pointer-events: none; }
+#projectsDropdown.is-open { pointer-events: auto; }
+
+#projectsDropdown.is-open .dropdown-menu{
   opacity: 1;
   pointer-events: auto;
   transform: translateY(0) scale(1);
-}
-
-/* Invisible hover bridge so it doesn't collapse */
-.dropdown-menu::before{
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: -12px;
-  height: 12px;
 }
 
 /* Subtle scanline overlay (like your loader) */
@@ -257,11 +263,9 @@ a:hover {
   pointer-events:none;
   background: linear-gradient(to bottom, rgba(255,255,255,0.02), transparent 12%);
   opacity: 0.22;
-  border-radius: 8px;
+  border-radius: 16px;
 }
 
-/* Optional prompt line at top of menu.
-   If you don't add the HTML element, this is ignored. */
 .dropdown-prompt{
   font-family: Consolas, "Lucida Console", "Courier New", monospace;
   font-size: 0.72rem;
@@ -330,7 +334,6 @@ a:hover {
   50%{ opacity: 0; }
 }
 
-/* If your dropdown items contain .title/.sub, keep them terminal-ish */
 .dropdown-item .title{
   font-weight: 650;
   font-size: 0.92rem;
@@ -338,10 +341,86 @@ a:hover {
 }
 
 .dropdown-item .sub{
-  font-size: 0.78rem;
-  color: rgba(180,190,200,0.55);
-  margin-top: 2px;
+  display: none;
 }
+
+
+
+/* ================================
+   TERMINAL DROPDOWN (Projects menu)
+   ================================ */
+
+/* Wrap button + menu so hover works */
+/* ================================
+   PORTALED Projects dropdown (REAL blur)
+   ================================ */
+
+#projectsDropdown{
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 5000;
+  pointer-events: none;
+}
+
+#projectsDropdown .projects-dropdown-menu{
+  position: absolute;
+  left: 0;
+  top: 0;
+
+  /* center under portal origin */
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, -6px) scale(0.98);
+  transform-origin: top center;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+
+  -webkit-backdrop-filter: blur(24px) saturate(170%) !important;
+  backdrop-filter: blur(24px) saturate(170%) !important;
+}
+
+#projectsDropdown.is-open{ pointer-events: auto; }
+
+#projectsDropdown.is-open .projects-dropdown-menu{
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, 0) scale(1);
+}
+
+
+/* Open state */
+.projects-dropdown.is-open{
+  pointer-events: auto;
+}
+.projects-dropdown.is-open .projects-dropdown-menu{
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+
+/* Open on hover OR keyboard focus */
+.projects-wrap:hover .dropdown-menu,
+.projects-wrap:focus-within .dropdown-menu{
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, 0) scale(1);
+}
+
+
+/* Open on hover OR keyboard focus */
+.projects-wrap:hover .dropdown-menu,
+.projects-wrap:focus-within .dropdown-menu{
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0) scale(1);
+}
+
+
+
+
+
+
 
 /* Icon buttons (same size as nav-control) */
 .icon-link {
@@ -356,6 +435,9 @@ a:hover {
 
   background: var(--nav-bg);
   border: 1px solid var(--nav-stroke);
+
+  -webkit-backdrop-filter: blur(10px) saturate(160%);
+  backdrop-filter: blur(10px) saturate(160%);
 
   box-shadow:
     0 6px 18px rgba(0,0,0,0.45),
@@ -438,8 +520,6 @@ body.lights-dim .window-light {
   opacity: 1 !important;
 }
 
-
-
 @keyframes lightsFlickerOn {
   0%   { filter: brightness(0.10) contrast(1.10) saturate(0.85); }
   12%  { filter: brightness(0.90) contrast(1.05) saturate(1.00); }
@@ -450,7 +530,6 @@ body.lights-dim .window-light {
   62%  { filter: brightness(0.78) contrast(1.04) saturate(0.98); }
   100% { filter: brightness(1.00) contrast(1.00) saturate(1.00); }
 }
-
 
 .robot {
   z-index: 2;
@@ -497,11 +576,7 @@ code:not([class*="language-"]) {
   border-radius: 6px;
 }
 
-
-
-
 /* ===== FULLSCREEN PROJECT SECTIONS ===== */
-
 .project-section {
   min-height: 100vh;
   display: grid;
@@ -546,9 +621,6 @@ code:not([class*="language-"]) {
   display: block;
   object-fit: cover;
 }
-
-
-
 
 /* Text block */
 .project-text {
@@ -616,7 +688,6 @@ code:not([class*="language-"]) {
   pointer-events: none;
 }
 
-
 .project-text li.ok::before   { content: "[OK]";   color: rgba(124,255,155,0.95); }
 .project-text li.warn::before { content: "[WARN]"; color: rgba(255,210,120,0.95); }
 .project-text li.err::before  { content: "[ERR]";  color: rgba(255,120,120,0.95); }
@@ -663,8 +734,6 @@ code:not([class*="language-"]) {
   }
 }
 
-
-
 .project-text p {
   font-size: 1.5rem;
   line-height: 1.7;
@@ -672,28 +741,13 @@ code:not([class*="language-"]) {
   margin-bottom: 20px;
 }
 
-/* ===== Custom cursor states =====
-   Place three images in `assets/Cursor/` named:
-     - open.png   (default / moving)
-     - mid.png    (hovering over clickable robot)
-     - closed.png (mouse down / clicked)
-   These are applied to the `body` via classes toggled from JS.
-*/
-
+/* ===== Custom cursor states ===== */
 :root {
-  /* Cursor behavior: revert to default cursors (no image assets).
-     JS may still toggle `body.cursor-open|mid|closed` classes; these
-     now map to standard cursor keywords so clicking rules are preserved. */
   --cursor-open: auto;
   --cursor-mid: pointer;
-  /* when mouse is pressed but not over something clickable, show default cursor */
   --cursor-closed: auto;
 }
 
-/* Apply cursor state to body and all descendant elements so the element
-  under the pointer inherits the intended cursor. */
-/* Force custom cursors to apply to the scene and all elements (use !important
-  to override other cursor declarations that might appear elsewhere). */
 body.cursor-open,
 body.cursor-open *,
 body.cursor-open .scene,
@@ -709,8 +763,6 @@ body.cursor-closed *,
 body.cursor-closed .scene,
 body.cursor-closed .scene * { cursor: var(--cursor-closed) !important; }
 
-
-/* Ensure nav and other explicit pointer cursors respect the global state */
 body.cursor-mid .nav-control,
 body.cursor-mid .icon-link,
 body.cursor-mid .dropdown-btn,
@@ -726,14 +778,11 @@ body.cursor-closed .icon-link,
 body.cursor-closed .dropdown-btn,
 body.cursor-closed .dropdown-item { cursor: var(--cursor-closed); }
 
-/* Ensure interactive nav elements still show pointer when clicking.
-  This overrides the general `body.cursor-closed *` rule above. */
 body.cursor-closed .nav-control,
 body.cursor-closed .icon-link,
 body.cursor-closed .dropdown-btn,
 body.cursor-closed .dropdown-item,
 body.cursor-closed .brand { cursor: pointer !important; }
-
 
 .project-text ul {
   padding-left: 18px;
@@ -770,7 +819,6 @@ body.cursor-closed .brand { cursor: pointer !important; }
   }
 }
 
-
 /* ===== PROJECT PAGE BACKDROP (subtle, not distracting) ===== */
 body.project-page {
   background:
@@ -784,9 +832,6 @@ body.project-page {
     linear-gradient(180deg, #06070a 0%, #020304 100%);
 }
 
-
-
-/* soft vignette to frame the content */
 body.project-page::before {
   content: "";
   position: fixed;
@@ -799,15 +844,11 @@ body.project-page::before {
 /* keep content above vignette */
 .page { position: relative; z-index: 1; }
 
-
 /* --- Prism font size override (must be last) --- */
 pre[class*="language-"] > code[class*="language-"] {
   font-size: 1.0rem;
   line-height: 1.55;
 }
-
-
-
 
 body.ambient-light .scene__bg{
   animation: roomLight 8s infinite;
@@ -820,7 +861,6 @@ body.ambient-light .scene__bg{
   55%  { filter: brightness(0.90) contrast(1.01); }
   100% { filter: brightness(1) contrast(1); }
 }
-
 
 .vignette{
   position:absolute; inset:0;
@@ -853,29 +893,22 @@ body.ambient-light .scene__bg{
   100% { transform: rotate(-0.5deg) translateX(-2px); }
 }
 
-/* accessibility */
 @media (prefers-reduced-motion: reduce){
   .tree-layer{ animation: none; }
 }
 
-/* Dev override: force tree sway even when OS/browser prefers reduced motion.
-   Use by adding the class `force-motion` to the body (e.g. in the console:
-   `document.body.classList.add('force-motion')`). Remove the class to restore
-   respecting user preference. This is intended for local testing only. */
 body.force-motion .tree-layer {
   animation: treeSway 6.5s ease-in-out infinite !important;
 }
 
 /* ===== Mobile nav ===== */
-
 @media (max-width: 900px) {
-  .topbar { pointer-events: auto;}
+  .topbar { pointer-events: auto; }
 }
 
 .nav-menu-btn {
   display: none;
   font-size: 1.4rem;
-  /* match standard nav-control sizing so the hamburger sits inside the same box */
   width: 80px;
   height: 56px;
   padding: 0;
@@ -892,13 +925,11 @@ body.force-motion .tree-layer {
 }
 
 @media (max-width: 900px) {
-  /* Ensure desktop nav is fully hidden on small screens */
   .nav-desktop,
   .nav-right > .nav-desktop {
     display: none !important;
   }
 
-  /* Force hamburger visible */
   .nav-menu-btn {
     display: inline-flex !important;
   }
@@ -964,25 +995,20 @@ body.drawer-open {
   overflow: hidden;
 }
 
-/* ===== Drawer above nav ===== */
 .drawer-backdrop { z-index: 2000; }
 .mobile-drawer   { z-index: 2001; }
 .topbar          { z-index: 1500; }
 
-
-/* IMPORTANT: when CLOSED, the backdrop must NOT block clicks */
 .drawer-backdrop {
-  pointer-events: none;   /* click-through when closed */
+  pointer-events: none;
   opacity: 0;
 }
 
-/* When OPEN, backdrop should catch clicks */
 body.drawer-open .drawer-backdrop {
   pointer-events: auto;
   opacity: 1;
 }
 
-/* Drawer open/close transform */
 .mobile-drawer {
   transform: translateX(105%);
 }
@@ -995,8 +1021,6 @@ body.drawer-open .mobile-drawer {
   padding-left: 40px;
 }
 
-
-/* Show social icons inside the drawer even if icons are hidden on mobile */
 @media (max-width: 700px) {
   .mobile-drawer .icon-link {
     display: inline-flex !important;
@@ -1013,30 +1037,34 @@ body.drawer-open .mobile-drawer {
     height: 48px;
   }
 }
-/* ===== MOBILE DRAWER SCROLL ===== */
+
 @media (max-width: 900px) {
   .topbar {
-    top: 12;
-    left: 0;
-    transform: none;
-    width: 100vw;
+    top: 10px;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    width: calc(100vw - 24px);
+  }
+
+  .nav-right{
+    width: 100%;
+    justify-content: space-between;
   }
 
   .mobile-drawer {
-    max-height: 100dvh;          /* viewport-safe height */
-    overflow-y: auto;            /* THIS enables drawer scrolling */
+    max-height: 100dvh;
+    overflow-y: auto;
     overscroll-behavior: contain;
-    padding-bottom: 24px;        /* space at bottom so last item isn't clipped */
+    padding-bottom: 24px;
   }
 }
 
 .icon-link svg{
-  display: block;      /* fixes “icon looks higher” */
+  display: block;
 }
 
-
 /* ===== ABOUT DROP-DOWN OVERLAY ===== */
-
 .about-overlay {
   position: fixed;
   inset: 0;
@@ -1062,7 +1090,7 @@ body.drawer-open .mobile-drawer {
   transform: translate(-50%, -110%);
   width: min(900px, 92vw);
 
-  margin-top: 110px; /* clears your fixed nav */
+  margin-top: 110px;
   padding: 28px 28px 24px;
 
   background: rgba(15, 18, 28, 0.85);
@@ -1127,10 +1155,11 @@ body.drawer-open .mobile-drawer {
   transform: translateY(-1px);
   background: rgba(255,255,255,0.14);
 }
+
 /* Prevent native link/image drag cursors in the top nav */
 .topbar, .topbar * {
   -webkit-user-drag: none;
-  user-select: none; /* optional: stops text selection while dragging */
+  user-select: none;
 }
 
 /* ===== LOADER: WINDOWS CMD ===== */
@@ -1225,21 +1254,17 @@ body.drawer-open .mobile-drawer {
 }
 @keyframes caretBlink{ 50%{ opacity: 0; } }
 
-/* (Optional) tiny CRT vibe */
 .cmd::after{
   content:"";
   position:absolute;
   inset:0;
   pointer-events:none;
-  background: linear-gradient(to bottom, rgba(255,255,255,0.02), transparent 12%);
-  opacity: 0.25;
-}
-/* Start blank/dark before the window pops in */
-#loader {
-  background: #05060a;
+  -webkit-backdrop-filter: blur(24px) saturate(175%) !important;
+  backdrop-filter: blur(24px) saturate(175%) !important;
 }
 
-/* Window pop-in */
+#loader { background: #05060a; }
+
 .cmd.cmd--hidden {
   opacity: 0;
   transform: translateY(14px) scale(0.98);
@@ -1255,10 +1280,9 @@ body.drawer-open .mobile-drawer {
 .cmd.cmd--embed{
   width: 100%;
   max-width: none;
-  position: relative; /* so .cmd::after overlay positions correctly */
+  position: relative;
 }
 
-/* Put Copy button inside the input row without breaking alignment */
 .cmd-copy{
   margin-left: auto;
   height: 28px;
@@ -1272,70 +1296,58 @@ body.drawer-open .mobile-drawer {
 }
 .cmd-copy:hover{ background: rgba(255,255,255,0.10); }
 
-/* Static command text (no typing animation, just styled) */
 .typed--static{ opacity: 0.95; }
 
-/* Code body: allow scrolling for long code */
-.cmd-body--code{
-  max-height: 70vh;      /* match your project-image tall card vibe */
-  overflow: auto;        /* scroll code */
-  padding: 0;            /* pre will own padding */
-}
-
-/* Make Prism sit nicely inside the CMD body */
-.cmd-body--code pre{
-  margin: 0;
-  padding: 12px 14px 14px;
-  max-height: none;      /* override any global pre max-height */
-  overflow: visible;     /* let container scroll instead */
-  background: transparent; /* keep true CMD black */
-}
-
-/* Line numbers spacing: Prism plugin expects extra left padding */
-.cmd-body--code pre.line-numbers{
-  padding-left: 3.2em;
-}
-
-/* Optional: slightly dim Prism tokens so it feels like CMD, not "VS Code theme" */
-.cmd-body--code code[class*="language-"],
-.cmd-body--code pre[class*="language-"]{
-  color: rgba(255,255,255,0.92);
-  text-shadow: none;
-}
-
-
-/* Embedded CMD code panel: scroll inside body (like real CMD) */
 .cmd-body--code{
   max-height: 70vh;
   overflow: auto;
   padding: 0;
 }
 
-/* The code block itself: no Prism rounding/padding weirdness */
+.cmd-body--code pre{
+  margin: 0;
+  padding: 12px 14px 14px;
+  max-height: none;
+  overflow: visible;
+  background: transparent;
+}
+
+.cmd-body--code pre.line-numbers{
+  padding-left: 3.2em;
+}
+
+.cmd-body--code code[class*="language-"],
+.cmd-body--code pre[class*="language-"]{
+  color: rgba(255,255,255,0.92);
+  text-shadow: none;
+}
+
+.cmd-body--code{
+  max-height: 70vh;
+  overflow: auto;
+  padding: 0;
+}
+
 .cmd-body--code .cmd-pre{
   margin: 0;
   padding: 12px 14px 14px;
   background: transparent;
   border-radius: 0;
   max-height: none;
-  overflow: visible; /* container scrolls */
+  overflow: visible;
 }
 
-/* Prism defaults sometimes add backgrounds; force transparent */
 .cmd-body--code pre[class*="language-"],
 .cmd-body--code code[class*="language-"]{
   background: transparent !important;
   text-shadow: none;
 }
 
-/* Slightly smaller + denser like Windows CMD */
 .cmd-body--code code[class*="language-"]{
   font-size: 0.98rem;
   line-height: 1.45;
 }
 
-
-/* ===== Terminal code colors (only inside CMD embed) ===== */
 .cmd-body--code pre,
 .cmd-body--code code{
   background: transparent !important;
@@ -1346,18 +1358,15 @@ body.drawer-open .mobile-drawer {
   color: rgba(235, 240, 245, 0.92);
 }
 
-/* Make Prism stop painting its own backgrounds */
 .cmd-body--code pre[class*="language-"]{
   background: transparent !important;
 }
 
-/* Selection looks terminal-y */
 .cmd-body--code pre ::selection,
 .cmd-body--code code ::selection{
   background: rgba(255,255,255,0.16);
 }
 
-/* Subtle token palette (NOT vsc dark plus) */
 .cmd-body--code .token.comment,
 .cmd-body--code .token.prolog,
 .cmd-body--code .token.doctype,
@@ -1371,21 +1380,21 @@ body.drawer-open .mobile-drawer {
 }
 
 .cmd-body--code .token.keyword{
-  color: rgba(120, 190, 255, 0.95); /* soft terminal-blue */
+  color: rgba(120, 190, 255, 0.95);
 }
 
 .cmd-body--code .token.function{
-  color: rgba(255, 210, 120, 0.95); /* amber */
+  color: rgba(255, 210, 120, 0.95);
 }
 
 .cmd-body--code .token.string,
 .cmd-body--code .token.char,
 .cmd-body--code .token.attr-value{
-  color: rgba(150, 230, 170, 0.95); /* terminal green */
+  color: rgba(150, 230, 170, 0.95);
 }
 
 .cmd-body--code .token.number{
-  color: rgba(255, 170, 200, 0.92); /* soft pink */
+  color: rgba(255, 170, 200, 0.92);
 }
 
 .cmd-body--code .token.boolean,
@@ -1407,23 +1416,18 @@ body.drawer-open .mobile-drawer {
   color: rgba(200, 170, 255, 0.90);
 }
 
-
-/* Allow section to break the normal 2-column constraint */
 .project-section--wide {
   grid-template-columns: 1fr 1fr;
 }
 
-/* Make the terminal span BOTH columns */
 .cmd--wide {
   grid-column: 1 / -1;
-  height: 80vh; /* taller = more immersive */
+  height: 80vh;
 }
 
-/* Let the code breathe vertically */
 .cmd--wide .cmd-body--code {
-  max-height: calc(80vh - 90px); /* title + prompt accounted for */
+  max-height: calc(80vh - 90px);
 }
-
 
 /* ===== Terminal bullet reveal (armed state) ===== */
 .project-text ul{
@@ -1438,29 +1442,23 @@ body.drawer-open .mobile-drawer {
     transform 0.35s ease;
 }
 
-/* When revealed */
 .project-text li.is-visible{
   opacity: 1;
   transform: translateY(0);
 }
 
-
 /* =========================
    TERMINAL NAV THEME OVERRIDE
-   Paste near the end of styles.css
    ========================= */
-
-/* tighten the whole nav vibe */
 .topbar{
-  top: 14px;
+  top: 12px;
   z-index: 1500;
 }
 
-/* Shared terminal button look */
 .nav-control,
 .dropdown-btn,
 .icon-link{
-  background: #000 !important;
+  background: rgba(0,0,0,0.22) !important;
   border: 1px solid var(--term-green-dim) !important;
   border-radius: 10px !important;
 
@@ -1473,9 +1471,11 @@ body.drawer-open .mobile-drawer {
 
   letter-spacing: 0.2px;
   position: relative;
+
+  -webkit-backdrop-filter: blur(12px) saturate(175%) !important;
+  backdrop-filter: blur(12px) saturate(175%) !important;
 }
 
-/* Stronger, opaque hover for nav buttons (clear/soft hover replaced) */
 .nav-control:hover,
 .dropdown-btn:hover,
 .icon-link:hover{
@@ -1487,7 +1487,10 @@ body.drawer-open .mobile-drawer {
   box-shadow: 0 8px 30px rgba(0,0,0,0.55), 0 2px 8px rgba(77,168,255,0.06);
 }
 
-/* make focus look terminal instead of default white outline */
+.dropdown-btn:hover{
+  transform: translateY(0px) !important;
+}
+
 .nav-control:focus-visible,
 .dropdown-btn:focus-visible,
 .icon-link:focus-visible{
@@ -1495,13 +1498,11 @@ body.drawer-open .mobile-drawer {
   outline-offset: 3px;
 }
 
-/* Brand looks like a command */
 .brand{
   font-weight: 700 !important;
   letter-spacing: 0.6px !important;
 }
 
-/* Add prompt marker to all nav buttons except icon-only buttons */
 .nav-control::before,
 .dropdown-btn::before{
   content: ">";
@@ -1509,16 +1510,13 @@ body.drawer-open .mobile-drawer {
   margin-right: 10px;
 }
 
-/* Keep icon buttons clean (no ">") */
 .icon-link::before{ content: none !important; }
 
-/* Icons match nav text color (inherit from .icon-link) */
 .icon-link svg{
   fill: currentColor !important;
   stroke: currentColor !important;
 }
 
-/* Subtle scanline overlay on buttons (same vibe as cmd window) */
 .nav-control::after,
 .dropdown-btn::after,
 .icon-link::after{
@@ -1531,7 +1529,6 @@ body.drawer-open .mobile-drawer {
   opacity: 0.22;
 }
 
-/* Optional: hover caret blink at the end of the text */
 .nav-control:hover span::after,
 .dropdown-btn:hover span::after{
   content: " █";
@@ -1539,24 +1536,20 @@ body.drawer-open .mobile-drawer {
   animation: navCaretBlink 0.9s steps(1) infinite;
 }
 
-/* If your nav buttons do NOT wrap text in a span, this makes it still work */
 .nav-control:hover::marker{ content: ""; }
 
 @keyframes navCaretBlink{
   50%{ opacity: 0; }
 }
 
-/* Dropdown menu should sit above terminal buttons cleanly */
 .dropdown-menu{
   z-index: 2005;
 }
 
-/* Make the dropdown button text consistent */
 .dropdown-btn{
-  padding-left: 22px; /* room for ">" marker */
+  padding-left: 22px;
 }
 
-/* Keep sizing consistent with your old nav */
 .nav-control{
   height: 56px;
   padding: 0 22px;
@@ -1568,21 +1561,18 @@ body.drawer-open .mobile-drawer {
   border-radius: 10px !important;
 }
 
-/* Remove global link underline hover inside nav */
 .topbar a:hover{
   text-decoration: none !important;
 }
+
 /* =========================
    TERMINAL ABOUT OVERLAY THEME
-   Paste after your existing About overlay styles
    ========================= */
-
 .about-overlay{
   background: rgba(0,0,0,0.72) !important;
   backdrop-filter: blur(3px) !important;
 }
 
-/* Make the sheet look like your CMD window */
 .about-sheet{
   background: #000 !important;
   border: 1px solid var(--term-green-dim) !important;
@@ -1599,7 +1589,6 @@ body.drawer-open .mobile-drawer {
   overflow: hidden;
 }
 
-/* Scanline/CRT-ish overlay like the cmd panels */
 .about-sheet::after{
   content:"";
   position:absolute;
@@ -1609,7 +1598,6 @@ body.drawer-open .mobile-drawer {
   opacity: 0.25;
 }
 
-/* Add a subtle prompt label */
 .about-sheet::before{
   content: "C:\\ABOUT>";
   position: absolute;
@@ -1622,12 +1610,10 @@ body.drawer-open .mobile-drawer {
   pointer-events: none;
 }
 
-/* Push content down so the prompt label doesn't overlap */
 .about-sheet{
   padding-top: 44px !important;
 }
 
-/* Terminal heading */
 .about-sheet h1{
   margin: 0 0 10px !important;
   font-family: Consolas, "Lucida Console", "Courier New", monospace !important;
@@ -1638,7 +1624,6 @@ body.drawer-open .mobile-drawer {
   padding-left: 1.6em;
 }
 
-/* // prefix on heading */
 .about-sheet h1::before{
   content: "//";
   position: absolute;
@@ -1647,7 +1632,6 @@ body.drawer-open .mobile-drawer {
   color: var(--term-green-dim);
 }
 
-/* Body text like terminal output */
 .about-sub{
   color: rgba(235,240,245,0.90) !important;
   opacity: 1 !important;
@@ -1655,7 +1639,6 @@ body.drawer-open .mobile-drawer {
   max-width: 78ch;
 }
 
-/* Tags become terminal chips */
 .about-meta span{
   border: 1px solid var(--term-green-muted) !important;
   background: var(--term-green-soft) !important;
@@ -1665,7 +1648,6 @@ body.drawer-open .mobile-drawer {
   font-size: 0.9rem !important;
 }
 
-/* Actions become terminal buttons */
 .about-actions a{
   border: 1px solid rgba(0,255,64,0.45) !important;
   background: rgba(0,0,0,0.9) !important;
@@ -1680,7 +1662,6 @@ body.drawer-open .mobile-drawer {
   padding-left: 18px !important;
 }
 
-/* Add prompt marker */
 .about-actions a::before{
   content: ">";
   position: absolute;
@@ -1688,7 +1669,6 @@ body.drawer-open .mobile-drawer {
   color: var(--term-green-dim);
 }
 
-/* Hover = green glow */
 .about-actions a:hover{
   transform: none !important;
   background: rgba(139,143,148,0.08) !important;
@@ -1698,11 +1678,153 @@ body.drawer-open .mobile-drawer {
     0 18px 55px rgba(0,0,0,0.75) !important;
 }
 
-/* Optional: links in about body match terminal green */
 .about-sheet a{
   color: var(--term-green) !important;
   border-bottom: 1px dotted var(--term-green-muted);
 }
 .about-sheet a:hover{
   border-bottom-style: solid;
+}
+/* ===== PORTALED PROJECTS DROPDOWN — FORCE CLEAN SHAPE ===== */
+#projectsDropdown{
+  /* portal container is just an anchor point */
+  width: 0 !important;
+  height: 0 !important;
+}
+
+/* target the actual panel */
+#projectsDropdown .projects-dropdown-menu{
+  width: 320px !important;          /* pick your vibe */
+  max-width: min(92vw, 420px) !important;
+  min-width: 280px !important;
+
+  padding: 12px 12px !important;
+  border-radius: 18px !important;   /* smoother */
+  overflow: hidden !important;      /* fixes “weird” corners */
+
+  /* stable glass + border */
+  border: 1px solid rgba(255,255,255,0.16) !important;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02)),
+    rgba(6, 8, 14, 0.18) !important;
+
+  box-shadow:
+    0 24px 70px rgba(0,0,0,0.55),
+    inset 0 1px 0 rgba(255,255,255,0.10) !important;
+
+  -webkit-backdrop-filter: blur(24px) saturate(170%) !important;
+  backdrop-filter: blur(24px) saturate(170%) !important;
+}
+
+/* optional: small “pointer”/notch under Projects button */
+#projectsDropdown .projects-dropdown-menu::before{
+  content:"";
+  position:absolute;
+  top:-7px;
+  left:50%;
+  transform: translateX(-50%) rotate(45deg);
+  width: 14px;
+  height: 14px;
+  background: rgba(6, 8, 14, 0.18);
+  border-left: 1px solid rgba(255,255,255,0.14);
+  border-top: 1px solid rgba(255,255,255,0.14);
+  -webkit-backdrop-filter: blur(24px) saturate(170%);
+  backdrop-filter: blur(24px) saturate(170%);
+}
+
+/* tighten prompt line so it doesn't look cramped */
+#projectsDropdown .dropdown-prompt{
+  margin-bottom: 8px !important;
+  padding: 6px 10px 8px !important;
+  border-bottom: 1px dashed rgba(255,255,255,0.18) !important;
+}
+
+/* make items feel aligned and reduce “tall column” awkwardness */
+#projectsDropdown .dropdown-item{
+  padding: 10px 12px 10px 30px !important;
+  border-radius: 10px !important;
+}
+
+/* reduce weird multi-line spacing */
+#projectsDropdown .dropdown-item .title{
+  line-height: 1.15 !important;
+}
+
+/* hide subs like you wanted */
+#projectsDropdown .dropdown-item .sub{ display:none !important; }
+/* ===== Projects dropdown final tweaks ===== */
+#projectsDropdown { width: 0 !important; height: 0 !important; }
+
+/* (2) left-aligned animation (no -50% centering) */
+#projectsDropdown .projects-dropdown-menu{
+  width: 280px !important;              /* (3) less empty space */
+  max-width: min(88vw, 340px) !important;
+
+  padding: 12px 8px 12px 12px !important; /* (3) smaller right padding */
+  overflow: hidden !important;
+
+  transform: translate(0, -6px) scale(0.98) !important;
+  transform-origin: top left !important;
+}
+
+#projectsDropdown.is-open .projects-dropdown-menu{
+  transform: translate(0, 0) scale(1) !important;
+}
+#projectsDropdown { overflow: visible !important; }
+
+/* ---- Fix clipped YouTube icon in top nav ---- */
+
+/* Allow the nav pill to render shadows/icons fully */
+.nav-right{
+  overflow: visible !important;
+}
+
+/* Ensure icon buttons never clip their SVG */
+.icon-link{
+  overflow: visible !important;
+}
+
+/* Make sure the SVG fits perfectly inside the button */
+.icon-link svg{
+  width: 24px !important;
+  height: 24px !important;
+  display: block !important;
+}
+/* Prevent the scanline overlay from affecting layout/clip */
+.icon-link::after{
+  border-radius: inherit;
+  pointer-events: none;
+}
+.icon-link svg{
+  fill: currentColor !important;
+  stroke: currentColor !important;   /* <- this adds a 1px stroke */
+}
+/* Icons are fill-only; remove stroke to prevent SVG viewBox clipping */
+.icon-link svg,
+.icon-link svg * {
+  stroke: none !important;
+}
+/* (Optional) tiny CRT vibe */
+.cmd::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  -webkit-backdrop-filter: blur(24px) saturate(175%) !important;
+  backdrop-filter: blur(24px) saturate(175%) !important;
+}
+/* (Optional) tiny CRT vibe — NO BLUR (keeps text crisp) */
+.cmd::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+
+  /* just a subtle scanline overlay */
+  background: linear-gradient(to bottom, rgba(255,255,255,0.03), transparent 14%);
+  opacity: 0.18;
+
+  /* IMPORTANT: disable blur */
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
 }

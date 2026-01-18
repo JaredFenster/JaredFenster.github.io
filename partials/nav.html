@@ -1,4 +1,4 @@
-<header class="topbar">
+<header class="topbar" id="topbar">
   <div class="nav-right">
 
     <!-- Always visible -->
@@ -16,71 +16,10 @@
 
     <!-- Desktop-only content -->
     <div class="nav-desktop">
-      <div class="dropdown" id="projectsDropdown">
-        <button class="dropdown-btn nav-control" type="button">
-          Projects ▾
-        </button>
-        
-        <div class="dropdown-menu" role="menu" aria-label="Projects">
-          <div class="dropdown-prompt">C:\PROJECTS&gt;</div>
+      <button class="dropdown-btn nav-control" id="projectsButton" type="button" aria-haspopup="menu" aria-expanded="false">
+        Projects ▾
+      </button>
 
-          <a class="dropdown-item"
-             href="/projects/precision-arm.html"
-             data-robot="precision-arm">
-            <div class="title">Precision Robotic Arm</div>
-            <div class="sub">Most Recent Project</div>
-          </a>
-        
-          <a class="dropdown-item"
-             href="/projects/b2emo.html"
-             data-robot="b2emo">
-            <div class="title">B2EMO</div>
-            <div class="sub">Star Wars Replica</div>
-          </a>
-        
-          <a class="dropdown-item"
-             href="/projects/harmonic-drive.html"
-             data-robot="harmonic-drive">
-            <div class="title">Harmonic Drive</div>
-            <div class="sub">High Torque Harmonic Drive</div>
-          </a>
-        
-          <a class="dropdown-item"
-             href="/projects/vision-arm.html"
-             data-robot="vision-arm">
-            <div class="title">Vision Arm</div>
-            <div class="sub">Robot Arm with Camera</div>
-          </a>
-        
-          <a class="dropdown-item"
-             href="/projects/omni.html"
-             data-robot="omni">
-            <div class="title">Omnidirectional Robot</div>
-            <div class="sub">RC Mechanum Wheels</div>
-          </a>
-        
-          <a class="dropdown-item"
-             href="/projects/controller.html"
-             data-robot="controller">
-            <div class="title">Controller</div>
-            <div class="sub">Universal Robot Controller</div>
-          </a>
-        
-          <a class="dropdown-item"
-             href="/projects/car.html"
-             data-robot="car">
-            <div class="title">RC Car</div>
-            <div class="sub">Simple RC Car</div>
-          </a>
-        
-          <a class="dropdown-item"
-             href="/projects/vertical-launcher.html"
-             data-robot="vertical-launcher">
-            <div class="title">Vertical Launcher</div>
-            <div class="sub">Physics Project</div>
-          </a>
-         </div>
-        </div>
       <a class="nav-control" href="/index.html#about" id="aboutNavBtn">About</a>
       <a class="nav-control" href="/gallery.html">Gallery</a>
 
@@ -103,8 +42,50 @@
         </svg>
       </a>
     </div>
+
+    <!-- IMPORTANT:
+         This starts inside nav-right so your include.js doesn't drop it.
+         JS will MOVE this element to document.body so blur works. -->
+    <div class="projects-dropdown" id="projectsDropdown" aria-label="Projects">
+      <div class="projects-dropdown-menu" role="menu" aria-label="Projects">
+        <div class="dropdown-prompt">C:\PROJECTS&gt;</div>
+
+        <a class="dropdown-item" href="/projects/precision-arm.html" data-robot="precision-arm">
+          <div class="title">Precision Robotic Arm</div>
+          <div class="sub">Most Recent Project</div>
+        </a>
+
+        <a class="dropdown-item" href="/projects/b2emo.html" data-robot="b2emo">
+          <div class="title">B2EMO</div>
+          <div class="sub">Star Wars Replica</div>
+        </a>
+
+        <a class="dropdown-item" href="/projects/harmonic-drive.html" data-robot="harmonic-drive">
+          <div class="title">Harmonic Drive</div>
+          <div class="sub">High Torque Harmonic Drive</div>
+        </a>
+
+        <a class="dropdown-item" href="/projects/vision-arm.html" data-robot="vision-arm">
+          <div class="title">Vision Arm</div>
+          <div class="sub">Robot Arm with Camera</div>
+        </a>
+
+        <a class="dropdown-item" href="/projects/omni.html" data-robot="omni">
+          <div class="title">Omnidirectional Robot</div>
+          <div class="sub">RC Mechanum Wheels</div>
+        </a>
+
+        <a class="dropdown-item" href="/projects/controller.html" data-robot="controller">
+          <div class="title">Controller</div>
+          <div class="sub">Universal Robot Controller</div>
+        </a>
+
+        <a class="dropdown-item" href="/projects/car.html" data-robot="car">
+          <div class="title">RC Car</div>
+          <div class="sub">Simple RC Car</div>
+        </a>
+      </div>
+    </div>
+
   </div>
 </header>
-
-
-

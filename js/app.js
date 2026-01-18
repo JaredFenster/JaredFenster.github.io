@@ -175,55 +175,221 @@ function safeInit() {
   };
 }
 
-// ===== NAV WIRING =====
 window.initNav = function initNav() {
-  // dropdown items (projects list)
-  const items = $all(".dropdown-item");
+  // dropdown items hover/click (projects list)
+  const bindDropdownItems = () => {
+    const items = $all(".dropdown-item");
+    items.forEach((item) => {
+      if (item.dataset.bound === "1") return;
+      item.dataset.bound = "1";
 
-  items.forEach((item) => {
-    item.addEventListener("mouseenter", () => {
-      const id = item.dataset.robot;
-      if (window.__ROBOT_SCENE__) {
-        window.__ROBOT_SCENE__.forceHoverRobot(id);
-      }
-      if (window.__setCursor && !document.body.classList.contains('cursor-closed')) {
-        window.__setCursor('cursor-mid');
-      }
+      item.addEventListener("mouseenter", () => {
+        const id = item.dataset.robot;
+        if (window.__ROBOT_SCENE__) window.__ROBOT_SCENE__.forceHoverRobot(id);
+        if (window.__setCursor && !document.body.classList.contains("cursor-closed")) {
+          window.__setCursor("cursor-mid");
+        }
+      });
+
+      item.addEventListener("mouseleave", () => {
+        if (window.__ROBOT_SCENE__) window.__ROBOT_SCENE__.clearForcedHover();
+        if (window.__setCursor && !document.body.classList.contains("cursor-closed")) {
+          window.__setCursor("cursor-open");
+        }
+      });
+
+      item.addEventListener("click", (e) => {
+        const href = item.dataset.href || item.getAttribute("href");
+        if (href && href !== "#") window.location.href = href;
+        e.preventDefault();
+      });
     });
+  };
 
-    item.addEventListener("mouseleave", () => {
-      if (window.__ROBOT_SCENE__) {
-        window.__ROBOT_SCENE__.clearForcedHover();
-      }
-      if (window.__setCursor && !document.body.classList.contains('cursor-closed')) {
-        window.__setCursor('cursor-open');
-      }
-    });
-
-    item.addEventListener("click", (e) => {
-      const href = item.dataset.href || item.getAttribute("href");
-      if (href && href !== "#") window.location.href = href;
-      e.preventDefault();
-    });
-  });
-
-  // TOP NAV hover (Name/About buttons, icons, dropdown button itself)
+  // TOP NAV hover cursor handling
   const navHoverTargets = $all(".nav-control, .icon-link, .dropdown-btn");
   navHoverTargets.forEach((el) => {
+    if (el.dataset.boundHover === "1") return;
+    el.dataset.boundHover = "1";
+
     el.addEventListener("mouseenter", () => {
-      if (window.__setCursor && !document.body.classList.contains('cursor-closed')) {
-        window.__setCursor('cursor-mid');
+      if (window.__setCursor && !document.body.classList.contains("cursor-closed")) {
+        window.__setCursor("cursor-mid");
       }
     });
+
     el.addEventListener("mouseleave", () => {
-      if (window.__setCursor && !document.body.classList.contains('cursor-closed')) {
-        // If robot hover is active, keep MID, else OPEN
-        if (window.__ROBOT_SCENE__ && window.__ROBOT_SCENE__.hasHover()) window.__setCursor('cursor-mid');
-        else window.__setCursor('cursor-open');
+      if (window.__setCursor && !document.body.classList.contains("cursor-closed")) {
+        if (window.__ROBOT_SCENE__ && window.__ROBOT_SCENE__.hasHover()) window.__setCursor("cursor-mid");
+        else window.__setCursor("cursor-open");
       }
     });
   });
+
+  // ===== Projects dropdown: robust (creates if missing), portals to body for real blur =====
+  const dropdownButton = document.getElementById("projectsButton");
+  if (!dropdownButton) return;
+
+  let dropdownPortal = document.getElementById("projectsDropdown");
+
+  // If the dropdown markup isn't in the DOM, create it.
+  if (!dropdownPortal) {
+    dropdownPortal = document.createElement("div");
+    dropdownPortal.id = "projectsDropdown";
+    dropdownPortal.className = "projects-dropdown";
+    dropdownPortal.setAttribute("aria-label", "Projects");
+
+    dropdownPortal.innerHTML = `
+      <div class="projects-hover-bridge" aria-hidden="true"></div>
+      <div class="projects-dropdown-menu" role="menu" aria-label="Projects">
+        <div class="dropdown-prompt">C:\\PROJECTS&gt;</div>
+
+        <a class="dropdown-item" href="/projects/precision-arm.html" data-robot="precision-arm">
+          <div class="title">Precision Robotic Arm</div>
+          <div class="sub">Most Recent Project</div>
+        </a>
+
+        <a class="dropdown-item" href="/projects/b2emo.html" data-robot="b2emo">
+          <div class="title">B2EMO</div>
+          <div class="sub">Star Wars Replica</div>
+        </a>
+
+        <a class="dropdown-item" href="/projects/harmonic-drive.html" data-robot="harmonic-drive">
+          <div class="title">Harmonic Drive</div>
+          <div class="sub">High Torque Harmonic Drive</div>
+        </a>
+
+        <a class="dropdown-item" href="/projects/vision-arm.html" data-robot="vision-arm">
+          <div class="title">Vision Arm</div>
+          <div class="sub">Robot Arm with Camera</div>
+        </a>
+
+        <a class="dropdown-item" href="/projects/omni.html" data-robot="omni">
+          <div class="title">Omnidirectional Robot</div>
+          <div class="sub">RC Mechanum Wheels</div>
+        </a>
+
+        <a class="dropdown-item" href="/projects/controller.html" data-robot="controller">
+          <div class="title">Controller</div>
+          <div class="sub">Universal Robot Controller</div>
+        </a>
+
+        <a class="dropdown-item" href="/projects/car.html" data-robot="car">
+          <div class="title">RC Car</div>
+          <div class="sub">Simple RC Car</div>
+        </a>
+      </div>
+    `;
+  }
+
+  const menu = dropdownPortal.querySelector(".projects-dropdown-menu");
+  if (!menu) return;
+
+  // Ensure bridge exists even if markup came from HTML
+  let bridge = dropdownPortal.querySelector(".projects-hover-bridge");
+  if (!bridge) {
+    bridge = document.createElement("div");
+    bridge.className = "projects-hover-bridge";
+    bridge.setAttribute("aria-hidden", "true");
+    dropdownPortal.insertBefore(bridge, menu);
+  }
+
+  // Init once
+  if (dropdownPortal.dataset.portalInit === "1") {
+    bindDropdownItems();
+    return;
+  }
+  dropdownPortal.dataset.portalInit = "1";
+
+  // Portal to body so blur samples the real scene
+  if (dropdownPortal.parentElement !== document.body) document.body.appendChild(dropdownPortal);
+
+  dropdownPortal.style.position = "fixed";
+  dropdownPortal.style.left = "0px";
+  dropdownPortal.style.top = "0px";
+  dropdownPortal.style.zIndex = "5000";
+  dropdownPortal.style.pointerEvents = "none";
+
+  let closeT = null;
+
+  const GAP_PX = 22; // your current gap
+
+  const syncBridgeSize = () => {
+    const w = menu.getBoundingClientRect().width || 280;
+    bridge.style.position = "absolute";
+    bridge.style.left = "0px";
+    bridge.style.top = "0px";
+    bridge.style.width = `${w}px`;
+    bridge.style.height = `${GAP_PX}px`;
+    bridge.style.background = "transparent";
+    bridge.style.pointerEvents = "auto";
+  };
+
+  const position = () => {
+    const r = dropdownButton.getBoundingClientRect();
+
+    // Anchor portal at the button bottom (NOT after the gap)
+    dropdownPortal.style.left = `${r.left}px`;
+    dropdownPortal.style.top = `${r.bottom}px`;
+
+    // Push the menu down by the gap
+    menu.style.left = "0px";
+    menu.style.top = `${GAP_PX}px`;
+
+    // Bridge fills the exact gap between button and menu
+    syncBridgeSize();
+  };
+
+  const open = () => {
+    clearTimeout(closeT);
+    position();
+    dropdownPortal.classList.add("is-open");
+    dropdownPortal.style.pointerEvents = "auto";
+    dropdownButton.setAttribute("aria-expanded", "true");
+
+    // ensure correct width after paint
+    requestAnimationFrame(() => {
+      syncBridgeSize();
+    });
+  };
+
+  const close = () => {
+    clearTimeout(closeT);
+    closeT = setTimeout(() => {
+      dropdownPortal.classList.remove("is-open");
+      dropdownPortal.style.pointerEvents = "none";
+      dropdownButton.setAttribute("aria-expanded", "false");
+    }, 140);
+  };
+
+  dropdownButton.addEventListener("mouseenter", open);
+  dropdownButton.addEventListener("mouseleave", close);
+  dropdownPortal.addEventListener("mouseenter", open);
+  dropdownPortal.addEventListener("mouseleave", close);
+
+  dropdownButton.addEventListener("focus", open);
+  dropdownButton.addEventListener("blur", close);
+
+  window.addEventListener("resize", position, { passive: true });
+  window.addEventListener("scroll", position, { passive: true });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      dropdownPortal.classList.remove("is-open");
+      dropdownPortal.style.pointerEvents = "none";
+      dropdownButton.setAttribute("aria-expanded", "false");
+    }
+  });
+
+  bindDropdownItems();
+  position();
 };
+
+
+
+
+
+
 
 function ensureMobileDrawerMarkup() {
   // backdrop
@@ -269,7 +435,6 @@ function ensureMobileDrawerMarkup() {
     </div>`;
   document.body.appendChild(d);
 }
-
 
 function initMobileDrawer() {
   ensureMobileDrawerMarkup();
@@ -326,14 +491,13 @@ function initMobileDrawer() {
   }
 
   function refreshFromHover(clientX, clientY) {
-    if (isDown) return; // don't override closed while down
+    if (isDown) return;
 
     if (robotHoverActive()) {
       setCursor(CUR_MID);
       return;
     }
 
-    // use elementFromPoint when we have coords; fallback to activeElement otherwise
     let el = null;
     if (typeof clientX === "number" && typeof clientY === "number") {
       el = document.elementFromPoint(clientX, clientY);
@@ -345,23 +509,18 @@ function initMobileDrawer() {
     else setCursor(CUR_OPEN);
   }
 
-  // Start in a known state
   setCursor(CUR_OPEN);
 
-  // Pointer move: set open/mid
   window.addEventListener("pointermove", (e) => {
     refreshFromHover(e.clientX, e.clientY);
   }, { passive: true });
 
-  // Pointer down: closed + capture pointer so we still get the up/cancel
   window.addEventListener("pointerdown", (e) => {
-    // only track primary button/touch
     if (e.button !== undefined && e.button !== 0) return;
 
     isDown = true;
     activePointerId = e.pointerId;
 
-    // capture ensures we receive pointerup even if you drag off elements
     try { e.target.setPointerCapture?.(e.pointerId); } catch {}
 
     setCursor(CUR_CLOSED);
@@ -369,39 +528,34 @@ function initMobileDrawer() {
 
   function releasePointer(e) {
     if (activePointerId !== null && e && e.pointerId !== undefined && e.pointerId !== activePointerId) {
-      return; // ignore other pointers
+      return;
     }
     isDown = false;
     activePointerId = null;
 
-    // decide final state based on where we released
     if (e) refreshFromHover(e.clientX, e.clientY);
     else setCursor(CUR_OPEN);
   }
 
-  // Pointer up / cancel: always release
   window.addEventListener("pointerup", releasePointer);
   window.addEventListener("pointercancel", releasePointer);
 
-  // If the pointer leaves the window or tab loses focus, force reset
   window.addEventListener("blur", () => releasePointer(null));
   document.addEventListener("visibilitychange", () => {
     if (document.hidden) releasePointer(null);
   });
 
-  // Some browsers fire mouseleave on window when exiting viewport
   window.addEventListener("mouseleave", () => {
-    // if you were holding down and left the window, don't get stuck
     if (isDown) releasePointer(null);
   });
 })();
+
 // ===== ABOUT OVERLAY (robust: works with injected nav) =====
 (function () {
   function initAboutOverlay() {
     const overlay = document.getElementById("aboutOverlay");
     const sheet = overlay ? overlay.querySelector(".about-sheet") : null;
 
-    // Only exists on index.html
     if (!overlay || !sheet) return;
 
     function openAbout() {
@@ -414,23 +568,11 @@ function initMobileDrawer() {
       overlay.setAttribute("aria-hidden", "true");
     }
 
-    function toggleAbout() {
-      const open = overlay.classList.contains("is-open");
-      if (open) {
-        closeAbout();
-        if (location.hash === "#about") history.replaceState(null, "", location.pathname);
-      } else {
-        openAbout();
-        if (location.hash !== "#about") history.replaceState(null, "", location.pathname + "#about");
-      }
-    }
-
     function syncFromHash() {
       if (location.hash === "#about") openAbout();
       else closeAbout();
     }
 
-    // Click outside closes
     overlay.addEventListener("click", (e) => {
       if (e.target === overlay) {
         closeAbout();
@@ -438,10 +580,8 @@ function initMobileDrawer() {
       }
     });
 
-    // Stop clicks inside the sheet from closing
     sheet.addEventListener("click", (e) => e.stopPropagation());
 
-    // ESC closes
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape") {
         closeAbout();
@@ -449,28 +589,24 @@ function initMobileDrawer() {
       }
     });
 
-    // IMPORTANT: nav is injected, so use event delegation
     document.addEventListener("click", (e) => {
-  const btn =
-    e.target.closest("#aboutNavBtn") ||
-    e.target.closest("[data-about-link]") ||
-    e.target.closest('a[href$="#about"], a[href*="/#about"]');
+      const btn =
+        e.target.closest("#aboutNavBtn") ||
+        e.target.closest("[data-about-link]") ||
+        e.target.closest('a[href$="#about"], a[href*="/#about"]');
 
-  if (!btn) return;
+      if (!btn) return;
 
-  // only intercept if overlay exists on THIS page (index.html)
-  const overlay = document.getElementById("aboutOverlay");
-  const sheet = overlay ? overlay.querySelector(".about-sheet") : null;
-  if (!overlay || !sheet) return; // <-- IMPORTANT: allow normal navigation on other pages
+      const overlay = document.getElementById("aboutOverlay");
+      const sheet = overlay ? overlay.querySelector(".about-sheet") : null;
+      if (!overlay || !sheet) return;
 
-  e.preventDefault();
+      e.preventDefault();
 
-  // ✅ OPEN (don't toggle) and update hash like a real link
-  overlay.classList.add("is-open");
-  overlay.setAttribute("aria-hidden", "false");
-  if (location.hash !== "#about") location.hash = "#about";
-});
-
+      overlay.classList.add("is-open");
+      overlay.setAttribute("aria-hidden", "false");
+      if (location.hash !== "#about") location.hash = "#about";
+    });
 
     syncFromHash();
     window.addEventListener("hashchange", syncFromHash);
@@ -480,18 +616,16 @@ function initMobileDrawer() {
   window.addEventListener("nav:loaded", initAboutOverlay);
 })();
 
-
 document.addEventListener("DOMContentLoaded", () => {
   const loader = document.getElementById("loader");
   if (!loader) return;
 
   const nav = performance.getEntriesByType("navigation")[0];
-  const navType = nav ? nav.type : "navigate"; // "navigate" | "reload" | "back_forward"
+  const navType = nav ? nav.type : "navigate";
 
   const alreadyShown = sessionStorage.getItem("bootShown") === "1";
   const isBackForward = navType === "back_forward";
 
-  // If coming from back button OR already saw it this session → skip
   if (isBackForward || alreadyShown) {
     loader.remove();
     document.body.classList.remove("lights-off", "lights-dim", "lights-on");
@@ -499,29 +633,23 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  // mark as shown for this tab/session
   sessionStorage.setItem("bootShown", "1");
 
   const cmdWin = loader.querySelector(".cmd");
   const bodyEl = document.getElementById("terminalBody");
   const typedEl = document.getElementById("typedNow");
 
-  // ===== TIMING (tweak these) =====
-  const POP_IN_DELAY = 500;      // blank screen time before cmd appears
-  const AFTER_DONE_DELAY = 450;  // pause after "DONE" before fade
-  const FADE_MS = 550;           // must match CSS transition on #loader
+  const POP_IN_DELAY = 500;
+  const AFTER_DONE_DELAY = 450;
+  const FADE_MS = 550;
 
-  // typing feel
-  const CHAR_MS = 100;            // 28–40 = readable
+  const CHAR_MS = 100;
   const CHAR_JITTER = 16;
   const PAUSE_AFTER_CMD = 180;
   const PAUSE_BETWEEN_LINES = 300;
   const WAIT_AFTER_WINDOW = 2000;
-  const TERMINAL_REMOVE_DELAY = 500; // after DONE, remove terminal
-  const DIM_REVEAL_MS = 1400;        // 1000–2000 (1–2 sec)
-
-
-  const PROMPT = `C:\\ROBOT_ROOM>`;
+  const TERMINAL_REMOVE_DELAY = 500;
+  const DIM_REVEAL_MS = 1400;
 
   const cmd = "room initialize";
   const out = [
@@ -535,104 +663,85 @@ document.addEventListener("DOMContentLoaded", () => {
     "DONE."
   ];
 
- const liveLine = document.getElementById("liveLine");
+  const liveLine = document.getElementById("liveLine");
 
-function addLine(text = "") {
-  if (!bodyEl) return;
+  function addLine(text = "") {
+    if (!bodyEl) return;
 
-  const div = document.createElement("div");
-  div.className = "cmd-line";
-  div.textContent = text;
+    const div = document.createElement("div");
+    div.className = "cmd-line";
+    div.textContent = text;
 
-  // Insert ABOVE the live line so the live prompt stays at the bottom
-  if (liveLine && liveLine.parentNode) {
-    liveLine.parentNode.insertBefore(div, liveLine);
-  } else {
-    bodyEl.appendChild(div);
+    if (liveLine && liveLine.parentNode) {
+      liveLine.parentNode.insertBefore(div, liveLine);
+    } else {
+      bodyEl.appendChild(div);
+    }
+
+    while (bodyEl.children.length > 12) {
+      bodyEl.removeChild(bodyEl.firstChild);
+    }
   }
-
-  // Trim ONLY printed lines inside #terminalBody (live line is not in there)
-  while (bodyEl.children.length > 12) {
-    bodyEl.removeChild(bodyEl.firstChild);
-  }
-}
-
 
   const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
-async function typeIntoPrompt(text) {
-  if (!typedEl) return;
+  async function typeIntoPrompt(text) {
+    if (!typedEl) return;
 
-  typedEl.textContent = "";
+    typedEl.textContent = "";
 
-  for (let i = 0; i < text.length; i++) {
-    typedEl.textContent += text[i];
-    await sleep(CHAR_MS + Math.floor(Math.random() * CHAR_JITTER));
+    for (let i = 0; i < text.length; i++) {
+      typedEl.textContent += text[i];
+      await sleep(CHAR_MS + Math.floor(Math.random() * CHAR_JITTER));
+    }
   }
-}
-
 
   async function run() {
-  // START: lights fully off
-  document.body.classList.add("lights-off");
-  document.body.classList.remove("lights-dim", "lights-on", "ambient-light");
+    document.body.classList.add("lights-off");
+    document.body.classList.remove("lights-dim", "lights-on", "ambient-light");
 
-  // 1) blank screen beat
-  await sleep(POP_IN_DELAY);
+    await sleep(POP_IN_DELAY);
 
-  // Move from OFF → DIM (still dark, but readable shapes)
-  document.body.classList.remove("lights-off");
-  document.body.classList.add("lights-dim");
+    document.body.classList.remove("lights-off");
+    document.body.classList.add("lights-dim");
 
-  // 2) pop window in
-  if (cmdWin) cmdWin.classList.remove("cmd--hidden");
-  await sleep(WAIT_AFTER_WINDOW);
+    if (cmdWin) cmdWin.classList.remove("cmd--hidden");
+    await sleep(WAIT_AFTER_WINDOW);
 
-  // 3) type command
-  await typeIntoPrompt(cmd);
-  await sleep(40);
-  await sleep(PAUSE_AFTER_CMD);
+    await typeIntoPrompt(cmd);
+    await sleep(40);
+    await sleep(PAUSE_AFTER_CMD);
 
-  // 4) output lines
-  for (const line of out) {
-    addLine(line);
-    await sleep(PAUSE_BETWEEN_LINES);
+    for (const line of out) {
+      addLine(line);
+      await sleep(PAUSE_BETWEEN_LINES);
+    }
+
+    await sleep(AFTER_DONE_DELAY);
+
+    await sleep(TERMINAL_REMOVE_DELAY);
+    if (cmdWin) cmdWin.remove();
+
+    document.body.classList.remove("lights-off");
+    document.body.classList.add("lights-dim");
+    loader.classList.add("see-through");
+
+    await sleep(DIM_REVEAL_MS);
+
+    document.body.classList.remove("lights-dim");
+    document.body.classList.add("lights-on");
+    loader.classList.remove("see-through");
+
+    setTimeout(() => {
+      document.body.classList.add("ambient-light");
+    }, 1300);
+
+    loader.classList.add("hidden");
+    setTimeout(() => loader.remove(), FADE_MS + 50);
   }
-
-  // After printing all output lines:
-await sleep(AFTER_DONE_DELAY);
-
-// 1) Wait 500ms then remove ONLY the terminal window
-await sleep(TERMINAL_REMOVE_DELAY);
-if (cmdWin) cmdWin.remove();
-
-// 2) Reveal the room faintly for 1–2 seconds
-document.body.classList.remove("lights-off");
-document.body.classList.add("lights-dim");
-loader.classList.add("see-through");
-
-await sleep(DIM_REVEAL_MS);
-
-// 3) Flicker lights ON
-document.body.classList.remove("lights-dim");
-document.body.classList.add("lights-on");
-loader.classList.remove("see-through");
-
-// Optional: start ambient loop after flicker finishes
-setTimeout(() => {
-  document.body.classList.add("ambient-light");
-}, 1300);
-
-// 4) Fade out loader overlay
-loader.classList.add("hidden");
-setTimeout(() => loader.remove(), FADE_MS + 50);
-
-}
-
 
   run();
 
-  // failsafe: never stuck (in case something errors)
   setTimeout(() => {
     if (!loader.classList.contains("hidden")) {
       loader.classList.add("hidden");
@@ -641,27 +750,20 @@ setTimeout(() => loader.remove(), FADE_MS + 50);
   }, 15000);
 });
 
-
-
 window.addEventListener("nav:loaded", () => {
   initMobileDrawer();
   if (typeof window.initNav === "function") window.initNav();
 });
 
-
 // ===== BOOTSTRAP =====
 function bootInteractive() {
-  // robots hover/click
   safeInit();
-
-  // nav interactions (if nav is already present)
   initMobileDrawer();
   if (typeof window.initNav === "function") window.initNav();
 }
 
 document.addEventListener("DOMContentLoaded", bootInteractive);
 window.addEventListener("nav:loaded", bootInteractive);
-
 
 // Terminal-style typing + cascading bullets (on scroll)
 document.addEventListener("DOMContentLoaded", () => {
@@ -683,12 +785,10 @@ document.addEventListener("DOMContentLoaded", () => {
           return;
         }
 
-        // 1) Start heading typing
         heading.classList.add("is-typing");
 
-        // 2) After typing finishes, reveal bullets one-by-one
-        const TYPE_DURATION = 900; // must match CSS typing animation
-        const BULLET_DELAY = 140;  // ms between bullets
+        const TYPE_DURATION = 900;
+        const BULLET_DELAY = 140;
 
         setTimeout(() => {
           bullets.forEach((li, i) => {
@@ -696,9 +796,9 @@ document.addEventListener("DOMContentLoaded", () => {
               li.classList.add("is-visible");
             }, i * BULLET_DELAY);
           });
-        }, TYPE_DURATION + 120); // slight pause after heading
+        }, TYPE_DURATION + 120);
 
-        obs.unobserve(section); // 🔑 run once
+        obs.unobserve(section);
       });
     },
     {
