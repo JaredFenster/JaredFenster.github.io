@@ -278,6 +278,11 @@ window.initNav = function initNav() {
           <div class="title">RC Car</div>
           <div class="sub">Simple RC Car</div>
         </a>
+
+        <a class="dropdown-item" href="/projects/vertical-launcher.html" data-robot="vertical-launcher">
+          <div class="title">Vertical Launcher</div>
+          <div class="sub">Phyisics Demo</div>
+        </a>
       </div>
     `;
   }
