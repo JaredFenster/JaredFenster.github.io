@@ -1842,3 +1842,21 @@ body.drawer-open .mobile-drawer {
   margin-right: 6px !important;
 }
 
+/* ===== About header caret ===== */
+.about-sheet .name-text { display: inline-flex; align-items: center; gap: 8px; }
+.about-sheet .name-caret{
+  /* match projects dropdown: solid block caret (no rounding) */
+  display: inline-block;
+  margin-left: 8px;
+  color: var(--term-green-caret);
+  font-family: Consolas, "Lucida Console", "Courier New", monospace;
+  line-height: 1;
+  font-size: 1em;
+  vertical-align: middle;
+}
+.about-sheet .name-caret::before{
+  content: "█";
+  color: var(--term-green-caret);
+  animation: dropdownCaretBlink 0.9s steps(1) infinite;
+}
+
