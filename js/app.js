@@ -659,11 +659,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const AFTER_DONE_DELAY = 450;
   const FADE_MS = 550;
 
-  const CHAR_MS = 100;
+  const CHAR_MS = 50;
   const CHAR_JITTER = 16;
   const PAUSE_AFTER_CMD = 180;
-  const PAUSE_BETWEEN_LINES = 300;
-  const WAIT_AFTER_WINDOW = 2000;
+  const PAUSE_BETWEEN_LINES = 100;
+  const WAIT_AFTER_WINDOW = 1000;
   const TERMINAL_REMOVE_DELAY = 500;
   const DIM_REVEAL_MS = 1400;
 
