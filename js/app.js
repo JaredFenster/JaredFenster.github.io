@@ -273,6 +273,11 @@ window.initNav = function initNav() {
           <div class="sub">Universal Robot Controller</div>
         </a>
 
+        <a class="dropdown-item" href="/projects/ikviz.html" data-robot="IKViz">
+          <div class="title">IK Visualizer</div>
+          <div class="sub">Inverse Kinematics Visualizer</div>
+        </a>
+
         <a class="dropdown-item" href="/projects/car.html" data-robot="car">
           <div class="title">RC Car</div>
           <div class="sub">Simple RC Car</div>
@@ -436,6 +441,8 @@ function ensureMobileDrawerMarkup() {
     <a href="/projects/controller.html">Controller</a>
     <a href="/projects/car.html">RC Car</a>
     <a href="/projects/vertical-launcher.html">Vertical Launcher</a>
+    <a href="/projects/IKViz.html">IK Visualizer</a>
+    
     <div class="drawer-title">Social</div>
     <div class="drawer-social">
       <a class="icon-link" href="https://www.linkedin.com/in/jaredfenster" target="_blank" rel="noopener" aria-label="LinkedIn">

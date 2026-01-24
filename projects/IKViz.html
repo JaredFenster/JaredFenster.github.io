@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" href="../assets/icon.png">
+
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XHHEVSN1WV"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-XHHEVSN1WV');
+</script>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>IK Visualizer</title>
+
+  <link rel="stylesheet" href="../css/styles.css" />
+  <script defer src="../js/include.js"></script>
+  <script defer src="../js/app.js"></script>
+</head>
+<body class="project-page">
+  <div data-include="../partials/nav.html"></div>
+
+  <main>
+
+  <!-- SECTION 1 -->
+  <section class="project-section">
+    <div class="project-image project-video">
+      <video
+        autoplay
+        muted
+        loop
+        playsinline
+        preload="metadata"
+      >
+        <source src="../assets/IKViz/IKVizDemo.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+    </div>
+
+    <div class="project-text">
+      <h2>IK Visualizer</h2>
+      <p>
+        An Inverse Kinematics Calculator and Simulator
+      </p>
+      <ul>
+        <li>C++</li>
+        <li>OpenGL</li>
+        <li>URDF Based</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- SECTION 2 -->
+  <section class="project-section reverse">
+    <div class="project-text">
+      <h2>Software</h2>
+      <ul>
+        <li>Forward kinematics computed per frame using homogeneous transforms to place each link in world space</li>
+        <li>Inverse kinematics solved via Jacobian methods (iterative updates from end-effector error to joint angle deltas)</li>
+        <li>Orientation error handled with axis–angle representation for stable rotational convergence</li>
+        <li>Real-time OpenGL render loop ties IK updates directly to visual feedback for interactive debugging</li>
+        <li>Joint limits and chain hierarchy enforced to keep solutions physically meaningful</li>
+      </ul>
+    </div>
+
+   <div class="project-image">
+      <img src="../assets/IKViz/Pic.png" alt="Software">
+    </div>
+  </section>
+
+
+  <!-- SECTION 3 -->
+  <section class="project-section">
+    
+    <div class="project-image">
+      <img src="../assets/IKViz/Pic2.png" alt="Demo">
+    </div>
+
+    <div class="project-text">
+      <h2>Try it for yourself</h2>
+      <ul>
+        <li><a href="https://github.com/JaredFenster/IKViz" target="_blank" rel="noopener noreferrer">IKViz Github</a></li>
+        <li>More path planning tools coming soon</li>
+      </ul>
+    </div>
+  </section>
+
+</main>
+
+</body>
+</html>
