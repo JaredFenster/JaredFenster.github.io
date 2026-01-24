@@ -273,7 +273,7 @@ window.initNav = function initNav() {
           <div class="sub">Universal Robot Controller</div>
         </a>
 
-        <a class="dropdown-item" href="/projects/ikviz.html" data-robot="IKViz">
+        <a class="dropdown-item" href="/projects/IKViz.html" data-robot="IKViz">
           <div class="title">IK Visualizer</div>
           <div class="sub">Inverse Kinematics Visualizer</div>
         </a>
