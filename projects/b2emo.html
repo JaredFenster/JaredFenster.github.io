@@ -17,6 +17,19 @@
   <title>B2EMO</title>
 
   <link rel="stylesheet" href="../css/styles.css"/>
+  <!-- highlight.js theme (github-dark) -->
+  <style>
+    /* Minimal github-dark from highlight.js (subset) */
+    .hljs{display:block;overflow-x:auto;padding:0.75em;background:transparent;color:#e6edf3;font-family:Consolas,"Lucida Console","Courier New",monospace;font-size:0.98rem;line-height:1.45;}
+    .hljs-comment,.hljs-quote{color:#8b949e;font-style:italic;}
+    .hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#ff7b72;}
+    .hljs-literal,.hljs-symbol,.hljs-name,.hljs-link{color:#79c0ff;}
+    .hljs-type,.hljs-built_in,.hljs-builtin-name,.hljs-number,.hljs-attr,.hljs-params{color:#ffa657;}
+    .hljs-string,.hljs-doctag,.hljs-template-tag,.hljs-template-variable,.hljs-addition{color:#a5d6ff;}
+    .hljs-title,.hljs-section{color:#d2a8ff;}
+    .hljs-variable,.hljs-deletion,.hljs-selector-id,.hljs-selector-class{color:#ffa198;}
+    .hljs-meta{color:#7d8590;}
+  </style>
 
   <script defer src="../js/include.js"></script>
   <script defer src="../js/app.js"></script>
@@ -111,14 +124,43 @@
 
       <div class="cmd-input">
         <span class="cmd-path">C:\B2EMO&gt;</span>
-        <span class="typed typed--static">B2EMO_Control.py</span>
+        <span class="typed typed--static">B2EMO_Control.cpp</span>
         <span class="caret"></span>
       </div>
 
       <div class="cmd-body cmd-body--code">
-        <pre class="cmd-pre language-arduino language-cpp" data-src="../assets/B2EMO/code.ino">
-          <code class="language-arduino language-cpp"></code>
-        </pre>
+        <pre class="cmd-pre"><code class="hljs language-cpp">void BrMotorDrive() {
+
+    int x = RxValue;
+    int y = RyValue;
+
+    //Use both X & Y Joystick values for Omnidirectional Motion
+    int Xmap = map(x, 0, 1023, -255, 255);
+    int Ymap = map(y, 0, 1023, 255, -255);
+
+    int cs = Xmap + Ymap;
+
+    if (cs < 20 && cs > -20) cs = 0;
+    if (cs > 255) cs = 255;
+    else if (cs < -255) cs = -255;
+
+    cs = cs * 100;
+    BrSmooth = (cs * 0.1) + (BrPrev * 0.90);
+    BrPrev = BrSmooth;
+    BrSmooth = BrSmooth / 100;
+
+    if (BrSmooth > 0) {
+      analogWrite(CENA, BrSmooth);
+      digitalWrite(CIN1, LOW);
+      digitalWrite(CIN2, HIGH);
+    }
+    else {
+      analogWrite(CENA, abs(BrSmooth));
+      digitalWrite(CIN1, HIGH);
+      digitalWrite(CIN2, LOW);
+    }
+ }
+</code></pre>
       </div>
     </div>
   </section>
@@ -142,34 +184,13 @@
 </body>
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-
-<!-- Arduino/C++ support -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-clike.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-cpp.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-arduino.min.js"></script>
-
-<!-- Python (keep) -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
-
-<!-- loads code from data-src -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/file-highlight/prism-file-highlight.min.js"></script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
 <script>
-  window.addEventListener("load", () => {
-    // Fallback aliases so .ino works even if Arduino is missing
-    if (Prism && Prism.languages) {
-      if (!Prism.languages.arduino && Prism.languages.cpp) {
-        Prism.languages.arduino = Prism.languages.cpp;
-      }
-      if (!Prism.languages.ino && Prism.languages.arduino) {
-        Prism.languages.ino = Prism.languages.arduino;
-      }
+  document.addEventListener('DOMContentLoaded', () => {
+    if (window.hljs) {
+      hljs.highlightAll();
     }
-    if (Prism?.plugins?.fileHighlight?.highlight) {
-      Prism.plugins.fileHighlight.highlight();
-    }
-    Prism.highlightAll();
   });
 </script>
 
