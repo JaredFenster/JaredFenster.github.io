@@ -1276,6 +1276,30 @@ body.drawer-open .mobile-drawer {
   transition: opacity 0.28s ease, transform 0.28s ease;
 }
 
+.scroll-hint{
+  position: fixed;
+  left: 50%;
+  bottom: 18px;
+  transform: translate(-50%, 12px);
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  border: none;
+  color: rgba(255,255,255,0.9);
+  font-size: 1rem;
+  letter-spacing: 0.08em;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 120;
+  text-shadow: 0 6px 28px rgba(0,0,0,0.4);
+  transition: opacity 0.32s ease, transform 0.34s ease;
+}
+
+.scroll-hint--show{
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
 /* ===== Embedded CMD code panel (same style as loader) ===== */
 .cmd.cmd--embed{
   width: 100%;

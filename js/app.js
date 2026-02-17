@@ -783,10 +783,60 @@ function bootInteractive() {
   safeInit();
   initMobileDrawer();
   if (typeof window.initNav === "function") window.initNav();
+  initScrollHint();
 }
 
 document.addEventListener("DOMContentLoaded", bootInteractive);
 window.addEventListener("nav:loaded", bootInteractive);
+
+function initScrollHint() {
+  const scene = document.getElementById("scene");
+  if (!scene) return;
+
+  const loaderEl = document.getElementById("loader");
+
+  const existing = document.querySelector(".scroll-hint");
+  const hint = existing || document.createElement("div");
+  if (!existing) {
+    hint.className = "scroll-hint";
+    hint.setAttribute("role", "status");
+    hint.setAttribute("aria-live", "polite");
+    hint.textContent = "Click on a robot!";
+    document.body.appendChild(hint);
+  }
+
+  let showing = false;
+  let showCount = 0;
+  const MAX_SHOWS = 3;
+
+  const reveal = () => {
+    if (showing) return;
+    if (showCount >= MAX_SHOWS) return;
+    // Avoid showing underneath the loader; wait until it's gone.
+    if (loaderEl && document.body.contains(loaderEl)) {
+      setTimeout(reveal, 350);
+      return;
+    }
+    showing = true;
+    showCount += 1;
+    hint.classList.add("scroll-hint--show");
+    setTimeout(() => {
+      hint.classList.remove("scroll-hint--show");
+      setTimeout(() => { showing = false; }, 280);
+    }, 4200);
+  };
+
+  const onWheel = () => reveal();
+  const onTouchMove = () => reveal();
+  const onKey = (e) => {
+    const keys = ["ArrowDown", "ArrowUp", "PageDown", "PageUp", "Home", "End", "Space", " "];
+    if (keys.includes(e.key)) reveal();
+  };
+
+  window.addEventListener("wheel", onWheel, { passive: true });
+  window.addEventListener("touchmove", onTouchMove, { passive: true });
+  window.addEventListener("keydown", onKey, { passive: true });
+}
 
 // Terminal-style typing + cascading bullets (on scroll)
 document.addEventListener("DOMContentLoaded", () => {
