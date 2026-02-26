@@ -821,24 +821,25 @@ body.cursor-closed .brand { cursor: pointer !important; }
 
 /* ===== PROJECT PAGE BACKDROP (subtle, not distracting) ===== */
 body.project-page {
-  background:
-    repeating-linear-gradient(
-      to bottom,
-      rgba(255,255,255,0.015),
-      rgba(255,255,255,0.015) 1px,
-      transparent 1px,
-      transparent 3px
-    ),
-    linear-gradient(180deg, #06070a 0%, #020304 100%);
+  background: #000;
 }
 
 body.project-page::before {
-  content: "";
+  content: none;
+}
+
+.project-mesh-bg {
   position: fixed;
   inset: 0;
-  pointer-events: auto;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
   z-index: 0;
-  background: radial-gradient(circle at center, transparent 55%, rgba(0,0,0,0.45) 100%);
+}
+
+body.project-page main {
+  position: relative;
+  z-index: 1;
 }
 
 /* keep content above vignette */
