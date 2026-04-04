@@ -113,7 +113,7 @@
           style="background: transparent;"
         ></model-viewer>
 
-        <div class="model-hint">MMB to Rotate • Scroll to Zoom • Right Click to Pan</div>
+        <div class="model-hint">Left Click to Rotate • MMB to Pan • Scroll to Zoom</div>
       </div>
     </section>
 
@@ -258,16 +258,67 @@
   window.addEventListener("load", () => Prism.highlightAll());
 </script>
 
-<!-- Prevent middle-button autoscroll when clicking the model-viewer -->
+<!-- Remap model-viewer controls: LMB=rotate, MMB=pan, scroll=zoom -->
 <script>
 document.addEventListener('DOMContentLoaded', () => {
   const viewer = document.querySelector('.project-image.project-model model-viewer');
   if (!viewer) return;
-  viewer.addEventListener('pointerdown', (e) => {
-    if (e.pointerType === 'mouse' && e.button === 1) {
-      e.preventDefault();
-    }
-  });
+
+  viewer.addEventListener('contextmenu', (e) => e.preventDefault());
+
+  let remapping = false;
+
+  function handlePointer(e) {
+    if (remapping) return;
+    if (e.pointerType !== 'mouse') return;
+
+    const path = e.composedPath();
+    if (!path.includes(viewer)) return;
+
+    const mmbDown = e.button === 1;
+    const rmbDown = e.button === 2;
+    const mmbHeld = (e.buttons & 4) !== 0;
+    const rmbHeld = (e.buttons & 2) !== 0;
+
+    if (!mmbDown && !rmbDown && !mmbHeld && !rmbHeld) return;
+
+    e.stopImmediatePropagation();
+    e.preventDefault();
+
+    // Block RMB — don't re-dispatch
+    if (rmbDown || (rmbHeld && !mmbHeld)) return;
+
+    // Remap MMB → RMB so model-viewer pans
+    const newButton = mmbDown ? 2 : e.button;
+    let newButtons = mmbHeld ? (e.buttons & ~4) | 2 : e.buttons;
+
+    remapping = true;
+    path[0].dispatchEvent(new PointerEvent(e.type, {
+      pointerId: e.pointerId,
+      pointerType: e.pointerType,
+      isPrimary: e.isPrimary,
+      clientX: e.clientX,
+      clientY: e.clientY,
+      screenX: e.screenX,
+      screenY: e.screenY,
+      movementX: e.movementX,
+      movementY: e.movementY,
+      button: newButton,
+      buttons: newButtons,
+      ctrlKey: e.ctrlKey,
+      shiftKey: e.shiftKey,
+      altKey: e.altKey,
+      metaKey: e.metaKey,
+      bubbles: true,
+      cancelable: true,
+      composed: true,
+    }));
+    remapping = false;
+  }
+
+  document.addEventListener('pointerdown', handlePointer, true);
+  document.addEventListener('pointermove', handlePointer, true);
+  document.addEventListener('pointerup', handlePointer, true);
 });
 </script>
 

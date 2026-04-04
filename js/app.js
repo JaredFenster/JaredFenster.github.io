@@ -544,7 +544,10 @@ function initMobileDrawer() {
     isDown = true;
     activePointerId = e.pointerId;
 
-    try { e.target.setPointerCapture?.(e.pointerId); } catch {}
+    // Don't steal pointer capture from model-viewer's internal canvas
+    if (e.target?.tagName?.toLowerCase() !== 'model-viewer') {
+      try { e.target.setPointerCapture?.(e.pointerId); } catch {}
+    }
 
     setCursor(CUR_CLOSED);
   });
