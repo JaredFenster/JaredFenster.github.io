@@ -894,133 +894,90 @@ function initProjectBackgroundMesh() {
   canvas.setAttribute("aria-hidden", "true");
   document.body.prepend(canvas);
 
-  const context = canvas.getContext("2d", { alpha: true });
-  if (!context) return;
+  const ctx = canvas.getContext("2d", { alpha: true });
+  if (!ctx) return;
 
-  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const pointer = {
-    x: window.innerWidth * 0.5,
-    y: window.innerHeight * 0.5,
-    targetX: window.innerWidth * 0.5,
-    targetY: window.innerHeight * 0.5,
-  };
+  const dpr  = Math.min(window.devicePixelRatio || 1, 2);
+  const w    = window.innerWidth;
+  const h    = window.innerHeight;
+  canvas.width  = Math.floor(w * dpr);
+  canvas.height = Math.floor(h * dpr);
+  canvas.style.width  = `${w}px`;
+  canvas.style.height = `${h}px`;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-  const points = [];
-  let rafId = 0;
-  let width = 0;
-  let height = 0;
-  let dpr = 1;
-  let columns = 0;
-  let rows = 0;
-  let spacingX = 0;
-  let spacingY = 0;
+  const CHARS  = ['0','1','.','/','-','\\','|','+','*','#','%','@','x','o'];
+  const COL_W  = 10;
+  const ROW_H  = 18;
+  const SIZE   = 13;
+  const RADIUS = 70; // mouse influence radius px
 
-  function rebuildGrid() {
-    dpr = Math.min(window.devicePixelRatio || 1, 2);
-    width = window.innerWidth;
-    height = window.innerHeight;
+  const cols = Math.ceil(w / COL_W) + 1;
+  const rows = Math.ceil(h / ROW_H) + 1;
 
-    canvas.width = Math.floor(width * dpr);
-    canvas.height = Math.floor(height * dpr);
-    canvas.style.width = `${width}px`;
-    canvas.style.height = `${height}px`;
-
-    context.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-    columns = Math.max(34, Math.floor(width / 34));
-    rows = Math.max(20, Math.floor(height / 34));
-    spacingX = width / (columns - 1);
-    spacingY = height / (rows - 1);
-
-    points.length = 0;
-    for (let y = 0; y < rows; y++) {
-      for (let x = 0; x < columns; x++) {
-        const baseX = x * spacingX;
-        const baseY = y * spacingY;
-        points.push({
-          baseX,
-          baseY,
-          x: baseX,
-          y: baseY,
-          phase: Math.random() * Math.PI * 2,
-        });
-      }
+  // Build grid: each cell has a char, base alpha, and a flash value (0–1)
+  const grid = [];
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      grid.push({
+        char:  Math.random() < 0.65 ? CHARS[Math.floor(Math.random() * CHARS.length)] : null,
+        alpha: 0.10 + Math.random() * 0.13,
+        flash: 0,
+      });
     }
   }
 
-  function draw(timeMs) {
-    const t = timeMs * 0.001;
-    const pulse = 0.4 + 0.6 * (Math.sin(t * 0.45) * 0.5 + 0.5);
+  const mouse = { x: -9999, y: -9999 };
+  let rafId = 0;
 
-    pointer.x += (pointer.targetX - pointer.x) * 0.12;
-    pointer.y += (pointer.targetY - pointer.y) * 0.12;
+  window.addEventListener("pointermove", e => {
+    mouse.x = e.clientX;
+    mouse.y = e.clientY;
+  }, { passive: true });
 
-    context.clearRect(0, 0, width, height);
+  window.addEventListener("pointerleave", () => {
+    mouse.x = -9999;
+    mouse.y = -9999;
+  }, { passive: true });
 
-    context.beginPath();
-    for (let y = 0; y < rows; y++) {
-      for (let x = 0; x < columns; x++) {
-        const index = y * columns + x;
-        const point = points[index];
-        if (!point) continue;
+  ctx.font = `${SIZE}px Consolas, "Lucida Console", monospace`;
+  ctx.textBaseline = "top";
 
-        const dx = pointer.x - point.baseX;
-        const dy = pointer.y - point.baseY;
-        const dist = Math.hypot(dx, dy) || 1;
-        const force = Math.max(0, 1 - dist / 120);
-        const drift = prefersReducedMotion ? 0 : Math.sin(t * 0.9 + point.phase) * 2.4;
+  function draw() {
+    ctx.clearRect(0, 0, w, h);
 
-        const push = force * 16;
-        point.x = point.baseX - (dx / dist) * push;
-        point.y = point.baseY - (dy / dist) * push + drift;
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        const cell = grid[r * cols + c];
+        const cx   = c * COL_W;
+        const cy   = r * ROW_H;
 
-        if (x < columns - 1) {
-          const next = points[index + 1];
-          context.moveTo(point.x, point.y);
-          context.lineTo(next.x, next.y);
+        // Distance from mouse center to this cell
+        const dx   = cx - mouse.x;
+        const dy   = cy - mouse.y;
+        const dist = Math.hypot(dx, dy);
+        const prox = Math.max(0, 1 - dist / RADIUS); // 0 far, 1 close
+
+        // Cells inside radius have a chance to scramble each frame
+        if (cell.char && prox > 0 && Math.random() < prox * 0.12) {
+          cell.char  = CHARS[Math.floor(Math.random() * CHARS.length)];
+          cell.flash = 1;
         }
 
-        if (y < rows - 1) {
-          const below = points[index + columns];
-          context.moveTo(point.x, point.y);
-          context.lineTo(below.x, below.y);
-        }
+        // Fade flash back down
+        cell.flash *= 0.82;
+
+        if (!cell.char) continue;
+
+        const alpha = cell.alpha + cell.flash * 0.10;
+        ctx.fillStyle = `rgba(160, 185, 220, ${alpha})`;
+        ctx.fillText(cell.char, cx, cy);
       }
     }
-
-    context.strokeStyle = `rgba(145, 165, 195, ${0.04 + 0.055 * pulse})`;
-    context.lineWidth = 1;
-    context.stroke();
-
-    context.beginPath();
-    for (const point of points) {
-      context.moveTo(point.x + 0.7, point.y);
-      context.arc(point.x, point.y, 0.7, 0, Math.PI * 2);
-    }
-    context.fillStyle = `rgba(175, 190, 215, ${0.055 + 0.04 * pulse})`;
-    context.fill();
 
     rafId = window.requestAnimationFrame(draw);
   }
 
-  function onPointerMove(event) {
-    pointer.targetX = event.clientX;
-    pointer.targetY = event.clientY;
-  }
-
-  function onPointerLeave() {
-    pointer.targetX = width * 0.5;
-    pointer.targetY = height * 0.5;
-  }
-
-  rebuildGrid();
   rafId = window.requestAnimationFrame(draw);
-
-  window.addEventListener("pointermove", onPointerMove, { passive: true });
-  window.addEventListener("pointerleave", onPointerLeave, { passive: true });
-  window.addEventListener("resize", rebuildGrid, { passive: true });
-
-  window.addEventListener("pagehide", () => {
-    window.cancelAnimationFrame(rafId);
-  }, { once: true });
+  window.addEventListener("pagehide", () => window.cancelAnimationFrame(rafId), { once: true });
 }
