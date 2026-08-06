@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;450;500&family=Space+Grotesk:wght@400;500;700&display=swap');
 
 :root {
   --bg: #05060a;
@@ -77,26 +77,19 @@ a:hover {
   pointer-events: auto;
 }
 
-/* Slot-style glass wrapper around the nav controls */
+/* One quiet bar holding every control, rather than a row of bordered pills */
 .nav-right{
   position: relative;
-  padding: 12px 14px;
-  border-radius: 22px;
+  padding: 6px 10px;
+  border-radius: 14px;
   width: 100%;
 
-  background:
-    linear-gradient(180deg, var(--topbar-glass-hi), rgba(255,255,255,0.02)),
-    var(--topbar-glass);
+  background: rgba(10, 12, 15, 0.62);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
 
-  border: 1px solid var(--topbar-glass-border);
-  box-shadow:
-    0 18px 40px rgba(0,0,0,0.35),
-    inset 0 1px 0 rgba(255,255,255,0.10);
-
-  -webkit-backdrop-filter: blur(24px) saturate(170%) !important;
-  backdrop-filter: blur(24px) saturate(170%) !important;
-
-  isolation: auto !important;
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
+  backdrop-filter: blur(20px) saturate(150%);
 }
 
 /* Fix: keep the desktop nav items in one horizontal row */
@@ -130,59 +123,54 @@ a:hover {
   cursor: pointer;
 }
 
-/* Unified sizing + style for name / projects / about */
+/* Plain text links — no per-item box, border, or shadow.
+   Font is set explicitly so the nav reads the same on every page. */
 .nav-control {
-  height: 56px;
-  padding: 0 24px;
-  border-radius: 16px;
+  height: 38px;
+  padding: 0 12px;
+  border-radius: 8px;
 
   display: inline-flex;
   align-items: center;
-  gap: 8px;
 
-  background: var(--nav-bg);
-  border: 1px solid var(--nav-stroke);
+  background: transparent;
+  border: 0;
 
-  -webkit-backdrop-filter: blur(32px) saturate(160%);
-  backdrop-filter: blur(10px) saturate(160%);
-
-  color: var(--text);
-  font-size: 1rem;
+  font-family: 'IBM Plex Sans', system-ui, sans-serif;
+  font-size: 0.95rem;
+  font-weight: 450;
+  letter-spacing: 0;
   line-height: 1;
+  color: rgba(255, 255, 255, 0.66);
+
   text-decoration: none;
   cursor: pointer;
   user-select: none;
 
-  box-shadow:
-    0 6px 18px rgba(0,0,0,0.45),
-    inset 0 1px 0 rgba(255,255,255,0.08);
-
-  transition:
-    background 0.15s ease,
-    border-color 0.15s ease,
-    transform 0.15s ease,
-    box-shadow 0.15s ease;
+  transition: color 0.15s ease, background-color 0.15s ease;
 }
 
 .nav-control:hover {
-  background: var(--nav-bg-hover);
-  border-color: var(--nav-stroke-hover);
-  transform: translateY(-1px);
-  box-shadow:
-    0 10px 26px rgba(0,0,0,0.55),
-    inset 0 1px 0 rgba(255,255,255,0.12);
+  color: #fff;
+  background: rgba(255, 255, 255, 0.07);
 }
 
 .nav-control:focus-visible {
-  outline: 2px solid rgba(233, 248, 255, 0.7);
+  outline: 2px solid rgba(255, 255, 255, 0.75);
   outline-offset: 2px;
 }
 
 .brand {
+  font-family: 'Space Grotesk', system-ui, sans-serif;
+  font-size: 1.02rem;
   font-weight: 600;
-  letter-spacing: 0.6px;
+  letter-spacing: -0.01em;
+  color: #fff;
   white-space: nowrap;
+  margin-right: 4px;
 }
+
+.brand:hover { background: transparent; }
 
 @media (max-width: 420px) {
   /* ultra-small devices: keep one line without breaking layout */
@@ -218,20 +206,14 @@ a:hover {
   top: 100%;
   left: 0;
   margin-top: 12px; /* small gap below nav glass */
-  min-width: 280px;
-  padding: 12px;
-  border-radius: 16px;
+  min-width: 300px;
+  padding: 8px;
+  border-radius: 14px;
 
-  /* 1. MATCH NAV BAR DYNAMIC GRADIENT */
-  background: 
-    linear-gradient(180deg, var(--topbar-glass-hi), rgba(255,255,255,0.02)),
-    var(--topbar-glass) !important;
-
-  /* 2. MATCH NAV BAR STROKE & SHADOW */
-  border: 1px solid var(--topbar-glass-border) !important;
-  box-shadow:
-    0 18px 44px rgba(0,0,0,0.40),
-    inset 0 1px 0 rgba(255,255,255,0.10) !important;
+  /* matches the nav bar */
+  background: rgba(10, 12, 15, 0.82) !important;
+  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.45) !important;
 
   /* 3. MATCH NAV BAR BLUR & SATURATION */
   -webkit-backdrop-filter: blur(24px) saturate(170%) !important;
@@ -255,94 +237,60 @@ a:hover {
   transform: translateY(0) scale(1);
 }
 
-/* Subtle scanline overlay (like your loader) */
-.dropdown-menu::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  pointer-events:none;
-  background: linear-gradient(to bottom, rgba(255,255,255,0.02), transparent 12%);
-  opacity: 0.22;
-  border-radius: 16px;
-}
 
-.dropdown-prompt{
-  font-family: Consolas, "Lucida Console", "Courier New", monospace;
-  font-size: 0.72rem;
-  letter-spacing: 0.15em;
-  color: var(--term-green-dim);
-  padding: 6px 10px 6px;
-  border-bottom: 1px dashed var(--term-green-muted);
-  margin-bottom: 6px;
-}
-
-/* Make items look like commands */
 .dropdown-item{
   display: block;
-  font-family: Consolas, "Lucida Console", "Courier New", monospace;
-  font-size: 0.92rem;
-  line-height: 1.35;
+  font-family: 'IBM Plex Sans', system-ui, sans-serif;
+  line-height: 1.3;
 
-  padding: 8px 10px 8px 26px;
-  border-radius: 6px;
+  padding: 10px 12px;
+  border-radius: 8px;
 
-  color: rgba(235,240,245,0.92);
+  color: rgba(255, 255, 255, 0.82);
   text-decoration: none;
-
-  border: 1px solid transparent;
+  border: 0;
   position: relative;
 
-  transition: background 0.12s ease, border-color 0.12s ease;
+  transition: background-color 0.12s ease, color 0.12s ease;
 }
 
-/* Command prompt marker */
-.dropdown-item::before{
-  content: ">";
-  position: absolute;
-  left: 10px;
-  top: 8px;
-  color: var(--term-green-dim);
-}
-
-/* Hover = armed row */
 .dropdown-item:hover{
-  background: var(--term-green-soft);
-  border-color: var(--term-green-hover-border);
-  text-decoration: none; /* override your global a:hover underline */
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  text-decoration: none; /* override the global a:hover underline */
 }
 
-/* Add a blinking caret on hover — positioned at the right of the item */
-.dropdown-item::after{
+/* the project you're currently looking at */
+.dropdown-item[aria-current="page"]{
+  color: #fff;
+}
+
+.dropdown-item[aria-current="page"]::after{
   content: "";
   position: absolute;
-  right: 10px;
+  left: 0;
   top: 50%;
   transform: translateY(-50%);
-  color: var(--term-green-caret);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 120ms linear, transform 120ms linear;
+  width: 2px;
+  height: 16px;
+  border-radius: 1px;
+  background: rgba(255, 255, 255, 0.55);
 }
 
-.dropdown-item:hover::after{
-  content: "█";
-  opacity: 1;
-  animation: dropdownCaretBlink 0.9s steps(1) infinite;
-}
-
-@keyframes dropdownCaretBlink{
-  50%{ opacity: 0; }
+.dropdown-item:focus-visible{
+  outline: 2px solid rgba(255, 255, 255, 0.75);
+  outline-offset: -2px;
 }
 
 .dropdown-item .title{
-  font-weight: 650;
-  font-size: 0.92rem;
-  color: rgba(235,240,245,0.92);
+  display: block;
+  font-size: 0.94rem;
+  font-weight: 500;
+  color: #fff;
 }
 
-.dropdown-item .sub{
-  display: none;
-}
+/* subtitles stay hidden (kept from the earlier design decision) */
+.dropdown-item .sub{ display: none; }
 
 
 
@@ -422,51 +370,38 @@ a:hover {
 
 
 
-/* Icon buttons (same size as nav-control) */
+/* Icon buttons: bare glyphs, matching the text links */
 .icon-link {
-  width: 56px;
-  height: 56px;
+  width: 34px;
+  height: 34px;
 
   display: inline-flex;
   align-items: center;
   justify-content: center;
 
-  border-radius: 14px;
-
-  background: var(--nav-bg);
-  border: 1px solid var(--nav-stroke);
-
-  -webkit-backdrop-filter: blur(10px) saturate(160%);
-  backdrop-filter: blur(10px) saturate(160%);
-
-  box-shadow:
-    0 6px 18px rgba(0,0,0,0.45),
-    inset 0 1px 0 rgba(255,255,255,0.08);
-
-  transition:
-    background 0.15s ease,
-    border-color 0.15s ease,
-    transform 0.15s ease,
-    box-shadow 0.15s ease;
-
+  border-radius: 8px;
+  background: transparent;
+  border: 0;
   text-decoration: none;
+  color: rgba(255, 255, 255, 0.6);
+
+  transition: color 0.15s ease, background-color 0.15s ease;
 }
 
 .icon-link:hover {
-  background: var(--nav-bg-hover);
-  border-color: var(--nav-stroke-hover);
-  transform: translateY(-1px);
-  box-shadow:
-    0 10px 26px rgba(0,0,0,0.55),
-    inset 0 1px 0 rgba(255,255,255,0.12);
+  color: #fff;
+  background: rgba(255, 255, 255, 0.07);
 }
 
 .icon-link:focus-visible {
-  outline: 2px solid rgba(233, 248, 255, 0.7);
+  outline: 2px solid rgba(255, 255, 255, 0.75);
   outline-offset: 2px;
 }
 
-.icon-link svg { width: 24px; height: 24px; fill: var(--text); }
+.icon-link svg { width: 18px; height: 18px; fill: currentColor; }
+
+/* a small gap before the social icons, so they read as a separate group */
+.icon-link:first-of-type { margin-left: 6px; }
 
 /* ===== SCENE ===== */
 .scene {
@@ -506,11 +441,6 @@ body.lights-on .scene__bg {
 /* Keep robots visible during flicker (no animation, just final state) */
 body.lights-on .robot {
   filter: inherit;
-}
-
-/* While we're in the dim hold, make the loader overlay mostly transparent */
-#loader.see-through {
-  background: rgba(5, 6, 10, 0.35); /* lets room show through */
 }
 
 /* Keep the outside/window light layers “on” even when room is dark */
@@ -576,171 +506,6 @@ code:not([class*="language-"]) {
   border-radius: 6px;
 }
 
-/* ===== FULLSCREEN PROJECT SECTIONS ===== */
-.project-section {
-  min-height: 100vh;
-  display: grid;
-  grid-template-columns: 1.2fr 1fr;
-  align-items: center;
-
-  gap: 80px;
-  padding: 0 8vw;
-}
-
-.project-section.reverse {
-  grid-template-columns: 1fr 1.2fr;
-}
-
-/* Big image container */
-.project-image {
-  width: 100%;
-  height: 70vh; /* BIG image */
-  border-radius: 24px;
-  overflow: hidden;
-
-  border: 1px solid rgba(255,255,255,0.12);
-  background: rgba(0,0,0,0.35);
-
-  box-shadow: 0 30px 80px rgba(0,0,0,0.6);
-}
-
-.project-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-/* Video embeds behave like images */
-.project-video {
-  position: relative;
-}
-
-.project-video video {
-  width: 100%;
-  height: 100%;
-  display: block;
-  object-fit: cover;
-}
-
-/* Text block */
-.project-text {
-  max-width: 520px;
-}
-
-/* ===== Terminal-style section headings ===== */
-.project-text h2{
-  font-family: Consolas, "Lucida Console", "Courier New", monospace;
-  font-size: 2rem;
-  font-weight: 600;
-  letter-spacing: 0.3px;
-  color: var(--term-green);
-
-  position: relative;
-  padding-left: 1.8em;
-}
-
-/* // prefix */
-.project-text h2::before{
-  content: "//";
-  position: absolute;
-  left: 0;
-  top: 0;
-  color: var(--term-green-dim);
-}
-
-.project-text ul{
-  list-style: none;
-  padding-left: 0;
-}
-
-.project-text li{
-  position: relative;
-  padding-left: 1.2em;
-}
-
-.project-text li::before{
-  content: ">";
-  position: absolute;
-  left: 0;
-  color: var(--term-green-dim);
-}
-
-.project-text a{
-  color: var(--term-green);
-  text-decoration: none;
-  border-bottom: 1px dotted rgba(124,255,155,0.4);
-}
-
-.project-text a:hover{
-  border-bottom-style: solid;
-}
-
-.project-section::before{
-  content: "C:\\ROBOT_ROOM>";
-  position: absolute;
-  top: 24px;
-  left: 8vw;
-
-  font-family: Consolas, monospace;
-  font-size: 0.75rem;
-  letter-spacing: 0.15em;
-  color: var(--term-green-dim);
-  pointer-events: none;
-}
-
-.project-text li.ok::before   { content: "[OK]";   color: rgba(124,255,155,0.95); }
-.project-text li.warn::before { content: "[WARN]"; color: rgba(255,210,120,0.95); }
-.project-text li.err::before  { content: "[ERR]";  color: rgba(255,120,120,0.95); }
-
-/* ===== Terminal typing headings (armed but inactive) ===== */
-.project-text h2{
-  font-family: Consolas, "Lucida Console", "Courier New", monospace;
-  font-weight: 600;
-  letter-spacing: 0.3px;
-  color: var(--term-green);
-
-  position: relative;
-  padding-left: 1.8em;
-
-  overflow: hidden;
-  white-space: nowrap;
-  max-width: 0;
-}
-
-/* // prefix */
-.project-text h2::before{
-  content: "//";
-  position: absolute;
-  left: 0;
-  top: 0;
-  color: var(--term-green-dim);
-}
-
-/* When activated */
-.project-text h2.is-typing{
-  animation: typeIn 0.9s steps(26, end) forwards;
-}
-
-@keyframes typeIn{
-  to { max-width: 40ch; }
-}
-
-/* Mobile: disable typing (feels cramped) */
-@media (max-width: 900px){
-  .project-text h2{
-    max-width: none;
-    white-space: normal;
-    animation: none !important;
-  }
-}
-
-.project-text p {
-  font-size: 1.5rem;
-  line-height: 1.7;
-  opacity: 0.92;
-  margin-bottom: 20px;
-}
-
 /* ===== Custom cursor states ===== */
 :root {
   --cursor-open: auto;
@@ -784,41 +549,6 @@ body.cursor-closed .dropdown-btn,
 body.cursor-closed .dropdown-item,
 body.cursor-closed .brand { cursor: pointer !important; }
 
-.project-text ul {
-  padding-left: 18px;
-  margin: 0;
-}
-
-.project-text li {
-  font-size: 1.2rem;
-  margin-bottom: 10px;
-  opacity: 0.85;
-}
-
-/* Remove dividers – scrolling does the separation */
-.project-divider {
-  display: none;
-}
-
-/* ===== MOBILE ===== */
-@media (max-width: 900px) {
-  .project-section,
-  .project-section.reverse {
-    grid-template-columns: 1fr;
-    gap: 32px;
-    padding: 80px 6vw;
-    min-height: auto;
-  }
-
-  .project-image {
-    height: 42vh;
-  }
-
-  .project-section.reverse .project-image {
-    order: -1;
-  }
-}
-
 /* ===== PROJECT PAGE BACKDROP (subtle, not distracting) ===== */
 body.project-page {
   background: #000;
@@ -826,15 +556,6 @@ body.project-page {
 
 body.project-page::before {
   content: none;
-}
-
-.project-mesh-bg {
-  position: fixed;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 0;
 }
 
 body.project-page main {
@@ -909,13 +630,13 @@ body.force-motion .tree-layer {
 
 .nav-menu-btn {
   display: none;
-  font-size: 1.4rem;
-  width: 80px;
-  height: 56px;
+  font-size: 1.25rem;
+  width: 40px;
+  height: 38px;
   padding: 0;
   align-items: center;
   justify-content: center;
-  border-radius: 14px;
+  border-radius: 8px;
   box-sizing: border-box;
   overflow: visible;
 }
@@ -965,18 +686,24 @@ body.force-motion .tree-layer {
     display: block;
     padding: 12px 0;
     text-decoration: none;
-    color: var(--text);
+    font-family: 'IBM Plex Sans', system-ui, sans-serif;
+    color: rgba(255, 255, 255, 0.82);
   }
 
+  .mobile-drawer a:hover { color: #fff; }
+
+  /* section label, not a heading */
   .drawer-title {
-    margin-top: 16px;
-    font-size: 2rem;
-    opacity: 1;
-    letter-spacing: 0.4px;
-    color: rgb(90, 90, 90);
-    font-weight: 1000;
+    margin: 22px 0 2px;
+    font-family: 'IBM Plex Sans', system-ui, sans-serif;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.38);
   }
+
+  .mobile-drawer .drawer-title:first-child { margin-top: 4px; }
 
   body.drawer-open .drawer-backdrop {
     opacity: 1;
@@ -1019,7 +746,7 @@ body.drawer-open .mobile-drawer {
 
 .mobile-drawer .drawer-title + a,
 .mobile-drawer .drawer-title ~ a {
-  padding-left: 40px;
+  padding-left: 0;
 }
 
 @media (max-width: 700px) {
@@ -1066,17 +793,20 @@ body.drawer-open .mobile-drawer {
 }
 
 /* ===== ABOUT DROP-DOWN OVERLAY ===== */
+
+/* ===== ABOUT OVERLAY ===== */
 .about-overlay {
   position: fixed;
   inset: 0;
   z-index: 50;
-  background: rgba(5, 8, 14, 0.45);
-  backdrop-filter: blur(6px);
+  background: rgba(6, 7, 9, 0.72);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
   overflow-y: auto;
 
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.25s ease;
+  transition: opacity 0.22s ease;
 }
 
 .about-overlay.is-open {
@@ -1088,73 +818,113 @@ body.drawer-open .mobile-drawer {
   position: absolute;
   top: 0;
   left: 50%;
-  transform: translate(-50%, -110%);
-  width: min(900px, 92vw);
+  transform: translate(-50%, -12px);
+  width: min(560px, 92vw);
 
-  margin-top: 110px;
-  padding: 28px 28px 24px;
+  margin-top: clamp(90px, 16vh, 150px);
+  margin-bottom: 60px;
+  padding: 34px 36px 32px;
 
-  background: rgba(15, 18, 28, 0.85);
-  border: 1px solid rgba(255,255,255,0.18);
-  border-radius: 22px;
-  backdrop-filter: blur(14px);
+  background: rgba(16, 18, 22, 0.96);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 14px;
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.6);
 
-  box-shadow: 0 40px 120px rgba(0,0,0,0.6);
+  font-family: 'IBM Plex Sans', system-ui, sans-serif;
+  color: #fff;
 
-  transition: transform 0.35s cubic-bezier(.2,.9,.2,1);
+  transition: transform 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .about-overlay.is-open .about-sheet {
   transform: translate(-50%, 0);
 }
 
-.about-sheet h1 {
-  margin: 0 0 10px;
-  font-size: clamp(1.8rem, 3vw, 2.4rem);
+.about-title {
+  margin: 0 0 14px;
+  font-family: 'Space Grotesk', system-ui, sans-serif;
+  font-size: clamp(1.9rem, 4vw, 2.5rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: #fff;
 }
 
-.about-sub {
-  opacity: 0.9;
-  line-height: 1.7;
-  max-width: 75ch;
+.about-lede {
+  margin: 0 0 22px;
+  font-size: 1.02rem;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.8);
 }
 
-.about-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin: 14px 0 18px;
+.about-note {
+  margin: 0 0 18px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.09);
+  font-size: 0.98rem;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.6);
 }
 
-.about-meta span {
-  padding: 8px 12px;
-  border-radius: 999px;
-  border: 1px solid rgba(255,255,255,0.18);
-  background: rgba(255,255,255,0.06);
-  font-size: 0.9rem;
-}
+.about-email {
+  display: inline-block;
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: transparent;
 
-.about-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 14px;
-}
-
-.about-actions a {
-  padding: 10px 14px;
-  border-radius: 14px;
-  border: 1px solid rgba(255,255,255,0.18);
-  background: rgba(255,255,255,0.08);
-  color: inherit;
+  font-size: 0.96rem;
+  color: #fff;
   text-decoration: none;
 
-  transition: transform 0.15s ease, background 0.15s ease;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
 }
 
-.about-actions a:hover {
-  transform: translateY(-1px);
-  background: rgba(255,255,255,0.14);
+.about-email:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.3);
+  text-decoration: none;
+}
+
+.about-email:focus-visible,
+.about-close:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.75);
+  outline-offset: 2px;
+}
+
+.about-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 15px;
+  line-height: 1;
+  cursor: pointer;
+
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.about-close:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+@media (max-width: 520px) {
+  .about-sheet { padding: 28px 22px 26px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .about-overlay,
+  .about-sheet { transition: none; }
 }
 
 /* Prevent native link/image drag cursors in the top nav */
@@ -1163,18 +933,7 @@ body.drawer-open .mobile-drawer {
   user-select: none;
 }
 
-/* ===== LOADER: WINDOWS CMD ===== */
-#loader{
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  background: #05060a;
-  display: grid;
-  place-items: center;
-  transition: opacity 0.55s ease, visibility 0.55s ease;
-}
-#loader.hidden{ opacity: 0; visibility: hidden; }
-
+/* ===== WINDOWS CMD PANEL (used by embedded code blocks) ===== */
 .cmd{
   width: min(860px, 94vw);
   border: 1px solid rgba(255,255,255,0.18);
@@ -1262,19 +1021,6 @@ body.drawer-open .mobile-drawer {
   pointer-events:none;
   -webkit-backdrop-filter: blur(24px) saturate(175%) !important;
   backdrop-filter: blur(24px) saturate(175%) !important;
-}
-
-#loader { background: #05060a; }
-
-.cmd.cmd--hidden {
-  opacity: 0;
-  transform: translateY(14px) scale(0.98);
-}
-
-.cmd {
-  opacity: 1;
-  transform: translateY(0) scale(1);
-  transition: opacity 0.28s ease, transform 0.28s ease;
 }
 
 .scroll-hint{
@@ -1441,150 +1187,6 @@ body.drawer-open .mobile-drawer {
   color: rgba(200, 170, 255, 0.90);
 }
 
-.project-section--wide {
-  grid-template-columns: 1fr 1fr;
-}
-
-.cmd--wide {
-  grid-column: 1 / -1;
-  height: 80vh;
-}
-
-.cmd--wide .cmd-body--code {
-  max-height: calc(80vh - 90px);
-}
-
-/* ===== Terminal bullet reveal (armed state) ===== */
-.project-text ul{
-  opacity: 1;
-}
-
-.project-text li{
-  opacity: 0;
-  transform: translateY(4px);
-  transition:
-    opacity 0.35s ease,
-    transform 0.35s ease;
-}
-
-.project-text li.is-visible{
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* =========================
-   TERMINAL NAV THEME OVERRIDE
-   ========================= */
-.topbar{
-  top: 12px;
-  z-index: 1500;
-}
-
-.nav-control,
-.dropdown-btn,
-.icon-link{
-  background: rgba(0,0,0,0.22) !important;
-  border: 1px solid var(--term-green-dim) !important;
-  border-radius: 10px !important;
-
-  box-shadow:
-    0 0 0 1px var(--term-green-outline),
-    0 14px 40px rgba(0,0,0,0.65) !important;
-
-  font-family: Consolas, "Lucida Console", "Courier New", monospace !important;
-  color: rgba(235,240,245,0.92) !important;
-
-  letter-spacing: 0.2px;
-  position: relative;
-
-  -webkit-backdrop-filter: blur(12px) saturate(175%) !important;
-  backdrop-filter: blur(12px) saturate(175%) !important;
-}
-
-.nav-control:hover,
-.dropdown-btn:hover,
-.icon-link:hover{
-  transform: translateY(-3px);
-  background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
-  background-color: var(--nav-bg-hover);
-  border-color: var(--nav-stroke-hover);
-  color: var(--text);
-  box-shadow: 0 8px 30px rgba(0,0,0,0.55), 0 2px 8px rgba(77,168,255,0.06);
-}
-
-.dropdown-btn:hover{
-  transform: translateY(0px) !important;
-}
-
-.nav-control:focus-visible,
-.dropdown-btn:focus-visible,
-.icon-link:focus-visible{
-  outline: 2px solid var(--term-green-dim) !important;
-  outline-offset: 3px;
-}
-
-.brand{
-  font-weight: 700 !important;
-  letter-spacing: 0.6px !important;
-}
-
-.nav-control::before,
-.dropdown-btn::before{
-  content: ">";
-  color: var(--term-green-dim);
-  margin-right: 10px;
-}
-
-.icon-link::before{ content: none !important; }
-
-.icon-link svg{
-  fill: currentColor !important;
-  stroke: currentColor !important;
-}
-
-.nav-control::after,
-.dropdown-btn::after,
-.icon-link::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  pointer-events:none;
-  border-radius: inherit;
-  background: linear-gradient(to bottom, rgba(255,255,255,0.03), transparent 12%);
-  opacity: 0.22;
-}
-
-.nav-control:hover span::after,
-.dropdown-btn:hover span::after{
-  content: " █";
-  color: var(--term-green-caret);
-  animation: navCaretBlink 0.9s steps(1) infinite;
-}
-
-.nav-control:hover::marker{ content: ""; }
-
-@keyframes navCaretBlink{
-  50%{ opacity: 0; }
-}
-
-.dropdown-menu{
-  z-index: 2005;
-}
-
-.dropdown-btn{
-  padding-left: 22px;
-}
-
-.nav-control{
-  height: 56px;
-  padding: 0 22px;
-}
-
-.icon-link{
-  width: 56px;
-  height: 56px;
-  border-radius: 10px !important;
-}
 
 .topbar a:hover{
   text-decoration: none !important;
@@ -1593,123 +1195,6 @@ body.drawer-open .mobile-drawer {
 /* =========================
    TERMINAL ABOUT OVERLAY THEME
    ========================= */
-.about-overlay{
-  background: rgba(0,0,0,0.72) !important;
-  backdrop-filter: blur(3px) !important;
-}
-
-.about-sheet{
-  background: #000 !important;
-  border: 1px solid var(--term-green-dim) !important;
-  border-radius: 10px !important;
-
-  box-shadow:
-    0 0 0 1px var(--term-green-outline),
-    0 40px 120px rgba(0,0,0,0.80) !important;
-
-  font-family: Consolas, "Lucida Console", "Courier New", monospace !important;
-  color: rgba(235,240,245,0.92) !important;
-
-  position: relative;
-  overflow: hidden;
-}
-
-.about-sheet::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  pointer-events:none;
-  background: linear-gradient(to bottom, rgba(255,255,255,0.03), transparent 14%);
-  opacity: 0.25;
-}
-
-.about-sheet::before{
-  content: "C:\\ABOUT>";
-  position: absolute;
-  top: 12px;
-  left: 14px;
-  font-size: 0.75rem;
-  letter-spacing: 0.14em;
-  color: var(--term-green-dim);
-  opacity: 0.95;
-  pointer-events: none;
-}
-
-.about-sheet{
-  padding-top: 44px !important;
-}
-
-.about-sheet h1{
-  margin: 0 0 10px !important;
-  font-family: Consolas, "Lucida Console", "Courier New", monospace !important;
-  font-weight: 700 !important;
-  color: var(--term-green) !important;
-  letter-spacing: 0.4px;
-  position: relative;
-  padding-left: 1.6em;
-}
-
-.about-sheet h1::before{
-  content: "//";
-  position: absolute;
-  left: 0;
-  top: 0;
-  color: var(--term-green-dim);
-}
-
-.about-sub{
-  color: rgba(235,240,245,0.90) !important;
-  opacity: 1 !important;
-  line-height: 1.75 !important;
-  max-width: 78ch;
-}
-
-.about-meta span{
-  border: 1px solid var(--term-green-muted) !important;
-  background: var(--term-green-soft) !important;
-  color: var(--term-green) !important;
-  border-radius: 999px !important;
-  font-family: Consolas, "Lucida Console", "Courier New", monospace !important;
-  font-size: 0.9rem !important;
-}
-
-.about-actions a{
-  border: 1px solid rgba(0,255,64,0.45) !important;
-  background: rgba(0,0,0,0.9) !important;
-  color: rgba(235,240,245,0.92) !important;
-  border-radius: 10px !important;
-
-  font-family: Consolas, "Lucida Console", "Courier New", monospace !important;
-  text-decoration: none !important;
-
-  box-shadow: 0 0 0 1px var(--term-green-outline);
-  position: relative;
-  padding-left: 18px !important;
-}
-
-.about-actions a::before{
-  content: ">";
-  position: absolute;
-  left: 10px;
-  color: var(--term-green-dim);
-}
-
-.about-actions a:hover{
-  transform: none !important;
-  background: rgba(139,143,148,0.08) !important;
-  border-color: var(--term-green-dim) !important;
-  box-shadow:
-    0 0 0 1px rgba(139,143,148,0.20),
-    0 18px 55px rgba(0,0,0,0.75) !important;
-}
-
-.about-sheet a{
-  color: var(--term-green) !important;
-  border-bottom: 1px dotted var(--term-green-muted);
-}
-.about-sheet a:hover{
-  border-bottom-style: solid;
-}
 /* ===== PORTALED PROJECTS DROPDOWN — FORCE CLEAN SHAPE ===== */
 #projectsDropdown{
   /* portal container is just an anchor point */
@@ -1741,33 +1226,10 @@ body.drawer-open .mobile-drawer {
   backdrop-filter: blur(24px) saturate(170%) !important;
 }
 
-/* optional: small “pointer”/notch under Projects button */
-#projectsDropdown .projects-dropdown-menu::before{
-  content:"";
-  position:absolute;
-  top:-7px;
-  left:50%;
-  transform: translateX(-50%) rotate(45deg);
-  width: 14px;
-  height: 14px;
-  background: rgba(6, 8, 14, 0.18);
-  border-left: 1px solid rgba(255,255,255,0.14);
-  border-top: 1px solid rgba(255,255,255,0.14);
-  -webkit-backdrop-filter: blur(24px) saturate(170%);
-  backdrop-filter: blur(24px) saturate(170%);
-}
-
-/* tighten prompt line so it doesn't look cramped */
-#projectsDropdown .dropdown-prompt{
-  margin-bottom: 8px !important;
-  padding: 6px 10px 8px !important;
-  border-bottom: 1px dashed rgba(255,255,255,0.18) !important;
-}
-
 /* make items feel aligned and reduce “tall column” awkwardness */
 #projectsDropdown .dropdown-item{
-  padding: 10px 12px 10px 30px !important;
-  border-radius: 10px !important;
+  padding: 9px 12px !important;
+  border-radius: 8px !important;
 }
 
 /* reduce weird multi-line spacing */
@@ -1775,17 +1237,15 @@ body.drawer-open .mobile-drawer {
   line-height: 1.15 !important;
 }
 
-/* hide subs like you wanted */
-#projectsDropdown .dropdown-item .sub{ display:none !important; }
 /* ===== Projects dropdown final tweaks ===== */
 #projectsDropdown { width: 0 !important; height: 0 !important; }
 
 /* (2) left-aligned animation (no -50% centering) */
 #projectsDropdown .projects-dropdown-menu{
-  width: 280px !important;              /* (3) less empty space */
-  max-width: min(88vw, 340px) !important;
+  width: 260px !important;
+  max-width: min(88vw, 320px) !important;
 
-  padding: 12px 8px 12px 12px !important; /* (3) smaller right padding */
+  padding: 8px !important;
   overflow: hidden !important;
 
   transform: translate(0, -6px) scale(0.98) !important;
@@ -1811,8 +1271,8 @@ body.drawer-open .mobile-drawer {
 
 /* Make sure the SVG fits perfectly inside the button */
 .icon-link svg{
-  width: 24px !important;
-  height: 24px !important;
+  width: 18px !important;
+  height: 18px !important;
   display: block !important;
 }
 /* Prevent the scanline overlay from affecting layout/clip */
@@ -1867,21 +1327,476 @@ body.drawer-open .mobile-drawer {
   margin-right: 6px !important;
 }
 
-/* ===== About header caret ===== */
-.about-sheet .name-text { display: inline-flex; align-items: center; gap: 8px; }
-.about-sheet .name-caret{
-  /* match projects dropdown: solid block caret (no rounding) */
-  display: inline-block;
-  margin-left: 8px;
-  color: var(--term-green-caret);
-  font-family: Consolas, "Lucida Console", "Courier New", monospace;
-  line-height: 1;
-  font-size: 1em;
-  vertical-align: middle;
-}
-.about-sheet .name-caret::before{
-  content: "█";
-  color: var(--term-green-caret);
-  animation: dropdownCaretBlink 0.9s steps(1) infinite;
+
+/* ###################################################################
+   PROJECT PAGES  (was css/project.css - merged in so the project page
+   layout can never go missing because a second stylesheet failed)
+   ################################################################### */
+
+/* =========================================================
+   PROJECT PAGES
+   Big media, tight text, nothing decorative in the way.
+   Scoped to body.project-page; loaded only by projects/*.html
+   ========================================================= */
+
+body.project-page {
+  --sheet:   #0c0d0f;
+  --rule:    rgba(255, 255, 255, 0.09);
+  --rule-2:  rgba(255, 255, 255, 0.16);
+  --ink:     #f2f3f4;
+  --ink-dim: #a9aeb5;
+
+  --display: 'Space Grotesk', system-ui, sans-serif;
+  --body:    'IBM Plex Sans', system-ui, sans-serif;
+
+  --gutter:  clamp(20px, 4vw, 64px);
+
+  background: var(--sheet);
+  color: var(--ink);
+  font-family: var(--body);
 }
 
+body.project-page main {
+  position: relative;
+  z-index: 1;
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 0 var(--gutter) 120px;
+}
+
+body.project-page .project-section {
+  scroll-margin-top: 96px;
+}
+
+/* =========================================================
+   SECTIONS
+   Media always takes the wider column. Sides alternate by
+   position, because the markup's .reverse class doesn't
+   reliably match the actual child order.
+   ========================================================= */
+
+.project-section {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(28px, 3.6vw, 64px);
+  padding: clamp(40px, 5.5vh, 76px) 0;
+  border-top: 1px solid var(--rule);
+}
+
+.project-section > .project-image { order: 1; }
+.project-section > .project-text  { order: 2; }
+
+.project-section:nth-of-type(even) {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr);
+}
+
+.project-section:nth-of-type(even) > .project-image { order: 2; }
+.project-section:nth-of-type(even) > .project-text  { order: 1; }
+
+/* A section with a code panel stacks: prose above, panel full width */
+.project-section:has(> .cmd) {
+  grid-template-columns: 1fr;
+}
+
+.project-section > .cmd {
+  grid-column: 1 / -1;
+  order: 3;
+}
+
+.project-section--wide {
+  grid-template-columns: 1fr 1fr;
+}
+
+.cmd--wide {
+  grid-column: 1 / -1;
+  height: 74vh;
+}
+
+.cmd--wide .cmd-body--code {
+  max-height: calc(74vh - 90px);
+}
+
+/* =========================================================
+   MEDIA — as large as the column allows, never cropped
+   ========================================================= */
+
+.project-image {
+  margin: 0;
+  display: grid;
+  place-items: center;
+  width: fit-content;
+  max-width: 100%;
+  justify-self: center;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  overflow: hidden;
+  background: transparent;
+}
+
+/* Explicit height, auto width: every block lands the same size and small
+   source files scale UP instead of sitting tiny. Nothing is ever cropped. */
+.project-image img,
+.project-image video {
+  display: block;
+  height: var(--media-cap, 68vh);
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.project-image.project-model {
+  width: 100%;
+}
+
+.project-image.project-model model-viewer {
+  width: 100%;
+  height: var(--media-cap, 76vh);
+  min-height: 460px;
+}
+
+/* =========================================================
+   TEXT
+   ========================================================= */
+
+.project-text {
+  max-width: 52ch;
+}
+
+.project-text h2 {
+  font-family: var(--display);
+  font-size: clamp(1.6rem, 2.5vw, 2.25rem);
+  font-weight: 600;
+  letter-spacing: -0.022em;
+  line-height: 1.12;
+  color: var(--ink);
+  margin: 0 0 18px;
+}
+
+.project-text ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.project-text li {
+  position: relative;
+  padding-left: 20px;
+  margin-bottom: 11px;
+  font-size: 1.02rem;
+  line-height: 1.55;
+  color: var(--ink-dim);
+}
+
+.project-text li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.68em;
+  width: 8px;
+  height: 1px;
+  background: var(--rule-2);
+}
+
+.project-text li.ok::before,
+.project-text li.warn::before,
+.project-text li.err::before {
+  background: var(--ink-dim);
+}
+
+.project-text p {
+  font-size: 1.02rem;
+  line-height: 1.55;
+  color: var(--ink-dim);
+  margin: 0 0 16px;
+}
+
+.project-text a {
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px solid var(--rule-2);
+}
+
+.project-text a:hover {
+  border-bottom-color: var(--ink);
+}
+
+/* =========================================================
+   HERO — name, one line, then straight into the media
+   ========================================================= */
+
+.project-section:first-of-type {
+  grid-template-columns: 1fr;
+  gap: clamp(20px, 2.6vh, 32px);
+  padding: clamp(96px, 13vh, 138px) 0 clamp(36px, 5vh, 64px);
+  border-top: 0;
+}
+
+.project-section:first-of-type > .project-text {
+  order: 1;
+  max-width: none;
+}
+
+.project-section:first-of-type > .project-image {
+  order: 2;
+  --media-cap: 78vh;
+}
+
+.project-section:first-of-type .project-text h2 {
+  font-family: var(--display);
+  font-size: clamp(2.5rem, 6vw, 4.4rem);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 0.98;
+  margin: 0 0 10px;
+}
+
+.project-section:first-of-type .project-text p {
+  font-size: clamp(1.05rem, 1.4vw, 1.25rem);
+  color: var(--ink-dim);
+  margin: 0 0 10px;
+  max-width: 62ch;
+}
+
+/* Headline specs read as one quiet line, not a panel */
+.project-section:first-of-type .project-text ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 10px;
+}
+
+.project-section:first-of-type .project-text li {
+  padding: 0;
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--ink-dim);
+}
+
+.project-section:first-of-type .project-text li::before {
+  content: "·";
+  position: static;
+  width: auto;
+  height: auto;
+  background: none;
+  margin-right: 10px;
+  color: var(--rule-2);
+}
+
+.project-section:first-of-type .project-text li:first-child::before {
+  content: none;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 900px) {
+  .project-section,
+  .project-section:nth-of-type(even),
+  .project-section--wide {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    padding: 36px 0;
+  }
+
+  /* media leads on every section, so the build is what you see */
+  .project-section > .project-image,
+  .project-section:nth-of-type(even) > .project-image { order: 1; }
+  .project-section > .project-text,
+  .project-section:nth-of-type(even) > .project-text { order: 2; }
+
+  .project-text { max-width: none; }
+
+  .project-image { --media-cap: 56vh; }
+  .project-section:first-of-type > .project-image { --media-cap: 60vh; }
+
+  .project-section:first-of-type {
+    padding: 92px 0 32px;
+  }
+
+  .cmd--wide { height: auto; }
+  .cmd--wide .cmd-body--code { max-height: 60vh; }
+}
+
+
+/* ###################################################################
+   GALLERY  (was css/gallery.css)
+   ################################################################### */
+
+/* =========================================================
+   GALLERY
+   Justified rows: every photo keeps its own aspect, rows fill
+   the width exactly, nothing is cropped.
+   Reuses the tokens defined in the project-pages block above.
+   ========================================================= */
+
+body.project-page main.gallery-page {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: clamp(96px, 13vh, 132px) var(--gutter) 100px;
+}
+
+.gallery-head {
+  margin: 0 0 clamp(24px, 4vh, 40px);
+}
+
+.gallery-title {
+  font-family: var(--display);
+  font-size: clamp(2.5rem, 6vw, 4.4rem);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 0.98;
+  color: var(--ink);
+  margin: 0 0 10px;
+}
+
+.gallery-sub {
+  font-size: clamp(1.05rem, 1.4vw, 1.25rem);
+  color: var(--ink-dim);
+  margin: 0;
+}
+
+/* ===== Rows ===== */
+
+.gallery-rows {
+  --gap: 14px;
+  --row-target: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+}
+
+@media (max-width: 1200px) { .gallery-rows { --row-target: 300px; } }
+@media (max-width: 800px)  { .gallery-rows { --row-target: 240px; --gap: 10px; } }
+@media (max-width: 520px)  { .gallery-rows { --row-target: 200px; --gap: 8px; } }
+
+.gallery-row {
+  display: flex;
+  gap: var(--gap);
+}
+
+/* A trailing row that can't fill the width keeps the target height
+   instead of stretching its few photos across the whole page. */
+.gallery-row--partial {
+  justify-content: flex-start;
+}
+
+.gallery-item {
+  display: block;
+  padding: 0;
+  margin: 0;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  overflow: hidden;
+  background: #101216;
+  cursor: pointer;
+  position: relative;
+  transition: border-color 0.18s ease;
+}
+
+.gallery-item:hover,
+.gallery-item:focus-visible {
+  border-color: #6d757f;
+}
+
+.gallery-item:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+/* No opacity gating: a photo shows the moment it decodes. Nothing here can
+   leave a tile blank while its image is sitting loaded in the DOM. */
+.gallery-item img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ===== Lightbox ===== */
+
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(12px, 3vw, 40px);
+  background: rgba(6, 7, 9, 0.94);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+
+.lightbox.is-open { display: flex; }
+
+.lightbox__img {
+  max-width: min(1600px, 94vw);
+  max-height: 88vh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 4px;
+  border: 1px solid var(--rule);
+}
+
+.lightbox__bar {
+  position: fixed;
+  top: 16px;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  pointer-events: none;
+}
+
+.lightbox__count {
+  font-size: 0.9rem;
+  color: var(--ink-dim);
+  font-variant-numeric: tabular-nums;
+}
+
+.lb-btn {
+  pointer-events: auto;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 4px;
+  border: 1px solid var(--rule);
+  background: rgba(0, 0, 0, 0.5);
+  color: var(--ink);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  transition: border-color 0.18s ease, background-color 0.18s ease;
+}
+
+.lb-btn:hover { border-color: var(--rule-2); background: rgba(0, 0, 0, 0.75); }
+.lb-btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+
+.lightbox__nav {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 48px;
+  height: 64px;
+}
+
+.lightbox__nav--prev { left: clamp(8px, 2vw, 24px); }
+.lightbox__nav--next { right: clamp(8px, 2vw, 24px); }
+
+@media (max-width: 620px) {
+  .lightbox__nav { top: auto; bottom: 20px; transform: none; height: 48px; }
+  .lightbox__nav--prev { left: 24px; }
+  .lightbox__nav--next { right: 24px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gallery-item,
+  .gallery-item img,
+  .lb-btn { transition: none; }
+  .gallery-item:hover { transform: none; }
+}

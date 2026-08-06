@@ -179,7 +179,15 @@ window.initNav = function initNav() {
   // dropdown items hover/click (projects list)
   const bindDropdownItems = () => {
     const items = $all(".dropdown-item");
+    const here = location.pathname.split("/").pop();
+
     items.forEach((item) => {
+      // mark the project page you're currently on
+      const target = (item.getAttribute("href") || "").split("/").pop();
+      if (here && target && here === target) {
+        item.setAttribute("aria-current", "page");
+      }
+
       if (item.dataset.bound === "1") return;
       item.dataset.bound = "1";
 
@@ -608,6 +616,16 @@ function initMobileDrawer() {
 
     sheet.addEventListener("click", (e) => e.stopPropagation());
 
+    // the sheet stops propagation, so the close button needs its own handler
+    const closeBtn = sheet.querySelector(".about-close");
+    if (closeBtn && closeBtn.dataset.bound !== "1") {
+      closeBtn.dataset.bound = "1";
+      closeBtn.addEventListener("click", () => {
+        closeAbout();
+        if (location.hash === "#about") history.replaceState(null, "", location.pathname);
+      });
+    }
+
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape") {
         closeAbout();
@@ -642,139 +660,12 @@ function initMobileDrawer() {
   window.addEventListener("nav:loaded", initAboutOverlay);
 })();
 
+// Scene starts fully lit — no boot sequence.
 document.addEventListener("DOMContentLoaded", () => {
-  const loader = document.getElementById("loader");
-  if (!loader) return;
-
-  const nav = performance.getEntriesByType("navigation")[0];
-  const navType = nav ? nav.type : "navigate";
-
-  const alreadyShown = sessionStorage.getItem("bootShown") === "1";
-  const isBackForward = navType === "back_forward";
-
-  if (isBackForward || alreadyShown) {
-    loader.remove();
-    document.body.classList.remove("lights-off", "lights-dim", "lights-on");
-    document.body.classList.add("ambient-light");
-    return;
-  }
-
-  sessionStorage.setItem("bootShown", "1");
-
-  const cmdWin = loader.querySelector(".cmd");
-  const bodyEl = document.getElementById("terminalBody");
-  const typedEl = document.getElementById("typedNow");
-
-  const POP_IN_DELAY = 500;
-  const AFTER_DONE_DELAY = 450;
-  const FADE_MS = 550;
-
-  const CHAR_MS = 50;
-  const CHAR_JITTER = 16;
-  const PAUSE_AFTER_CMD = 180;
-  const PAUSE_BETWEEN_LINES = 100;
-  const WAIT_AFTER_WINDOW = 1000;
-  const TERMINAL_REMOVE_DELAY = 500;
-  const DIM_REVEAL_MS = 1400;
-
-  const cmd = "room initialize";
-  const out = [
-    "Boot sequence: ROBOT_ROOM",
-    "Allocating scene graph ............. OK",
-    "Loading room texture ............... OK",
-    "Loading robot layers ............... OK",
-    "Building hover hitmaps ............. OK",
-    "Warming shaders .................... OK",
-    "Syncing input pipeline ............. OK",
-    "DONE."
-  ];
-
-  const liveLine = document.getElementById("liveLine");
-
-  function addLine(text = "") {
-    if (!bodyEl) return;
-
-    const div = document.createElement("div");
-    div.className = "cmd-line";
-    div.textContent = text;
-
-    if (liveLine && liveLine.parentNode) {
-      liveLine.parentNode.insertBefore(div, liveLine);
-    } else {
-      bodyEl.appendChild(div);
-    }
-
-    while (bodyEl.children.length > 12) {
-      bodyEl.removeChild(bodyEl.firstChild);
-    }
-  }
-
-  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
-
-  async function typeIntoPrompt(text) {
-    if (!typedEl) return;
-
-    typedEl.textContent = "";
-
-    for (let i = 0; i < text.length; i++) {
-      typedEl.textContent += text[i];
-      await sleep(CHAR_MS + Math.floor(Math.random() * CHAR_JITTER));
-    }
-  }
-
-  async function run() {
-    document.body.classList.add("lights-off");
-    document.body.classList.remove("lights-dim", "lights-on", "ambient-light");
-
-    await sleep(POP_IN_DELAY);
-
-    document.body.classList.remove("lights-off");
-    document.body.classList.add("lights-dim");
-
-    if (cmdWin) cmdWin.classList.remove("cmd--hidden");
-    await sleep(WAIT_AFTER_WINDOW);
-
-    await typeIntoPrompt(cmd);
-    await sleep(40);
-    await sleep(PAUSE_AFTER_CMD);
-
-    for (const line of out) {
-      addLine(line);
-      await sleep(PAUSE_BETWEEN_LINES);
-    }
-
-    await sleep(AFTER_DONE_DELAY);
-
-    await sleep(TERMINAL_REMOVE_DELAY);
-    if (cmdWin) cmdWin.remove();
-
-    document.body.classList.remove("lights-off");
-    document.body.classList.add("lights-dim");
-    loader.classList.add("see-through");
-
-    await sleep(DIM_REVEAL_MS);
-
-    document.body.classList.remove("lights-dim");
-    document.body.classList.add("lights-on");
-    loader.classList.remove("see-through");
-
-    setTimeout(() => {
-      document.body.classList.add("ambient-light");
-    }, 1300);
-
-    loader.classList.add("hidden");
-    setTimeout(() => loader.remove(), FADE_MS + 50);
-  }
-
-  run();
-
-  setTimeout(() => {
-    if (!loader.classList.contains("hidden")) {
-      loader.classList.add("hidden");
-      setTimeout(() => loader.remove(), FADE_MS + 50);
-    }
-  }, 15000);
+  document.body.classList.remove("lights-off", "lights-dim", "lights-on");
+  document.body.classList.add("ambient-light");
 });
+
 
 window.addEventListener("nav:loaded", () => {
   initMobileDrawer();
@@ -787,7 +678,6 @@ function bootInteractive() {
   initMobileDrawer();
   if (typeof window.initNav === "function") window.initNav();
   initScrollHint();
-  initProjectBackgroundMesh();
 }
 
 document.addEventListener("DOMContentLoaded", bootInteractive);
@@ -796,8 +686,6 @@ window.addEventListener("nav:loaded", bootInteractive);
 function initScrollHint() {
   const scene = document.getElementById("scene");
   if (!scene) return;
-
-  const loaderEl = document.getElementById("loader");
 
   const existing = document.querySelector(".scroll-hint");
   const hint = existing || document.createElement("div");
@@ -816,11 +704,6 @@ function initScrollHint() {
   const reveal = () => {
     if (showing) return;
     if (showCount >= MAX_SHOWS) return;
-    // Avoid showing underneath the loader; wait until it's gone.
-    if (loaderEl && document.body.contains(loaderEl)) {
-      setTimeout(reveal, 350);
-      return;
-    }
     showing = true;
     showCount += 1;
     hint.classList.add("scroll-hint--show");
@@ -840,147 +723,4 @@ function initScrollHint() {
   window.addEventListener("wheel", onWheel, { passive: true });
   window.addEventListener("touchmove", onTouchMove, { passive: true });
   window.addEventListener("keydown", onKey, { passive: true });
-}
-
-// Terminal-style typing + cascading bullets (on scroll)
-document.addEventListener("DOMContentLoaded", () => {
-  const sections = document.querySelectorAll(".project-section");
-
-  if (!("IntersectionObserver" in window)) return;
-
-  const observer = new IntersectionObserver(
-    (entries, obs) => {
-      entries.forEach(entry => {
-        if (!entry.isIntersecting) return;
-
-        const section = entry.target;
-        const heading = section.querySelector(".project-text h2");
-        const bullets = section.querySelectorAll(".project-text li");
-
-        if (!heading) {
-          obs.unobserve(section);
-          return;
-        }
-
-        heading.classList.add("is-typing");
-
-        const TYPE_DURATION = 900;
-        const BULLET_DELAY = 140;
-
-        setTimeout(() => {
-          bullets.forEach((li, i) => {
-            setTimeout(() => {
-              li.classList.add("is-visible");
-            }, i * BULLET_DELAY);
-          });
-        }, TYPE_DURATION + 120);
-
-        obs.unobserve(section);
-      });
-    },
-    {
-      threshold: 0.55,
-      rootMargin: "0px 0px -10% 0px"
-    }
-  );
-
-  sections.forEach(section => observer.observe(section));
-});
-
-function initProjectBackgroundMesh() {
-  if (!document.body.classList.contains("project-page")) return;
-  if (document.body.dataset.meshInit === "1") return;
-  document.body.dataset.meshInit = "1";
-
-  const canvas = document.createElement("canvas");
-  canvas.className = "project-mesh-bg";
-  canvas.setAttribute("aria-hidden", "true");
-  document.body.prepend(canvas);
-
-  const ctx = canvas.getContext("2d", { alpha: true });
-  if (!ctx) return;
-
-  const dpr  = Math.min(window.devicePixelRatio || 1, 2);
-  const w    = window.innerWidth;
-  const h    = window.innerHeight;
-  canvas.width  = Math.floor(w * dpr);
-  canvas.height = Math.floor(h * dpr);
-  canvas.style.width  = `${w}px`;
-  canvas.style.height = `${h}px`;
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-  const CHARS  = ['0','1','.','/','-','\\','|','+','*','#','%','@','x','o'];
-  const COL_W  = 10;
-  const ROW_H  = 18;
-  const SIZE   = 13;
-  const RADIUS = 70; // mouse influence radius px
-
-  const cols = Math.ceil(w / COL_W) + 1;
-  const rows = Math.ceil(h / ROW_H) + 1;
-
-  // Build grid: each cell has a char, base alpha, and a flash value (0–1)
-  const grid = [];
-  for (let r = 0; r < rows; r++) {
-    for (let c = 0; c < cols; c++) {
-      grid.push({
-        char:  Math.random() < 0.65 ? CHARS[Math.floor(Math.random() * CHARS.length)] : null,
-        alpha: 0.10 + Math.random() * 0.13,
-        flash: 0,
-      });
-    }
-  }
-
-  const mouse = { x: -9999, y: -9999 };
-  let rafId = 0;
-
-  window.addEventListener("pointermove", e => {
-    mouse.x = e.clientX;
-    mouse.y = e.clientY;
-  }, { passive: true });
-
-  window.addEventListener("pointerleave", () => {
-    mouse.x = -9999;
-    mouse.y = -9999;
-  }, { passive: true });
-
-  ctx.font = `${SIZE}px Consolas, "Lucida Console", monospace`;
-  ctx.textBaseline = "top";
-
-  function draw() {
-    ctx.clearRect(0, 0, w, h);
-
-    for (let r = 0; r < rows; r++) {
-      for (let c = 0; c < cols; c++) {
-        const cell = grid[r * cols + c];
-        const cx   = c * COL_W;
-        const cy   = r * ROW_H;
-
-        // Distance from mouse center to this cell
-        const dx   = cx - mouse.x;
-        const dy   = cy - mouse.y;
-        const dist = Math.hypot(dx, dy);
-        const prox = Math.max(0, 1 - dist / RADIUS); // 0 far, 1 close
-
-        // Cells inside radius have a chance to scramble each frame
-        if (cell.char && prox > 0 && Math.random() < prox * 0.12) {
-          cell.char  = CHARS[Math.floor(Math.random() * CHARS.length)];
-          cell.flash = 1;
-        }
-
-        // Fade flash back down
-        cell.flash *= 0.82;
-
-        if (!cell.char) continue;
-
-        const alpha = cell.alpha + cell.flash * 0.10;
-        ctx.fillStyle = `rgba(160, 185, 220, ${alpha})`;
-        ctx.fillText(cell.char, cx, cy);
-      }
-    }
-
-    rafId = window.requestAnimationFrame(draw);
-  }
-
-  rafId = window.requestAnimationFrame(draw);
-  window.addEventListener("pagehide", () => window.cancelAnimationFrame(rafId), { once: true });
 }

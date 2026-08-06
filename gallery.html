@@ -9,297 +9,279 @@
   <link rel="stylesheet" href="css/styles.css" />
   <script defer src="js/include.js"></script>
   <script defer src="js/app.js"></script>
-
-  <style>
-    html, body { background: var(--bg); }
-
-    .gallery-page {
-      max-width: 1600px;
-      margin: 0 auto;
-      padding: 120px 24px 80px;
-    }
-
-    .gallery-title {
-      font-size: clamp(2rem, 4vw, 3rem);
-      margin: 0 0 28px;
-    }
-
-    /* ===== Justified rows (4–5 per row) ===== */
-    :root{
-      --gap: 18px;
-      --card-radius: 16px;
-
-      /* 👇 KEY TUNING VALUE */
-      --row-h: 620px; /* desktop: ~4–5 per row */
-    }
-
-    @media (max-width: 1200px) { :root{ --row-h: 280px; } }
-    @media (max-width: 800px)  { :root{ --row-h: 240px; } }
-    @media (max-width: 520px)  { :root{ --row-h: 200px; } }
-
-    .justified {
-      display: flex;
-      flex-direction: column;
-      gap: var(--gap);
-    }
-
-    .justified-row {
-      display: flex;
-      gap: var(--gap);
-      width: 100%;
-      align-items: stretch;
-    }
-
-    .justified-item {
-      border-radius: var(--card-radius);
-      overflow: hidden;
-      border: 1px solid rgba(255,255,255,0.12);
-      background: rgba(0,0,0,0.35);
-      box-shadow: 0 18px 40px rgba(0,0,0,0.45);
-      cursor: pointer;
-
-      contain: content;
-      content-visibility: auto;
-      contain-intrinsic-size: 360px 260px;
-    }
-
-    .justified-item img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      display: block;
-      opacity: 0;
-      transition: opacity 0.35s ease-in-out;
-    }
-
-    .justified-item img.loaded { opacity: 1; }
-
-    /* ===== Lightbox ===== */
-    .lightbox {
-      position: fixed;
-      inset: 0;
-      z-index: 9999;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-      background: rgba(0,0,0,0.86);
-      backdrop-filter: blur(6px);
-      cursor: pointer;
-    }
-    .lightbox.is-open { display: flex; }
-
-    .lightbox img {
-      max-width: min(1400px, 96vw);
-      max-height: 92vh;
-      border-radius: 18px;
-      border: 1px solid rgba(255,255,255,0.14);
-      box-shadow: 0 30px 90px rgba(0,0,0,0.7);
-    }
-
-    .lightbox-close {
-      position: fixed;
-      top: 18px;
-      right: 18px;
-      z-index: 10000;
-      width: 48px;
-      height: 48px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,0.18);
-      background: rgba(0,0,0,0.35);
-      color: #fff;
-      font-size: 20px;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-    }
-
-    .lightbox.is-open + .lightbox-close { display: inline-flex; }
-  </style>
 </head>
 
 <body class="project-page">
   <div data-include="partials/nav.html"></div>
 
   <main class="gallery-page">
-    <div class="justified" id="gallery"></div>
+    <header class="gallery-head">
+      <h1 class="gallery-title">Gallery</h1>
+      <p class="gallery-sub">Builds, parts and work in progress — <span id="galleryCount"></span> photos.</p>
+    </header>
+
+    <div class="gallery-rows" id="gallery"></div>
   </main>
 
-  <div class="lightbox" id="lightbox">
-    <img id="lightboxImg" />
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Photo viewer">
+    <img class="lightbox__img" id="lightboxImg" alt="" />
+
+    <div class="lightbox__bar">
+      <span class="lightbox__count" id="lightboxCount"></span>
+      <button class="lb-btn" id="lightboxClose" type="button" aria-label="Close viewer">&#10005;</button>
+    </div>
+
+    <button class="lb-btn lightbox__nav lightbox__nav--prev" id="lightboxPrev" type="button" aria-label="Previous photo">&#8249;</button>
+    <button class="lb-btn lightbox__nav lightbox__nav--next" id="lightboxNext" type="button" aria-label="Next photo">&#8250;</button>
   </div>
-  <div class="lightbox-close" id="lightboxClose">✕</div>
 
   <script>
-    const images = ["71419296365__BFADA0B6-9317-4A31-95FD-DA5054866922.JPEG",
-      "car.png",
-      "Controller.JPG",
-      "Elec.JPEG",
-      "Electronics.JPEG",
-      "Electronics.JPG",
-      "FusionPic.png",
-      "IMG_0073.JPEG",
-      "IMG_0085.JPEG",
-      "IMG_0248.JPEG",
-      "IMG_0252.JPEG",
-      "IMG_0293.JPEG",
-      "IMG_0318.JPEG",
-      "IMG_0322.JPEG",
-      "IMG_0446.JPG",
-      "IMG_0470.JPEG",
-      "IMG_0505.JPEG",
-      "IMG_0511.JPEG",
-      "IMG_0586.JPEG",
-      "IMG_0636.JPEG",
-      "IMG_0652.JPEG",
-      "IMG_0675.JPEG",
-      "IMG_0709.JPEG",
-      "IMG_0767.JPEG",
-      "IMG_0771.JPEG",
-      "IMG_0778.JPEG",
-      "IMG_0779.JPEG",
-      "IMG_0782.JPEG",
-      "IMG_0785.JPEG",
-      "IMG_0794.JPEG",
-      "IMG_0810.JPEG",
-      "IMG_0811.JPEG",
-      "IMG_0812.JPEG",
-      "IMG_0815.JPEG",
-      "IMG_0816.JPEG",
-      "IMG_0827.JPEG",
-      "IMG_0885.JPEG",
-      "IMG_0892.JPEG",
-      "IMG_0900.JPEG",
-      "IMG_0951.JPEG",
-      "IMG_1007.JPEG",
-      "IMG_1023.JPEG",
-      "IMG_1028.JPEG",
-      "IMG_1029.JPEG",
-      "IMG_1037.JPEG",
-      "IMG_1042.JPEG",
-      "IMG_1073.JPEG",
-      "IMG_1111.JPEG",
-      "IMG_1330.JPG",
-      "IMG_1477.JPG",
-      "IMG_1493.JPG",
-      "IMG_1504.JPG",
-      "IMG_1549.JPG",
-      "IMG_1568.JPG",
-      "IMG_1590.JPG",
-      "IMG_1592.JPG",
-      "IMG_1595.JPG",
-      "IMG_1596.JPG",
-      "IMG_1598.JPG",
-      "IMG_1649.JPG",
-      "IMG_1654.JPG",
-      "IMG_1677.JPG",
-      "IMG_1695.JPEG",
-      "IMG_1702.JPG",
-      "IMG_1710.JPG",
-      "IMG_1725.JPG",
-      "IMG_1726.JPG",
-      "IMG_3655.JPEG",
-      "IMG_3671.JPEG",
-      "IMG_3939.JPEG",
-      "IMG_3955.JPEG",
-      "IMG_4048.JPEG",
-      "IMG_4076.JPEG",
-      "IMG_4082.JPEG",
-      "IMG_4131.JPEG",
-      "J3Internal.png",
-      "Joint.png",
-      "result.JPEG",
-      "ROS.png",
-      "Vis.png"];
+  (function () {
+    "use strict";
 
-    const gallery = document.getElementById("gallery");
+    // [original, thumbnail, displayedWidth, displayedHeight]
+    // Dimensions have EXIF rotation applied, so they match what the browser
+    // actually renders. Baked in so the grid lays out before any photo loads.
+    const PHOTOS = [
+      ["71419296365__BFADA0B6-9317-4A31-95FD-DA5054866922.JPEG", "71419296365__BFADA0B6-9317-4A31-95FD-DA5054866922.JPEG.jpg", 1536, 2048],
+      ["Controller.JPG", "Controller.JPG.jpg", 2936, 2312],
+      ["Elec.JPEG", "Elec.JPEG.jpg", 2615, 2973],
+      ["Electronics.JPEG", "Electronics.JPEG.jpg", 3024, 4032],
+      ["Electronics.JPG", "Electronics.JPG.jpg", 2783, 2334],
+      ["FusionPic.png", "FusionPic.png.jpg", 738, 650],
+      ["IMG_0073.JPEG", "IMG_0073.JPEG.jpg", 1536, 2048],
+      ["IMG_0085.JPEG", "IMG_0085.JPEG.jpg", 1536, 2048],
+      ["IMG_0248.JPEG", "IMG_0248.JPEG.jpg", 1536, 2048],
+      ["IMG_0252.JPEG", "IMG_0252.JPEG.jpg", 1536, 2048],
+      ["IMG_0293.JPEG", "IMG_0293.JPEG.jpg", 1536, 2048],
+      ["IMG_0318.JPEG", "IMG_0318.JPEG.jpg", 1536, 2048],
+      ["IMG_0322.JPEG", "IMG_0322.JPEG.jpg", 1536, 2048],
+      ["IMG_0446.JPG", "IMG_0446.JPG.jpg", 5712, 4284],
+      ["IMG_0470.JPEG", "IMG_0470.JPEG.jpg", 1536, 2048],
+      ["IMG_0505.JPEG", "IMG_0505.JPEG.jpg", 1536, 2048],
+      ["IMG_0511.JPEG", "IMG_0511.JPEG.jpg", 1368, 2298],
+      ["IMG_0586.JPEG", "IMG_0586.JPEG.jpg", 1540, 2040],
+      ["IMG_0636.JPEG", "IMG_0636.JPEG.jpg", 1536, 2048],
+      ["IMG_0652.JPEG", "IMG_0652.JPEG.jpg", 1536, 2048],
+      ["IMG_0675.JPEG", "IMG_0675.JPEG.jpg", 1536, 2048],
+      ["IMG_0709.JPEG", "IMG_0709.JPEG.jpg", 834, 1274],
+      ["IMG_0767.JPEG", "IMG_0767.JPEG.jpg", 1536, 2048],
+      ["IMG_0771.JPEG", "IMG_0771.JPEG.jpg", 1536, 2048],
+      ["IMG_0778.JPEG", "IMG_0778.JPEG.jpg", 1536, 2048],
+      ["IMG_0779.JPEG", "IMG_0779.JPEG.jpg", 1536, 2048],
+      ["IMG_0782.JPEG", "IMG_0782.JPEG.jpg", 1536, 2048],
+      ["IMG_0785.JPEG", "IMG_0785.JPEG.jpg", 1536, 2048],
+      ["IMG_0794.JPEG", "IMG_0794.JPEG.jpg", 1536, 2048],
+      ["IMG_0810.JPEG", "IMG_0810.JPEG.jpg", 1536, 2048],
+      ["IMG_0811.JPEG", "IMG_0811.JPEG.jpg", 1536, 2048],
+      ["IMG_0812.JPEG", "IMG_0812.JPEG.jpg", 1536, 2048],
+      ["IMG_0815.JPEG", "IMG_0815.JPEG.jpg", 1536, 2048],
+      ["IMG_0816.JPEG", "IMG_0816.JPEG.jpg", 1536, 2048],
+      ["IMG_0827.JPEG", "IMG_0827.JPEG.jpg", 1536, 2048],
+      ["IMG_0885.JPEG", "IMG_0885.JPEG.jpg", 1536, 2048],
+      ["IMG_0892.JPEG", "IMG_0892.JPEG.jpg", 1536, 2048],
+      ["IMG_0900.JPEG", "IMG_0900.JPEG.jpg", 1536, 2048],
+      ["IMG_0951.JPEG", "IMG_0951.JPEG.jpg", 1536, 2048],
+      ["IMG_1007.JPEG", "IMG_1007.JPEG.jpg", 1536, 2048],
+      ["IMG_1023.JPEG", "IMG_1023.JPEG.jpg", 1536, 2048],
+      ["IMG_1028.JPEG", "IMG_1028.JPEG.jpg", 1536, 2048],
+      ["IMG_1029.JPEG", "IMG_1029.JPEG.jpg", 1536, 2048],
+      ["IMG_1037.JPEG", "IMG_1037.JPEG.jpg", 1536, 2048],
+      ["IMG_1042.JPEG", "IMG_1042.JPEG.jpg", 1826, 1720],
+      ["IMG_1073.JPEG", "IMG_1073.JPEG.jpg", 1536, 2048],
+      ["IMG_1111.JPEG", "IMG_1111.JPEG.jpg", 1536, 2048],
+      ["IMG_1330.JPG", "IMG_1330.JPG.jpg", 3024, 4032],
+      ["IMG_1477.JPG", "IMG_1477.JPG.jpg", 3024, 4032],
+      ["IMG_1493.JPG", "IMG_1493.JPG.jpg", 3024, 4032],
+      ["IMG_1504.JPG", "IMG_1504.JPG.jpg", 3024, 4032],
+      ["IMG_1549.JPG", "IMG_1549.JPG.jpg", 3024, 4032],
+      ["IMG_1568.JPG", "IMG_1568.JPG.jpg", 3024, 4032],
+      ["IMG_1590.JPG", "IMG_1590.JPG.jpg", 3024, 4032],
+      ["IMG_1592.JPG", "IMG_1592.JPG.jpg", 3024, 4032],
+      ["IMG_1595.JPG", "IMG_1595.JPG.jpg", 3024, 4032],
+      ["IMG_1596.JPG", "IMG_1596.JPG.jpg", 3024, 4032],
+      ["IMG_1598.JPG", "IMG_1598.JPG.jpg", 3024, 4032],
+      ["IMG_1649.JPG", "IMG_1649.JPG.jpg", 3024, 4032],
+      ["IMG_1654.JPG", "IMG_1654.JPG.jpg", 3024, 4032],
+      ["IMG_1677.JPG", "IMG_1677.JPG.jpg", 3024, 4032],
+      ["IMG_1695.JPEG", "IMG_1695.JPEG.jpg", 3024, 4032],
+      ["IMG_1702.JPG", "IMG_1702.JPG.jpg", 3024, 4032],
+      ["IMG_1710.JPG", "IMG_1710.JPG.jpg", 3024, 4032],
+      ["IMG_1725.JPG", "IMG_1725.JPG.jpg", 3024, 4032],
+      ["IMG_1726.JPG", "IMG_1726.JPG.jpg", 3024, 4032],
+      ["IMG_3655.JPEG", "IMG_3655.JPEG.jpg", 1536, 2048],
+      ["IMG_3671.JPEG", "IMG_3671.JPEG.jpg", 1536, 2048],
+      ["IMG_3939.JPEG", "IMG_3939.JPEG.jpg", 1536, 2048],
+      ["IMG_3955.JPEG", "IMG_3955.JPEG.jpg", 2048, 1536],
+      ["IMG_4048.JPEG", "IMG_4048.JPEG.jpg", 2048, 1536],
+      ["IMG_4076.JPEG", "IMG_4076.JPEG.jpg", 1536, 2048],
+      ["IMG_4082.JPEG", "IMG_4082.JPEG.jpg", 1536, 2048],
+      ["IMG_4131.JPEG", "IMG_4131.JPEG.jpg", 2048, 1536],
+      ["J3Internal.png", "J3Internal.png.jpg", 813, 659],
+      ["Joint.png", "Joint.png.jpg", 990, 754],
+      ["ROS.png", "ROS.png.jpg", 1005, 798],
+      ["Vis.png", "Vis.png.jpg", 481, 446],
+      ["car.png", "car.png.jpg", 708, 618],
+      ["result.JPEG", "result.JPEG.jpg", 3024, 2962]
+    ];
+
+    const FULL_DIR  = "assets/gallery/";
+    const THUMB_DIR = "assets/gallery/thumbs/";
+
+    const gallery  = document.getElementById("gallery");
+    const countEl  = document.getElementById("galleryCount");
     const lightbox = document.getElementById("lightbox");
-    const lightboxImg = document.getElementById("lightboxImg");
-    const lightboxClose = document.getElementById("lightboxClose");
+    const lbImg    = document.getElementById("lightboxImg");
+    const lbCount  = document.getElementById("lightboxCount");
+    const lbClose  = document.getElementById("lightboxClose");
+    const lbPrev   = document.getElementById("lightboxPrev");
+    const lbNext   = document.getElementById("lightboxNext");
 
-    function openLightbox(src) {
-      lightboxImg.src = src;
+    countEl.textContent = PHOTOS.length;
+
+    const items = PHOTOS.map(([file, thumb, w, h], i) => ({
+      thumb: THUMB_DIR + encodeURIComponent(thumb),
+      full:  FULL_DIR  + encodeURIComponent(file),
+      aspect: w / h,
+      index: i
+    }));
+
+    const px = (el, name, fallback) => {
+      const v = parseFloat(getComputedStyle(el).getPropertyValue(name));
+      return Number.isFinite(v) ? v : fallback;
+    };
+
+    // ---- justified rows -------------------------------------------------
+    // Photos are packed in order; a row commits once its natural height has
+    // shrunk to the target. Widths use flex-grow proportional to aspect so a
+    // row always fills the container exactly, whatever the rounding.
+    function layout() {
+      const width = gallery.clientWidth;
+      if (!width) return;
+
+      const gap    = px(gallery, "--gap", 14);
+      const target = px(gallery, "--row-target", 400);
+
+      const frag = document.createDocumentFragment();
+      let row = [];
+      let sumAspect = 0;
+
+      const commit = (isPartial) => {
+        if (!row.length) return;
+        const rowEl = document.createElement("div");
+        rowEl.className = "gallery-row" + (isPartial ? " gallery-row--partial" : "");
+
+        const height = isPartial
+          ? target
+          : (width - gap * (row.length - 1)) / sumAspect;
+
+        rowEl.style.height = height + "px";
+
+        row.forEach(item => {
+          if (isPartial) {
+            item.el.style.flex = "0 0 auto";
+            item.el.style.width = (item.aspect * height) + "px";
+          } else {
+            item.el.style.flex = item.aspect + " 1 0px";
+            item.el.style.width = "";
+          }
+          rowEl.appendChild(item.el);
+        });
+
+        frag.appendChild(rowEl);
+        row = [];
+        sumAspect = 0;
+      };
+
+      items.forEach(item => {
+        row.push(item);
+        sumAspect += item.aspect;
+        const height = (width - gap * (row.length - 1)) / sumAspect;
+        if (height <= target) commit(false);
+      });
+
+      commit(true); // trailing row, if any - never dropped
+
+      gallery.replaceChildren(frag);
+    }
+
+    // Build each tile once, then only re-flow on resize.
+    items.forEach(item => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "gallery-item";
+      btn.setAttribute("aria-label", `Open photo ${item.index + 1} of ${items.length}`);
+
+      const img = document.createElement("img");
+      img.src = item.thumb;
+      img.alt = "";
+      img.loading = "lazy";
+      img.decoding = "async";
+
+      btn.appendChild(img);
+      btn.addEventListener("click", () => open(item.index));
+      item.el = btn;
+    });
+
+    layout();
+
+    let resizeTimer;
+    window.addEventListener("resize", () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(layout, 120);
+    });
+
+    // ---- lightbox -------------------------------------------------------
+    let current = -1;
+    let lastFocused = null;
+
+    function show(i) {
+      current = (i + items.length) % items.length;
+      lbImg.src = items[current].full;
+      lbImg.alt = `Photo ${current + 1} of ${items.length}`;
+      lbCount.textContent = `${current + 1} / ${items.length}`;
+
+      // warm the neighbours so arrow-key browsing is instant
+      [current + 1, current - 1].forEach(n => {
+        const it = items[(n + items.length) % items.length];
+        const pre = new Image();
+        pre.src = it.full;
+      });
+    }
+
+    function open(i) {
+      lastFocused = document.activeElement;
+      show(i);
       lightbox.classList.add("is-open");
       document.body.style.overflow = "hidden";
+      lbClose.focus();
     }
-    function closeLightbox() {
+
+    function close() {
       lightbox.classList.remove("is-open");
-      lightboxImg.src = "";
+      lbImg.src = "";
       document.body.style.overflow = "";
+      if (lastFocused && lastFocused.focus) lastFocused.focus();
     }
 
-    function cssPx(name, fallback) {
-      const v = parseFloat(getComputedStyle(document.documentElement).getPropertyValue(name));
-      return Number.isFinite(v) ? v : fallback;
-    }
+    const isOpen = () => lightbox.classList.contains("is-open");
 
-    const GAP = () => cssPx("--gap", 18);
-    const ROW_H = () => cssPx("--row-h", 320);
+    lbClose.addEventListener("click", close);
+    lbPrev.addEventListener("click", () => show(current - 1));
+    lbNext.addEventListener("click", () => show(current + 1));
 
-    let buffer = [];
-    let active = 0;
-    let next = 0;
-    const MAX = 6;
+    // click the backdrop to dismiss, but not the photo itself
+    lightbox.addEventListener("click", e => {
+      if (e.target === lightbox || e.target === lbImg) close();
+    });
 
-    function tryBuild() {
-      const width = gallery.clientWidth;
-      while (buffer.length) {
-        let sum = 0, count = 0;
-        for (let i = 0; i < buffer.length; i++) {
-          sum += buffer[i].aspect;
-          count++;
-          const needed = sum * ROW_H() + GAP() * (count - 1);
-          if (needed >= width) {
-            const h = (width - GAP() * (count - 1)) / sum;
-            const row = document.createElement("div");
-            row.className = "justified-row";
-
-            buffer.splice(0, count).forEach(it => {
-              const w = it.aspect * h;
-              const card = document.createElement("div");
-              card.className = "justified-item";
-              card.style.width = w + "px";
-              card.style.height = h + "px";
-
-              const img = document.createElement("img");
-              img.src = it.src;
-              img.onload = () => img.classList.add("loaded");
-
-              card.onclick = () => openLightbox(it.src);
-              card.appendChild(img);
-              row.appendChild(card);
-            });
-
-            gallery.appendChild(row);
-            break;
-          }
-          if (i === buffer.length - 1) return;
-        }
-      }
-    }
-
-    function pump() {
-      while (active < MAX && next < images.length) {
-        const src = `assets/gallery/${images[next++]}`;
-        active++;
-        const im = new Image();
-        im.onload = () => {
-          buffer.push({ src, aspect: im.naturalWidth / im.naturalHeight });
-          active--;
-          tryBuild();
-          pump();
-        };
-        im.onerror = () => { active--; pump(); };
-        im.src = src;
-      }
-    }
-
-    pump();
-
-    lightbox.onclick = closeLightbox;
-    lightboxClose.onclick = closeLightbox;
-    lightboxImg.onclick = e => e.stopPropagation();
+    document.addEventListener("keydown", e => {
+      if (!isOpen()) return;
+      if (e.key === "Escape")     { e.preventDefault(); close(); }
+      if (e.key === "ArrowLeft")  { e.preventDefault(); show(current - 1); }
+      if (e.key === "ArrowRight") { e.preventDefault(); show(current + 1); }
+    });
+  })();
   </script>
 </body>
 </html>

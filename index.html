@@ -35,27 +35,6 @@
 </head>
 <body>
 
-<div id="loader" aria-hidden="false">
-  <div class="cmd cmd--hidden">
-    <div class="cmd-titlebar">
-      <div class="cmd-title">Command Prompt</div>
-      <div class="cmd-controls">
-        <span class="cmd-btn">—</span><span class="cmd-btn">□</span><span class="cmd-btn cmd-close">×</span>
-      </div>
-    </div>
-<div class="cmd-input">
-      <span class="cmd-path">C:\ROBOT_ROOM&gt;</span>
-      <span class="typed" id="typedNow"></span><span class="caret"></span>
-    </div>
-    <div class="cmd-body" id="terminalBody"></div>
-
-    
-  </div>
-</div>
-
-
-
-  
   <!-- Reusable Nav injected here -->
   <div data-include="partials/nav.html"></div>
 
@@ -97,30 +76,23 @@
     
   </main>
   <!-- ABOUT OVERLAY -->
-<div class="about-overlay" id="aboutOverlay" aria-hidden="true">
-  <div class="about-sheet" role="dialog" aria-modal="true">
-    <h1><span class="name-text">Jared Fenster</span></h1>
-    <ul>
-      <li>I'm currently studying Mechatronics Engineering at the University of Waterloo</li>
-    </ul>
+  <div class="about-overlay" id="aboutOverlay" aria-hidden="true">
+    <div class="about-sheet" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
+      <button class="about-close" type="button" aria-label="Close">&#10005;</button>
 
-    
-    </section>
+      <h1 class="about-title" id="aboutTitle">Jared Fenster</h1>
 
+      <p class="about-lede">
+        I'm currently studying Mechatronics Engineering at the University of Waterloo.
+      </p>
 
-        <div class="panel">
-          <ul>
-            <li>If you want to talk about a project, robotics, or opportunities, feel free to reach out.</li>
-          </ul>
-          <ul>
-          <div class="contact-row">
-            <li><a class="contact-btn" href="mailto:jared.fenster@gmail.com">jaredfenster@gmail.com</a></li>
-          </div>
-          </ul>
-        </div>
-      </section>
+      <p class="about-note">
+        If you want to talk about a project, robotics, or opportunities, feel free to reach out.
+      </p>
+
+      <a class="about-email" href="mailto:jaredfenster@gmail.com">jaredfenster@gmail.com</a>
+    </div>
   </div>
-</div>
 
 </body>
 </html>
