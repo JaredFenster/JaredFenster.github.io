@@ -1,0 +1,352 @@
+@import url('https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,300;400;500&family=Inter:wght@400;450;500;600&display=swap');
+
+/* ===========================================================
+   BORING MODE
+   A plain, white, academic portfolio. No cursors, no scene,
+   no glass. Standalone — does not load css/styles.css.
+   =========================================================== */
+
+:root {
+  --ink: #16181c;
+  --ink-soft: #4a4f57;
+  --ink-faint: #85898f;
+  --rule: #e4e5e7;
+  --rule-soft: #f0f0f1;
+  --paper: #ffffff;
+  --tint: #f7f7f8;
+
+  --wrap: 1120px;
+  --gap: 18px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font-size: 16px;
+  line-height: 1.62;
+  -webkit-font-smoothing: antialiased;
+}
+
+img { display: block; max-width: 100%; }
+
+a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+  text-decoration-color: #c9cacd;
+}
+
+a:hover { text-decoration-color: var(--ink); }
+
+.wrap {
+  width: 100%;
+  max-width: var(--wrap);
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+/* ===== Top bar ===== */
+
+.b-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(255, 255, 255, 0.92);
+  -webkit-backdrop-filter: saturate(120%) blur(8px);
+  backdrop-filter: saturate(120%) blur(8px);
+  border-bottom: 1px solid var(--rule);
+}
+
+.b-topbar__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  height: 62px;
+}
+
+.b-brand {
+  font-family: 'Newsreader', Georgia, serif;
+  font-size: 1.12rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.b-nav {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  font-size: 0.86rem;
+  font-weight: 450;
+}
+
+.b-nav a {
+  color: var(--ink-soft);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.b-nav a:hover { color: var(--ink); text-decoration: underline; text-underline-offset: 4px; }
+
+.b-nav .b-exit {
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  padding: 6px 13px;
+  color: var(--ink);
+}
+
+.b-nav .b-exit:hover {
+  background: var(--tint);
+  border-color: #cdced1;
+  text-decoration: none;
+}
+
+/* ===== Section furniture ===== */
+
+.b-section {
+  padding: 64px 0 0;
+  scroll-margin-top: 78px;
+}
+
+.b-section--first { padding-top: 56px; }
+
+.b-section__label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin: 0 0 28px;
+}
+
+/* ===== Project entries ===== */
+
+.b-project {
+  padding: 0 0 60px;
+  margin-bottom: 56px;
+  border-bottom: 1px solid var(--rule-soft);
+}
+
+.b-project:last-child { border-bottom: 0; }
+
+.b-project__head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+  gap: 24px 56px;
+  align-items: start;
+  margin-bottom: 26px;
+}
+
+.b-project__title {
+  font-family: 'Newsreader', Georgia, serif;
+  font-size: 1.62rem;
+  font-weight: 400;
+  letter-spacing: -0.015em;
+  line-height: 1.2;
+  margin: 0 0 6px;
+}
+
+.b-project__sub {
+  font-size: 0.94rem;
+  color: var(--ink-soft);
+  margin: 0 0 14px;
+}
+
+.b-project__more {
+  font-size: 0.86rem;
+  color: var(--ink-soft);
+}
+
+.b-specs {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.92rem;
+  color: var(--ink-soft);
+  columns: 1;
+}
+
+.b-specs li {
+  position: relative;
+  padding-left: 16px;
+  margin-bottom: 5px;
+}
+
+.b-specs li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.72em;
+  width: 6px;
+  height: 1px;
+  background: #b9bbbe;
+}
+
+/* ===== Image grids ===== */
+
+.b-figs {
+  display: grid;
+  gap: var(--gap);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.b-figs--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+.b-figs figure { margin: 0; }
+
+.b-figs img,
+.b-figs video {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  background: var(--tint);
+  border: 1px solid var(--rule);
+}
+
+.b-figs figcaption {
+  margin-top: 8px;
+  font-size: 0.78rem;
+  color: var(--ink-faint);
+}
+
+.b-fig--tall img { aspect-ratio: 3 / 4; }
+
+/* Lead photo or clip: its own full-bleed row, so the tiles below stay aligned */
+.b-fig--wide { grid-column: 1 / -1; }
+.b-fig--wide img,
+.b-fig--wide video { aspect-ratio: 3 / 2; }
+
+.b-fig--contain img { object-fit: contain; }
+
+/* ===== Photo index ===== */
+
+.b-photos {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.b-photos a {
+  display: block;
+  text-decoration: none;
+}
+
+.b-photos img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  background: var(--tint);
+  border: 1px solid var(--rule);
+  transition: opacity 0.15s ease;
+}
+
+.b-photos a:hover img { opacity: 0.78; }
+
+.b-photos__note {
+  margin-top: 18px;
+  font-size: 0.86rem;
+  color: var(--ink-soft);
+}
+
+/* ===== Lightbox ===== */
+
+.b-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  background: #fff;
+}
+
+.b-lightbox.is-open { display: flex; }
+
+.b-lightbox img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border: 1px solid var(--rule);
+}
+
+.b-lightbox__close {
+  position: absolute;
+  top: 18px;
+  right: 22px;
+  border: 1px solid var(--rule);
+  background: #fff;
+  border-radius: 999px;
+  width: 34px;
+  height: 34px;
+  font-size: 15px;
+  line-height: 1;
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+
+.b-lightbox__close:hover { background: var(--tint); color: var(--ink); }
+
+.b-lightbox__count {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.8rem;
+  color: var(--ink-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ===== Contact / footer ===== */
+
+.b-contact p {
+  max-width: 60ch;
+  color: var(--ink-soft);
+  margin: 0 0 16px;
+}
+
+.b-footer {
+  margin-top: 76px;
+  padding: 26px 0 46px;
+  border-top: 1px solid var(--rule);
+  font-size: 0.82rem;
+  color: var(--ink-faint);
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+/* ===== Responsive ===== */
+
+@media (max-width: 900px) {
+  .wrap { padding: 0 20px; }
+  .b-project__head { grid-template-columns: minmax(0, 1fr); gap: 18px; }
+  .b-figs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .b-fig--wide { grid-column: 1 / -1; }
+  .b-photos { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .b-nav { gap: 14px; font-size: 0.82rem; }
+}
+
+@media (max-width: 620px) {
+  .b-nav a:not(.b-exit) { display: none; }
+  .b-figs, .b-figs--2 { grid-template-columns: minmax(0, 1fr); }
+  .b-fig--wide { grid-column: 1 / -1; }
+  .b-fig--wide img,
+  .b-fig--wide video { aspect-ratio: 3 / 2; }
+  .b-photos { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .b-lightbox { padding: 16px; }
+}

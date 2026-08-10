@@ -440,6 +440,7 @@ function ensureMobileDrawerMarkup() {
     <a href="/">Home</a>
     <a href="/#about" data-about-link>About</a>
     <a href="/gallery.html">Gallery</a>
+    <a href="/boring.html">Boring Mode</a>
     <div class="drawer-title">Projects</div>
     <a href="/projects/precision-arm.html">Precision Arm</a>
     <a href="/projects/b2emo.html">B2EMO</a>

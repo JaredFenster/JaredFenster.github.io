@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" href="assets/icon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Jared Fenster — Portfolio</title>
+  <meta name="description" content="Jared Fenster — robotics and mechatronics projects. Plain text-and-photos portfolio." />
+
+  <link rel="stylesheet" href="css/boring.css" />
+</head>
+
+<body>
+
+  <header class="b-topbar">
+    <div class="wrap b-topbar__inner">
+      <a class="b-brand" href="boring.html">Jared Fenster</a>
+
+      <nav class="b-nav" aria-label="Sections">
+        <a href="#work">Work</a>
+        <a href="#photos">Photos</a>
+        <a href="#contact">Contact</a>
+        <a href="https://www.linkedin.com/in/jaredfenster" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="https://github.com/jaredfenster" target="_blank" rel="noopener">GitHub</a>
+        <a class="b-exit" href="/">Interactive site</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- ===== SELECTED WORK ===== -->
+    <section class="b-section b-section--first" id="work">
+      <div class="wrap">
+        <p class="b-section__label">Selected work</p>
+
+        <!-- 1 -->
+        <article class="b-project">
+          <div class="b-project__head">
+            <div>
+              <h2 class="b-project__title">Precision Robotic Arm</h2>
+              <p class="b-project__sub">Six-axis arm built around 3D-printed harmonic drives.</p>
+              <p class="b-project__more"><a href="projects/precision-arm.html">Full write-up &rarr;</a></p>
+            </div>
+            <ul class="b-specs">
+              <li>6 degrees of freedom</li>
+              <li>Dual on-axis absolute encoders — no homing required</li>
+              <li>End-effector repeatability ≈ ±0.75 mm</li>
+              <li>1 m reach, 5 kg payload</li>
+              <li>Moteus R4 controllers over CAN-FD; ROS 2 + MoveIt on a Pi 5</li>
+            </ul>
+          </div>
+
+          <div class="b-figs">
+            <figure class="b-fig--wide">
+              <video data-src="assets/Precision%20Arm/DemoVid.mp4" muted loop playsinline preload="none"></video>
+              <figcaption>Demonstration</figcaption>
+            </figure>
+            <figure>
+              <img src="assets/Precision%20Arm/result.JPEG" alt="Finished precision robotic arm" loading="lazy" decoding="async">
+              <figcaption>Completed arm</figcaption>
+            </figure>
+            <figure class="b-fig--contain">
+              <img src="assets/Precision%20Arm/FusionPic.png" alt="Fusion 360 model of the arm" loading="lazy" decoding="async">
+              <figcaption>Fusion 360 assembly</figcaption>
+            </figure>
+            <figure class="b-fig--contain">
+              <img src="assets/Precision%20Arm/J3Internal.png" alt="Cross-section of joint 3" loading="lazy" decoding="async">
+              <figcaption>Joint cross-section</figcaption>
+            </figure>
+            <figure>
+              <img src="assets/Precision%20Arm/Elec.JPEG" alt="Motor controller electronics" loading="lazy" decoding="async">
+              <figcaption>Daisy-chained motor controllers</figcaption>
+            </figure>
+            <figure class="b-fig--contain">
+              <img src="assets/Precision%20Arm/ROS.png" alt="ROS 2 and RViz visualisation" loading="lazy" decoding="async">
+              <figcaption>MoveIt 2 in RViz</figcaption>
+            </figure>
+          </div>
+        </article>
+
+        <!-- 2 -->
+        <article class="b-project">
+          <div class="b-project__head">
+            <div>
+              <h2 class="b-project__title">B2EMO</h2>
+              <p class="b-project__sub">Full-scale, functional B2EMO replica from Star Wars.</p>
+              <p class="b-project__more"><a href="projects/b2emo.html">Full write-up &rarr;</a></p>
+            </div>
+            <ul class="b-specs">
+              <li>Full scale and full functionality</li>
+              <li>Omnidirectional motion</li>
+              <li>Arduino-based control system</li>
+              <li><a href="https://www.youtube.com/watch?v=8wvXt8-5Ivs" target="_blank" rel="noopener">Demo video</a></li>
+            </ul>
+          </div>
+
+          <div class="b-figs">
+            <figure class="b-fig--wide">
+              <video data-src="assets/B2EMO/B2EMO%20DEMO.mp4" muted loop playsinline preload="none"></video>
+              <figcaption>Demonstration</figcaption>
+            </figure>
+            <figure>
+              <img src="assets/B2EMO/FINAL_PIC.JPEG" alt="Completed B2EMO replica" loading="lazy" decoding="async">
+              <figcaption>Completed replica</figcaption>
+            </figure>
+            <figure>
+              <video data-src="assets/B2EMO/MECHANICAL_DISPLAY.mp4" muted loop playsinline preload="none"></video>
+              <figcaption>Mechanical motion</figcaption>
+            </figure>
+            <figure>
+              <img src="assets/B2EMO/Electronics.JPEG" alt="B2EMO internal electronics" loading="lazy" decoding="async">
+              <figcaption>Internal electronics</figcaption>
+            </figure>
+          </div>
+        </article>
+
+        <!-- 3 -->
+        <article class="b-project">
+          <div class="b-project__head">
+            <div>
+              <h2 class="b-project__title">Harmonic Drive Gearbox</h2>
+              <p class="b-project__sub">3D-printed strain wave gearbox with an encoder inside the flexspline.</p>
+              <p class="b-project__more"><a href="projects/harmonic-drive.html">Full write-up &rarr;</a></p>
+            </div>
+            <ul class="b-specs">
+              <li>Harmonic drive combined with a planetary stage</li>
+              <li>Highly compact; dual on-axis encoders</li>
+              <li>16-bit magnetic encoder, accurate to 0.05°</li>
+              <li>Low backlash and backdriveable</li>
+              <li><a href="https://hackaday.io/project/196387-strain-wave-gear-robotic-arm" target="_blank" rel="noopener">Project documentation on Hackaday</a></li>
+            </ul>
+          </div>
+
+          <div class="b-figs">
+            <figure class="b-fig--wide">
+              <video data-src="assets/Harmonic%20Drive/Demo.mp4" muted loop playsinline preload="none"></video>
+              <figcaption>Gearbox under test</figcaption>
+            </figure>
+            <figure class="b-fig--contain">
+              <img src="assets/Harmonic%20Drive/Joint.png" alt="Harmonic drive joint model" loading="lazy" decoding="async">
+              <figcaption>Joint assembly</figcaption>
+            </figure>
+            <figure>
+              <img src="assets/Harmonic%20Drive/IMG_1695.JPEG" alt="Printed harmonic drive parts" loading="lazy" decoding="async">
+              <figcaption>Printed gearbox</figcaption>
+            </figure>
+            <figure>
+              <img src="assets/Harmonic%20Drive/Electronics.JPEG" alt="Gearbox encoder electronics" loading="lazy" decoding="async">
+              <figcaption>Encoder electronics</figcaption>
+            </figure>
+          </div>
+        </article>
+
+        <!-- 4 -->
+        <article class="b-project">
+          <div class="b-project__head">
+            <div>
+              <h2 class="b-project__title">Vision Arm</h2>
+              <p class="b-project__sub">Six-axis arm with a camera, cycloidal drives and a Unity visualiser.</p>
+              <p class="b-project__more"><a href="projects/vision-arm.html">Full write-up &rarr;</a></p>
+            </div>
+            <ul class="b-specs">
+              <li>6 degrees of freedom</li>
+              <li>OpenCV and AprilTag detection</li>
+              <li>Unity arm and detection visualiser</li>
+              <li>3D-printed cycloidal gearboxes</li>
+            </ul>
+          </div>
+
+          <div class="b-figs">
+            <figure class="b-fig--wide">
+              <video data-src="assets/Vision%20Arm/Demo.mp4" muted loop playsinline preload="none"></video>
+              <figcaption>Demonstration</figcaption>
+            </figure>
+            <figure>
+              <img src="assets/Vision%20Arm/SidePic.jpg" alt="Vision arm, side view" loading="lazy" decoding="async">
+              <figcaption>Assembled arm</figcaption>
+            </figure>
+            <figure>
+              <img src="assets/Vision%20Arm/EndPic.jpg" alt="Vision arm end effector" loading="lazy" decoding="async">
+              <figcaption>End effector</figcaption>
+            </figure>
+            <figure>
+              <video data-src="assets/Vision%20Arm/inverse%20kin.mp4" muted loop playsinline preload="none"></video>
+              <figcaption>Inverse kinematics</figcaption>
+            </figure>
+            <figure>
+              <img src="assets/Vision%20Arm/Cycloidal.jpg" alt="Cycloidal drive" loading="lazy" decoding="async">
+              <figcaption>Cycloidal drive</figcaption>
+            </figure>
+            <figure class="b-fig--contain">
+              <img src="assets/Vision%20Arm/J1.png" alt="Joint 1 CAD" loading="lazy" decoding="async">
+              <figcaption>Joint 1 in CAD</figcaption>
+            </figure>
+            <figure class="b-fig--contain">
+              <img src="assets/Vision%20Arm/Detection.png" alt="AprilTag detection output" loading="lazy" decoding="async">
+              <figcaption>AprilTag detection</figcaption>
+            </figure>
+            <figure class="b-fig--contain">
+              <img src="assets/Vision%20Arm/Unity.png" alt="Unity visualiser" loading="lazy" decoding="async">
+              <figcaption>Unity visualiser</figcaption>
+            </figure>
+          </div>
+        </article>
+
+        <!-- 5 -->
+        <article class="b-project">
+          <div class="b-project__head">
+            <div>
+              <h2 class="b-project__title">Omnidirectional Robot</h2>
+              <p class="b-project__sub">Radio-controlled platform on mecanum wheels.</p>
+              <p class="b-project__more"><a href="projects/omni.html">Full write-up &rarr;</a></p>
+            </div>
+            <ul class="b-specs">
+              <li>Wireless nRF24L01 communication</li>
+              <li>Arduino MEGA</li>
+              <li>Mecanum wheels</li>
+            </ul>
+          </div>
+
+          <div class="b-figs">
+            <figure class="b-fig--wide">
+              <video data-src="assets/omni/Demo.mp4" muted loop playsinline preload="none"></video>
+              <figcaption>Demonstration</figcaption>
+            </figure>
+            <figure>
+              <img src="assets/omni/Iso.JPG" alt="Omnidirectional robot" loading="lazy" decoding="async">
+              <figcaption>Assembled robot</figcaption>
+            </figure>
+            <figure class="b-fig--contain">
+              <img src="assets/omni/CAD.png" alt="Omnidirectional robot CAD" loading="lazy" decoding="async">
+              <figcaption>CAD model</figcaption>
+            </figure>
+            <figure>
+              <img src="assets/omni/Electronics.JPG" alt="Omnidirectional robot electronics" loading="lazy" decoding="async">
+              <figcaption>Electronics</figcaption>
+            </figure>
+          </div>
+        </article>
+
+        <!-- 6 -->
+        <article class="b-project">
+          <div class="b-project__head">
+            <div>
+              <h2 class="b-project__title">Universal Robot Controller</h2>
+              <p class="b-project__sub">A wireless controller that pairs with any of my robots.</p>
+              <p class="b-project__more"><a href="projects/controller.html">Full write-up &rarr;</a></p>
+            </div>
+            <ul class="b-specs">
+              <li>Connects to any Arduino with an nRF24L01</li>
+              <li>Sends all input data 20 times per second</li>
+              <li>3D-printed enclosure</li>
+            </ul>
+          </div>
+
+          <div class="b-figs">
+            <figure>
+              <img src="assets/Controller/Controller.JPG" alt="Universal robot controller" loading="lazy" decoding="async">
+              <figcaption>Finished controller</figcaption>
+            </figure>
+            <figure class="b-fig--contain">
+              <img src="assets/Controller/CAD.png" alt="Controller CAD model" loading="lazy" decoding="async">
+              <figcaption>CAD model</figcaption>
+            </figure>
+            <figure>
+              <img src="assets/Controller/Electronics.JPEG" alt="Controller electronics" loading="lazy" decoding="async">
+              <figcaption>Electronics</figcaption>
+            </figure>
+          </div>
+        </article>
+
+        <!-- 7 -->
+        <article class="b-project">
+          <div class="b-project__head">
+            <div>
+              <h2 class="b-project__title">IK Visualizer</h2>
+              <p class="b-project__sub">Inverse kinematics visualiser for URDF-described arms.</p>
+              <p class="b-project__more"><a href="projects/IKViz.html">Full write-up &rarr;</a></p>
+            </div>
+            <ul class="b-specs">
+              <li>Written in C++</li>
+              <li>Rendered with OpenGL</li>
+              <li>URDF based</li>
+            </ul>
+          </div>
+
+          <div class="b-figs b-figs--2">
+            <figure class="b-fig--wide">
+              <video data-src="assets/IKViz/IKVizDemo.mp4" muted loop playsinline preload="none"></video>
+              <figcaption>Solver running</figcaption>
+            </figure>
+            <figure class="b-fig--contain">
+              <img src="assets/IKViz/Pic.png" alt="IK visualiser screenshot" loading="lazy" decoding="async">
+              <figcaption>Solver view</figcaption>
+            </figure>
+            <figure class="b-fig--contain">
+              <img src="assets/IKViz/Pic2.png" alt="IK visualiser screenshot" loading="lazy" decoding="async">
+              <figcaption>Loaded URDF</figcaption>
+            </figure>
+          </div>
+        </article>
+
+        <!-- 8 -->
+        <article class="b-project">
+          <div class="b-project__head">
+            <div>
+              <h2 class="b-project__title">RC Car</h2>
+              <p class="b-project__sub">A simple radio-controlled car, printed end to end.</p>
+              <p class="b-project__more"><a href="projects/car.html">Full write-up &rarr;</a></p>
+            </div>
+            <ul class="b-specs">
+              <li>Wireless nRF24L01 communication</li>
+              <li>Arduino GIGA R1</li>
+              <li>3D printed</li>
+            </ul>
+          </div>
+
+          <div class="b-figs">
+            <figure class="b-fig--wide">
+              <video data-src="assets/Car/Demo.mp4" muted loop playsinline preload="none"></video>
+              <figcaption>Demonstration</figcaption>
+            </figure>
+            <figure class="b-fig--contain">
+              <img src="assets/Car/car.png" alt="RC car CAD model" loading="lazy" decoding="async">
+              <figcaption>CAD model</figcaption>
+            </figure>
+            <figure>
+              <img src="assets/Car/Electronics.JPG" alt="RC car electronics" loading="lazy" decoding="async">
+              <figcaption>Electronics</figcaption>
+            </figure>
+            <figure>
+              <img src="assets/Car/Controller.JPG" alt="RC car controller" loading="lazy" decoding="async">
+              <figcaption>Controller</figcaption>
+            </figure>
+          </div>
+        </article>
+
+        <!-- 9 -->
+        <article class="b-project">
+          <div class="b-project__head">
+            <div>
+              <h2 class="b-project__title">Vertical Ball Launcher</h2>
+              <p class="b-project__sub">A physics demonstration that launches a ball perfectly vertically.</p>
+              <p class="b-project__more"><a href="projects/vertical-launcher.html">Full write-up &rarr;</a></p>
+            </div>
+            <ul class="b-specs">
+              <li>Launches a ball perfectly vertical</li>
+              <li>Triggered by a distance sensor</li>
+              <li>3D printed apart from the spring</li>
+            </ul>
+          </div>
+
+          <div class="b-figs b-figs--2">
+            <figure class="b-fig--wide">
+              <video data-src="assets/Vertical%20Launcher/Demo.mp4" muted loop playsinline preload="none"></video>
+              <figcaption>Demonstration</figcaption>
+            </figure>
+            <figure>
+              <img src="assets/Vertical%20Launcher/Left.JPEG" alt="Vertical ball launcher" loading="lazy" decoding="async">
+              <figcaption>Assembled launcher</figcaption>
+            </figure>
+            <figure>
+              <img src="assets/Vertical%20Launcher/Elec.JPEG" alt="Launcher electronics" loading="lazy" decoding="async">
+              <figcaption>Electronics</figcaption>
+            </figure>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ===== PHOTO INDEX ===== -->
+    <section class="b-section" id="photos">
+      <div class="wrap">
+        <p class="b-section__label">Photographs</p>
+        <div class="b-photos" id="photoGrid"></div>
+        <p class="b-photos__note">Click any photo to enlarge.</p>
+      </div>
+    </section>
+
+    <!-- ===== CONTACT ===== -->
+    <section class="b-section b-contact" id="contact">
+      <div class="wrap">
+        <p class="b-section__label">Contact</p>
+        <p>
+          If you want to talk about a project, robotics, or opportunities, feel free to reach out.
+        </p>
+        <p>
+          <a href="mailto:jaredfenster@gmail.com">jaredfenster@gmail.com</a>
+        </p>
+
+        <div class="b-footer">
+          <span>Jared Fenster — Mechatronics Engineering, University of Waterloo</span>
+          <span><a href="/">Back to the interactive site</a></span>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <div class="b-lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Photo viewer">
+    <button class="b-lightbox__close" id="lightboxClose" type="button" aria-label="Close">&#10005;</button>
+    <img id="lightboxImg" alt="" />
+    <span class="b-lightbox__count" id="lightboxCount"></span>
+  </div>
+
+  <script>
+  // ---- Autoplaying clips -------------------------------------------------
+  // The demo videos run 13-52 MB each, so nothing is fetched until a clip is
+  // nearly on screen. Playback stops again once it scrolls away, which keeps
+  // a page full of loops from pinning the CPU.
+  (function () {
+    "use strict";
+
+    const videos = Array.from(document.querySelectorAll("video[data-src]"));
+    if (!videos.length) return;
+
+    const play = (v) => {
+      if (!v.src) v.src = v.dataset.src;
+      const p = v.play();
+      if (p && p.catch) p.catch(() => {}); // autoplay blocked — leave it paused
+    };
+
+    if (!("IntersectionObserver" in window)) {
+      videos.forEach(play);
+      return;
+    }
+
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) play(entry.target);
+        else if (entry.target.src) entry.target.pause();
+      });
+    }, { rootMargin: "200px 0px" });
+
+    videos.forEach(v => io.observe(v));
+  })();
+  </script>
+
+  <script>
+  (function () {
+    "use strict";
+
+    // [full file, thumbnail] — thumbnails are the ones the gallery already ships.
+    const PHOTOS = [
+      "IMG_1330.JPG", "IMG_1477.JPG", "IMG_1493.JPG", "IMG_1504.JPG",
+      "IMG_1549.JPG", "IMG_1568.JPG", "IMG_1590.JPG", "IMG_1592.JPG",
+      "IMG_1595.JPG", "IMG_1596.JPG", "IMG_1598.JPG", "IMG_1649.JPG",
+      "IMG_1654.JPG", "IMG_1677.JPG", "IMG_1695.JPEG", "IMG_1702.JPG",
+      "IMG_1710.JPG", "IMG_1725.JPG", "IMG_1726.JPG", "IMG_0446.JPG",
+      "IMG_0073.JPEG", "IMG_0085.JPEG", "IMG_0248.JPEG", "IMG_0293.JPEG",
+      "IMG_0470.JPEG", "IMG_0505.JPEG", "IMG_0586.JPEG", "IMG_0636.JPEG",
+      "IMG_0709.JPEG", "IMG_0767.JPEG", "IMG_0785.JPEG", "IMG_0811.JPEG",
+      "IMG_0885.JPEG", "IMG_0900.JPEG", "IMG_1007.JPEG", "IMG_1028.JPEG",
+      "IMG_1042.JPEG", "IMG_1073.JPEG", "IMG_3655.JPEG", "IMG_3939.JPEG",
+      "IMG_4048.JPEG", "IMG_4076.JPEG", "IMG_4131.JPEG", "result.JPEG",
+      "Elec.JPEG", "Electronics.JPEG", "Electronics.JPG", "Controller.JPG"
+    ];
+
+    const FULL_DIR  = "assets/gallery/";
+    const THUMB_DIR = "assets/gallery/thumbs/";
+
+    const grid     = document.getElementById("photoGrid");
+    const lightbox = document.getElementById("lightbox");
+    const lbImg    = document.getElementById("lightboxImg");
+    const lbCount  = document.getElementById("lightboxCount");
+    const lbClose  = document.getElementById("lightboxClose");
+
+    const items = PHOTOS.map((file, i) => ({
+      full:  FULL_DIR  + encodeURIComponent(file),
+      thumb: THUMB_DIR + encodeURIComponent(file + ".jpg"),
+      index: i
+    }));
+
+    const frag = document.createDocumentFragment();
+    items.forEach(item => {
+      const a = document.createElement("a");
+      a.href = item.full;
+      a.setAttribute("aria-label", `Open photo ${item.index + 1} of ${items.length}`);
+
+      const img = document.createElement("img");
+      img.src = item.thumb;
+      img.alt = "";
+      img.loading = "lazy";
+      img.decoding = "async";
+
+      a.appendChild(img);
+      a.addEventListener("click", e => { e.preventDefault(); show(item.index); });
+      frag.appendChild(a);
+    });
+    grid.appendChild(frag);
+
+    let current = -1;
+    let lastFocused = null;
+
+    function show(i) {
+      current = (i + items.length) % items.length;
+      lbImg.src = items[current].full;
+      lbImg.alt = `Photo ${current + 1} of ${items.length}`;
+      lbCount.textContent = `${current + 1} / ${items.length}`;
+
+      if (!lightbox.classList.contains("is-open")) {
+        lastFocused = document.activeElement;
+        lightbox.classList.add("is-open");
+        document.body.style.overflow = "hidden";
+        lbClose.focus();
+      }
+    }
+
+    function close() {
+      lightbox.classList.remove("is-open");
+      lbImg.src = "";
+      document.body.style.overflow = "";
+      if (lastFocused && lastFocused.focus) lastFocused.focus();
+    }
+
+    const isOpen = () => lightbox.classList.contains("is-open");
+
+    lbClose.addEventListener("click", close);
+    lightbox.addEventListener("click", e => {
+      if (e.target === lightbox || e.target === lbImg) close();
+    });
+
+    document.addEventListener("keydown", e => {
+      if (!isOpen()) return;
+      if (e.key === "Escape")     { e.preventDefault(); close(); }
+      if (e.key === "ArrowLeft")  { e.preventDefault(); show(current - 1); }
+      if (e.key === "ArrowRight") { e.preventDefault(); show(current + 1); }
+    });
+  })();
+  </script>
+
+</body>
+</html>
