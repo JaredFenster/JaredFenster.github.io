@@ -698,21 +698,43 @@ function initScrollHint() {
     document.body.appendChild(hint);
   }
 
+  // bootInteractive runs on both DOMContentLoaded and nav:loaded, so wire the
+  // hint up once — otherwise every trigger below fires twice.
+  if (hint.dataset.hintInit === "1") return;
+  hint.dataset.hintInit = "1";
+
   let showing = false;
   let showCount = 0;
   const MAX_SHOWS = 3;
+  const HOLD_MS = 4200;
+  const INTRO_HOLD_MS = 2000;
+
+  const flash = (holdMs, isIntro) => {
+    showing = true;
+    if (isIntro) hint.classList.add("scroll-hint--intro");
+    hint.classList.add("scroll-hint--show");
+    setTimeout(() => {
+      hint.classList.remove("scroll-hint--show");
+      setTimeout(() => {
+        // drop the size only once it has faded out, so it doesn't snap
+        hint.classList.remove("scroll-hint--intro");
+        showing = false;
+      }, 280);
+    }, holdMs);
+  };
 
   const reveal = () => {
     if (showing) return;
     if (showCount >= MAX_SHOWS) return;
-    showing = true;
     showCount += 1;
-    hint.classList.add("scroll-hint--show");
-    setTimeout(() => {
-      hint.classList.remove("scroll-hint--show");
-      setTimeout(() => { showing = false; }, 280);
-    }, 4200);
+    flash(HOLD_MS);
   };
+
+  // Greet once the scene images are actually on screen, then hand over to the
+  // scroll triggers. The intro doesn't spend one of the scroll reveals.
+  const intro = () => flash(INTRO_HOLD_MS, true);
+  if (document.readyState === "complete") intro();
+  else window.addEventListener("load", intro, { once: true });
 
   const onWheel = () => reveal();
   const onTouchMove = () => reveal();
